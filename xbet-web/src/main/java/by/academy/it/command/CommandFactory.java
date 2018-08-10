@@ -1,14 +1,14 @@
 package by.academy.it.command;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Factory of commands
+ * Factory of commands.
  *
  */
 public class CommandFactory {
@@ -16,7 +16,7 @@ public class CommandFactory {
     private static CommandFactory instance = null;
     private static Map<String, Command> commands;
 
-    private static final Logger logger = LogManager.getLogger(CommandFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandFactory.class);
     private static final String GET_LOCALE = "GET/locale";
     private static final String GET_HOME = "GET/home";
     private static final String HOME = "home";
@@ -72,7 +72,7 @@ public class CommandFactory {
     }
 
     /**
-     * Returns an factory instance
+     * Returns an factory instance.
      *
      * @return CommandFactory
      */
@@ -84,7 +84,7 @@ public class CommandFactory {
     }
 
     /**
-     * Returns appropriate command by the requested path
+     * Returns appropriate command by the requested path.
      *
      * @param request HttpServletRequest
      * @return Command

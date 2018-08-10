@@ -3,8 +3,8 @@ package by.academy.it.dao;
 import by.academy.it.entity.User;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,11 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Works with a <code>User</code> entity class and have access to the 'users' database table
+ * Works with a {@link by.academy.it.entity.User} entity class and has access to the 'users' database table.
  *
  */
 public class UserDaoImpl implements UserDao {
-    private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
     private static ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.users " +
@@ -27,15 +28,22 @@ public class UserDaoImpl implements UserDao {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.users WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.users WHERE login = ?";
 
+
+    /**
+     * Constructs an instance of {@code UserDaoImpl} with the specified connection pool.
+     *
+     * @param connectionPool the connection pool.
+     */
     public UserDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
     }
 
+
     /**
-     * Creates a new user entry in the database
+     * Creates a new user entry in the database.
      *
-     * @param user
-     * @throws DAOException
+     * @param user the {@link by.academy.it.entity.User} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(User user) throws DAOException {
         Connection connection = null;
@@ -53,7 +61,6 @@ public class UserDaoImpl implements UserDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot create a user in DAO", e);
-            e.printStackTrace();
             throw new DAOException("UserDao cannot create a user");
         } finally {
             closeStatement(statement);
@@ -61,11 +68,12 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+
     /**
-     * Updates a user's entry in the database
+     * Updates a user's entry in the database.
      *
-     * @param user
-     * @throws DAOException
+     * @param user the {@link by.academy.it.entity.User} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void update(User user) throws DAOException {
         Connection connection = null;
@@ -78,7 +86,6 @@ public class UserDaoImpl implements UserDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot update a user in DAO", e);
-            e.printStackTrace();
             throw new DAOException("UserDao cannot update a user");
         } finally {
             closeStatement(statement);
@@ -86,12 +93,13 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+
     /**
-     * Retrieves a user entry from the database
+     * Retrieves a user entry by login from the database.
      *
-     * @param login
-     * @return User entity
-     * @throws DAOException
+     * @param login the login of a user.
+     * @return  the {@link by.academy.it.entity.User} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public User findByLogin(String login) throws DAOException {
         Connection connection = null;
@@ -116,7 +124,6 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("UserDao find by login operation is failed");
         } finally {
             closeResultSet(set);
@@ -126,12 +133,13 @@ public class UserDaoImpl implements UserDao {
         return user;
     }
 
+
     /**
-     * Retrieves a user entry from the database
+     * Retrieves a user entry by id from the database.
      *
-     * @param id
-     * @return User entity
-     * @throws DAOException
+     * @param id the id of a user.
+     * @return  the {@link by.academy.it.entity.User} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     @Override
     public User findById(int id) throws DAOException {
@@ -157,7 +165,6 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("UserDao find by login operation is failed");
         } finally {
             closeResultSet(set);
@@ -167,11 +174,12 @@ public class UserDaoImpl implements UserDao {
         return user;
     }
 
+
     /**
-     * Deletes a user entry from the database
+     * Deletes a user entry from the database.
      *
-     * @param user
-     * @throws DAOException
+     * @param  user the {@link by.academy.it.entity.User} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(User user) throws DAOException {
         Connection connection = null;
@@ -183,7 +191,6 @@ public class UserDaoImpl implements UserDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot delete a user in DAO", e);
-            e.printStackTrace();
             throw new DAOException("UserDao cannot delete a user");
         } finally {
             closeStatement(statement);

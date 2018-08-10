@@ -2,8 +2,8 @@ package by.academy.it.command;
 
 import by.academy.it.entity.Match;
 import by.academy.it.service.MatchService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class PlaceBetCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(PlaceBetCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlaceBetCommand.class);
     private MatchService matchService = MatchService.getInstance();
 
     @Override
@@ -25,7 +25,6 @@ public class PlaceBetCommand extends Command {
         if (isValidString(matchId)) {
             try {
                 int id = Integer.parseInt(matchId);
-                logger.info("parameter matchId - [" + matchId + "]");
                 Match match = matchService.getMatchById(id);
                 logger.info("match has been retrieved - [" + match.getId() + "]");
                 request.getSession().setAttribute(MATCH, match);
@@ -34,7 +33,6 @@ public class PlaceBetCommand extends Command {
 
             } catch (Exception e) {
                 logger.error("An exception occurred during get match operation", e);
-                e.printStackTrace();
                 request.getSession().setAttribute(ERROR_MESSAGE, MATCH_EXCEPTION);
 
                 response.sendRedirect(request.getContextPath() + ERROR);

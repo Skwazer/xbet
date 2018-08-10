@@ -3,7 +3,7 @@ package by.academy.it.entity;
 import java.io.Serializable;
 
 /**
- * Representation of database table 'roles'
+ * Representation of database table 'roles'.
  */
 public class Role implements Serializable {
 
@@ -12,18 +12,34 @@ public class Role implements Serializable {
     private Integer id;
     private String role;
 
+    /**
+     * The {@code id} field getter.
+     * @return a value of the {@code id} field.
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * The {@code id} field setter.
+     * @param id value to set.
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * The {@code role} field getter.
+     * @return a value of the {@code role} field.
+     */
     public String getRole() {
         return role;
     }
 
+    /**
+     * The {@code role} field setter.
+     * @param role value to set.
+     */
     public void setRole(String role) {
         this.role = role;
     }

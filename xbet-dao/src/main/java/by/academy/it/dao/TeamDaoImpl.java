@@ -3,8 +3,8 @@ package by.academy.it.dao;
 import by.academy.it.entity.Team;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,26 +12,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Works with a <code>Result</code> entity class and have access to the 'results' database table
+ * Works with a {@link by.academy.it.entity.Team} entity class and has access to the 'teams' database table.
  *
  */
 public class TeamDaoImpl implements TeamDao {
-    private static final Logger logger = LogManager.getLogger(TeamDaoImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(TeamDaoImpl.class);
     private static ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.teams (name) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.teams WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.teams WHERE name = ?";
 
+
+    /**
+     * Constructs an instance of {@code TeamDaoImpl} with the specified connection pool.
+     *
+     * @param connectionPool the connection pool.
+     */
     public TeamDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
     }
 
+
     /**
-     * Creates a new team entry in the database
+     * Creates a new team entry in the database.
      *
-     * @param team
-     * @throws DAOException
+     * @param team the {@link by.academy.it.entity.Team} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Team team) throws DAOException {
         Connection connection = null;
@@ -43,7 +51,6 @@ public class TeamDaoImpl implements TeamDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot create a team in DAO", e);
-            e.printStackTrace();
             throw new DAOException("TeamDao cannot create a team");
         } finally {
             closeStatement(statement);
@@ -51,12 +58,13 @@ public class TeamDaoImpl implements TeamDao {
         }
     }
 
+
     /**
-     * Retrieves a team entry from the database
+     * Retrieves a team entry by id from the database.
      *
-     * @param id
-     * @return Team entity
-     * @throws DAOException
+     * @param id the id of a team.
+     * @return the {@link by.academy.it.entity.Team} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public Team findById(int id) throws DAOException {
         Connection connection = null;
@@ -75,7 +83,6 @@ public class TeamDaoImpl implements TeamDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao find by id operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("TeamDao find by login operation is failed");
         } finally {
             closeResultSet(set);
@@ -85,11 +92,12 @@ public class TeamDaoImpl implements TeamDao {
         return team;
     }
 
+
     /**
-     * Deletes a team entry from the database
+     * Deletes a team entry from the database.
      *
-     * @param team
-     * @throws DAOException
+     * @param team the {@link by.academy.it.entity.Team} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Team team) throws DAOException {
         Connection connection = null;
@@ -101,7 +109,6 @@ public class TeamDaoImpl implements TeamDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot delete a role in DAO", e);
-            e.printStackTrace();
             throw new DAOException("TeamDao cannot delete a role");
         } finally {
             closeStatement(statement);

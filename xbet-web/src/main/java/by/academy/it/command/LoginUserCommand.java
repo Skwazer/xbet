@@ -1,11 +1,10 @@
 package by.academy.it.command;
 
-
 import by.academy.it.entity.User;
 import by.academy.it.service.ServiceException;
 import by.academy.it.service.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This command puts into session data about logged user
+ * This command puts into session data about logged user.
  *
  */
 public class LoginUserCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(LoginUserCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginUserCommand.class);
     private UserService userService = UserService.getInstance();
 
     @Override
@@ -48,7 +47,6 @@ public class LoginUserCommand extends Command {
             }
         } catch (ServiceException e) {
             logger.error("An exception occurred during login action", e);
-            e.printStackTrace();
             request.getSession().setAttribute(ERROR_MESSAGE, LOGIN_EXCEPTION);
 
             response.sendRedirect(request.getContextPath() + ERROR);

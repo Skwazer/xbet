@@ -3,19 +3,20 @@ package by.academy.it.dao;
 import by.academy.it.entity.Bet;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Works with a <code>Bet</code> entity class and have access to the 'bets' database table
+ * Works with a {@link by.academy.it.entity.Bet} entity class and has access to the 'bets' database table.
  *
  */
 public class BetDaoImpl implements BetDao {
-    private static final Logger logger = LogManager.getLogger(BetDaoImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(BetDaoImpl.class);
     private static ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.bets " +
@@ -25,15 +26,22 @@ public class BetDaoImpl implements BetDao {
     private static final String DELETE_QUERY = "DELETE FROM xbet.bets WHERE match_id = ?";
     private static final String UPDATE_BET_QUERY = "UPDATE xbet.bets SET status=? WHERE id=?";
 
+
+    /**
+     * Constructs an instance of {@code BetDaoImpl} with the specified connection pool.
+     *
+     * @param connectionPool the connection pool.
+     */
     public BetDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
     }
 
+
     /**
-     * Creates a new bet entry in the database
+     * Creates a new bet entry in the database.
      *
-     * @param bet
-     * @throws DAOException
+     * @param bet the {@link by.academy.it.entity.Bet} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Bet bet) throws DAOException {
         Connection connection = null;
@@ -50,7 +58,6 @@ public class BetDaoImpl implements BetDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao cannot create a bet in DAO", e);
-            e.printStackTrace();
             throw new DAOException("BetDao cannot create a bet");
         } finally {
             closeStatement(statement);
@@ -58,12 +65,13 @@ public class BetDaoImpl implements BetDao {
         }
     }
 
+
     /**
-     * Retrieves a list of Bet entries from the database
+     * Retrieves a list of bets from the database by user id.
      *
-     * @param userId
-     * @return List<Bet>
-     * @throws DAOException
+     * @param userId the id of a user.
+     * @return {@code List<Bet>} - the list of user's bets.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public List<Bet> findByUserId(int userId) throws DAOException {
         Connection connection = null;
@@ -88,7 +96,6 @@ public class BetDaoImpl implements BetDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao find by user id operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("BetDao find by user id operation is failed");
         } finally {
             closeResultSet(set);
@@ -98,11 +105,12 @@ public class BetDaoImpl implements BetDao {
         return list;
     }
 
+
     /**
-     * Deletes a bet entry from the database
+     * Deletes a bet entry from the database.
      *
-     * @param bet
-     * @throws DAOException
+     * @param bet the {@link by.academy.it.entity.Bet} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Bet bet) throws DAOException {
         Connection connection = null;
@@ -114,7 +122,6 @@ public class BetDaoImpl implements BetDao {
             statement.execute();
         } catch (SQLException  | ConnectionPoolException e) {
             logger.error("BetDao cannot delete a bet in DAO", e);
-            e.printStackTrace();
             throw new DAOException("BetDao cannot delete a bet");
         } finally {
             closeStatement(statement);
@@ -122,12 +129,13 @@ public class BetDaoImpl implements BetDao {
         }
     }
 
+
     /**
-     * Retrieves a list of Bet entries from the database
+     * Retrieves a list of bets from the database by match id.
      *
-     * @param matchId
-     * @return List<Bet>
-     * @throws DAOException
+     * @param matchId the id of a {@link by.academy.it.entity.Match} entity.
+     * @return {@code List<Bet>} - the list of bets placed on this Match.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     @Override
     public List<Bet> findByMatchId(int matchId) throws DAOException {
@@ -154,7 +162,6 @@ public class BetDaoImpl implements BetDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao find by match id operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("BetDao find by match id operation is failed");
         } finally {
             closeResultSet(set);
@@ -164,11 +171,12 @@ public class BetDaoImpl implements BetDao {
         return list;
     }
 
+
     /**
-     * Updates a bet entry in the database
+     * Updates a bet entry in the database.
      *
-     * @param bet
-     * @throws DAOException
+     * @param bet the {@link by.academy.it.entity.Bet} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     @Override
     public void update(Bet bet) throws DAOException {
@@ -182,7 +190,6 @@ public class BetDaoImpl implements BetDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao cannot create a bet in DAO", e);
-            e.printStackTrace();
             throw new DAOException("BetDao cannot create a bet");
         } finally {
             closeStatement(statement);

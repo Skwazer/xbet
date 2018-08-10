@@ -1,7 +1,7 @@
 package by.academy.it.command;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +12,8 @@ import java.io.IOException;
  * This class is an implementation of the Command pattern.
  */
 public abstract class Command {
-    private static final Logger logger = LogManager.getLogger(Command.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(Command.class);
 
     public static final String USER = "user";
     public static final String CURRENT_URI = "currentURI";
@@ -63,24 +64,6 @@ public abstract class Command {
 
     public abstract void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 
-    /*private String getReferrerName(HttpServletRequest request) {
-        logger.info("request currentURL - [" + request.getSession().getAttribute("currentURL") + "]");
-        logger.info("request contextPath - " + request.getContextPath() + "");
-        logger.info("request getRequestURL - " + request.getRequestURL() + "");
-        logger.info("request PathInfo - " + request.getPathInfo() + "");
-        logger.info("request QueryString - " + request.getQueryString() + "");
-        logger.info("request getRequestURI - " + request.getRequestURI() + "");
-        logger.info("request servletPath - " + request.getServletPath() + "");
-
-        //String name = request.getSession().getAttribute(CURRENT_URL).toString().substring(34);
-        String name = request.getSession().getAttribute(CURRENT_URI).toString();
-        name = name.replaceFirst(request.getContextPath() + "/", "");
-        name = name.replace(JSP, "");
-
-        return name;
-    }*/
-
-
     String getReferrerURL(HttpServletRequest request) {
         String URI = request.getSession().getAttribute(CURRENT_URI).toString();
         String URL = URI.replaceFirst(request.getContextPath(), "");
@@ -99,21 +82,6 @@ public abstract class Command {
 
         return path;
     }
-
-
-    /*String getReferrerURL(HttpServletRequest request) {
-        String URL = request.getContextPath() + MAIN + getReferrerName(request);
-        logger.info("referrer URL - " + URL);
-
-        return URL;
-    }
-
-    String getReferrerPath(HttpServletRequest request) {
-        String name = request.getSession().getAttribute(CURRENT_URL).toString().substring(21);
-        logger.info("referrer name: " + name);
-
-        return name;
-    }*/
 
     boolean isValidString(String string) {
         return string != null && !string.trim().isEmpty();

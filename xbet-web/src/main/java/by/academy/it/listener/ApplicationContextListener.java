@@ -2,8 +2,8 @@ package by.academy.it.listener;
 
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -13,7 +13,7 @@ import javax.servlet.ServletContextListener;
  *
  */
 public class ApplicationContextListener implements ServletContextListener {
-    private static final Logger logger = LogManager.getLogger(ApplicationContextListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -29,7 +29,6 @@ public class ApplicationContextListener implements ServletContextListener {
             ConnectionPool.getInstance().shutdownConnectionPool();
         } catch (ConnectionPoolException e) {
             logger.info("Connection Pool hasn't been closed");
-            e.printStackTrace();
         }
         logger.info("Connection Pool has been closed");
     }

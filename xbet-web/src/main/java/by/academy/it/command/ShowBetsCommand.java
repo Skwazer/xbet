@@ -3,8 +3,8 @@ package by.academy.it.command;
 import by.academy.it.entity.Bet;
 import by.academy.it.entity.User;
 import by.academy.it.service.BetService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +13,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This command retrieves a list of the user's bets and sends it to 'bets page'
+ * This command retrieves a list of the user's bets and sends it to 'bets page'.
  *
  */
 public class ShowBetsCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(ShowBetsCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShowBetsCommand.class);
     private BetService betService = BetService.getInstance();
 
     @Override
@@ -33,7 +33,6 @@ public class ShowBetsCommand extends Command {
 
         } catch (Exception e) {
             logger.error("An exception occurred during get bets list operation", e);
-            e.printStackTrace();
             request.getSession().setAttribute(ERROR_MESSAGE, BETS_EXCEPTION);
 
             response.sendRedirect(request.getContextPath() + ERROR);

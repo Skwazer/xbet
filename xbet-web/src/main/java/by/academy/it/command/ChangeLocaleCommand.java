@@ -1,7 +1,7 @@
 package by.academy.it.command;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,11 +11,11 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * This command sets the locale of the application
+ * This command sets the locale of the application.
  */
 public class ChangeLocaleCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(ChangeLocaleCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChangeLocaleCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

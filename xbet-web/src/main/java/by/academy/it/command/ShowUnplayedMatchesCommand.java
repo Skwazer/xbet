@@ -3,8 +3,8 @@ package by.academy.it.command;
 import by.academy.it.entity.Match;
 import by.academy.it.service.MatchService;
 import by.academy.it.service.ServiceException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +13,12 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This command retrieves a list of unplayed matches and sends it to 'matches page'
+ * This command retrieves a list of unplayed matches and sends it to 'matches page'.
  *
  */
 public class ShowUnplayedMatchesCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(ShowUnplayedMatchesCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShowUnplayedMatchesCommand.class);
     private MatchService matchService = MatchService.getInstance();
 
     @Override
@@ -32,7 +32,6 @@ public class ShowUnplayedMatchesCommand extends Command {
 
         } catch (ServiceException e) {
             logger.error("An exception occurred during get unplayed matches operation", e);
-            e.printStackTrace();
             request.getSession().setAttribute(ERROR_MESSAGE, MATCH_EXCEPTION);
 
             response.sendRedirect(request.getContextPath() + ERROR);

@@ -3,7 +3,7 @@ package by.academy.it.entity;
 import java.io.Serializable;
 
 /**
- * Representation of database table 'results'
+ * Representation of database table 'results'.
  */
 public class Result implements Serializable {
 
@@ -17,58 +17,114 @@ public class Result implements Serializable {
     private Integer winnerGoals;
     private Integer loserGoals;
 
+    /**
+     * The {@code id} field getter.
+     * @return a value of the {@code id} field.
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * The {@code id} field setter.
+     * @param id value to set.
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * The {@code matchId} field getter.
+     * @return a value of the {@code matchId} field.
+     */
     public Integer getMatchId() {
         return matchId;
     }
 
+    /**
+     * The {@code matchId} field setter.
+     * @param matchId value to set.
+     */
     public void setMatchId(Integer matchId) {
         this.matchId = matchId;
     }
 
+    /**
+     * The {@code result} field getter.
+     * @return a value of the {@code result} field.
+     */
     public String getResult() {
         return result;
     }
 
+    /**
+     * The {@code result} field setter.
+     * @param result value to set.
+     */
     public void setResult(String result) {
         this.result = result;
     }
 
+    /**
+     * The {@code winnerId} field getter.
+     * @return a value of the {@code winnerId} field.
+     */
     public Integer getWinnerId() {
         return winnerId;
     }
 
+    /**
+     * The {@code winnerId} field setter.
+     * @param winnerId value to set.
+     */
     public void setWinnerId(Integer winnerId) {
         this.winnerId = winnerId;
     }
 
+    /**
+     * The {@code loserId} field getter.
+     * @return a value of the {@code loserId} field.
+     */
     public Integer getLoserId() {
         return loserId;
     }
 
+    /**
+     * The {@code loserId} field setter.
+     * @param loserId value to set.
+     */
     public void setLoserId(Integer loserId) {
         this.loserId = loserId;
     }
 
+    /**
+     * The {@code winnerGoals} field getter.
+     * @return a value of the {@code winnerGoals} field.
+     */
     public Integer getWinnerGoals() {
         return winnerGoals;
     }
 
+    /**
+     * The {@code winnerGoals} field setter.
+     * @param winnerGoals value to set.
+     */
     public void setWinnerGoals(Integer winnerGoals) {
         this.winnerGoals = winnerGoals;
     }
 
+    /**
+     * The {@code loserGoals} field getter.
+     * @return a value of the {@code loserGoals} field.
+     */
     public Integer getLoserGoals() {
         return loserGoals;
     }
 
+    /**
+     * The {@code loserGoals} field setter.
+     * @param loserGoals value to set.
+     */
     public void setLoserGoals(Integer loserGoals) {
         this.loserGoals = loserGoals;
     }

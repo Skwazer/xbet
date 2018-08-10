@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 /**
- * Representation of database table 'matches'
+ * Representation of database table 'matches'.
  */
 public class Match implements Serializable{
 
@@ -24,98 +24,194 @@ public class Match implements Serializable{
     private Team team1;
     private Team team2;
 
+    /**
+     * The {@code team1} field getter.
+     * @return a value of the {@code team1} field.
+     */
     public Team getTeam1() {
         return team1;
     }
 
+    /**
+     * The {@code team1} field setter.
+     * @param team1 value to set.
+     */
     public void setTeam1(Team team1) {
         this.team1 = team1;
     }
 
+    /**
+     * The {@code team2} field getter.
+     * @return a value of the {@code team2} field.
+     */
     public Team getTeam2() {
         return team2;
     }
 
+    /**
+     * The {@code team2} field setter.
+     * @param team2 value to set.
+     */
     public void setTeam2(Team team2) {
         this.team2 = team2;
     }
 
+    /**
+     * The {@code id} field getter.
+     * @return a value of the {@code id} field.
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * The {@code id} field setter.
+     * @param id value to set.
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * The {@code date} field getter.
+     * @return a value of the {@code date} field.
+     */
     public Date getDate() {
         return date;
     }
 
+    /**
+     * The {@code date} field setter.
+     * @param date value to set.
+     */
     public void setDate(Date date) {
         this.date = date;
     }
 
+    /**
+     * The {@code team1_id} field getter.
+     * @return a value of the {@code team1_id} field.
+     */
     public Integer getTeam1_id() {
         return team1_id;
     }
 
+    /**
+     * The {@code team1_id} field setter.
+     * @param team1_id value to set.
+     */
     public void setTeam1_id(Integer team1_id) {
         this.team1_id = team1_id;
     }
 
+    /**
+     * The {@code team2_id} field getter.
+     * @return a value of the {@code team2_id} field.
+     */
     public Integer getTeam2_id() {
         return team2_id;
     }
 
+    /**
+     * The {@code team2_id} field setter.
+     * @param team2_id value to set.
+     */
     public void setTeam2_id(Integer team2_id) {
         this.team2_id = team2_id;
     }
 
+    /**
+     * The {@code victory1} field getter.
+     * @return a value of the {@code victory1} field.
+     */
     public Double getVictory1() {
         return victory1;
     }
 
+    /**
+     * The {@code victory1} field setter.
+     * @param victory1 value to set.
+     */
     public void setVictory1(Double victory1) {
         this.victory1 = victory1;
     }
 
+    /**
+     * The {@code draw} field getter.
+     * @return a value of the {@code draw} field.
+     */
     public Double getDraw() {
         return draw;
     }
 
+    /**
+     * The {@code draw} field setter.
+     * @param draw value to set.
+     */
     public void setDraw(Double draw) {
         this.draw = draw;
     }
 
+    /**
+     * The {@code victory2} field getter.
+     * @return a value of the {@code victory2} field.
+     */
     public Double getVictory2() {
         return victory2;
     }
 
+    /**
+     * The {@code victory2} field setter.
+     * @param victory2 value to set.
+     */
     public void setVictory2(Double victory2) {
         this.victory2 = victory2;
     }
 
+    /**
+     * The {@code victory1OrDraw} field getter.
+     * @return a value of the {@code victory1OrDraw} field.
+     */
     public Double getVictory1OrDraw() {
         return victory1OrDraw;
     }
 
+    /**
+     * The {@code victory1OrDraw} field setter.
+     * @param victory1OrDraw value to set.
+     */
     public void setVictory1OrDraw(Double victory1OrDraw) {
         this.victory1OrDraw = victory1OrDraw;
     }
 
+    /**
+     * The {@code victory1Or2} field getter.
+     * @return a value of the {@code victory1Or2} field.
+     */
     public Double getVictory1Or2() {
         return victory1Or2;
     }
 
+    /**
+     * The {@code victory1Or2} field setter.
+     * @param victory1Or2 value to set.
+     */
     public void setVictory1Or2(Double victory1Or2) {
         this.victory1Or2 = victory1Or2;
     }
 
+    /**
+     * The {@code victory2OrDraw} field getter.
+     * @return a value of the {@code victory2OrDraw} field.
+     */
     public Double getVictory2OrDraw() {
         return victory2OrDraw;
     }
 
+    /**
+     * The {@code victory2OrDraw} field setter.
+     * @param victory2OrDraw value to set.
+     */
     public void setVictory2OrDraw(Double victory2OrDraw) {
         this.victory2OrDraw = victory2OrDraw;
     }

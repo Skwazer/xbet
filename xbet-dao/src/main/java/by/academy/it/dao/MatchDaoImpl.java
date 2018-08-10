@@ -3,19 +3,20 @@ package by.academy.it.dao;
 import by.academy.it.entity.Match;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Works with a <code>Match</code> entity class and have access to the 'matches' database table
+ * Works with a {@link by.academy.it.entity.Match} entity class and has access to the 'matches' database table.
  *
  */
 public class MatchDaoImpl implements MatchDao {
-    private static final Logger logger = LogManager.getLogger(MatchDaoImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(MatchDaoImpl.class);
     private static ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.matches " +
@@ -26,15 +27,22 @@ public class MatchDaoImpl implements MatchDao {
             "(SELECT m.id FROM  xbet.matches m JOIN xbet.results r ON m.id = r.matches_id) ORDER BY date";
     private static final String DELETE_QUERY = "DELETE FROM xbet.matches WHERE id = ?";
 
+
+    /**
+     * Constructs an instance of {@code MatchDaoImpl} with the specified connection pool.
+     *
+     * @param connectionPool the connection pool.
+     */
     public MatchDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
     }
 
+
     /**
-     * Creates a new match entry in the database
+     * Creates a new match entry in the database.
      *
-     * @param match
-     * @throws DAOException
+     * @param match the {@link by.academy.it.entity.Match} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Match match) throws DAOException {
         Connection connection = null;
@@ -54,7 +62,6 @@ public class MatchDaoImpl implements MatchDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot create a match in DAO", e);
-            e.printStackTrace();
             throw new DAOException("MatchDao cannot create a match");
         } finally {
             closeStatement(statement);
@@ -62,12 +69,13 @@ public class MatchDaoImpl implements MatchDao {
         }
     }
 
+
     /**
-     * Retrieves a match entry from the database
+     * Retrieves a match entry by id from the database.
      *
-     * @param id
-     * @return Match entity
-     * @throws DAOException
+     * @param id the id of a match.
+     * @return {@link by.academy.it.entity.Match} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public Match findById(int id) throws DAOException {
         Connection connection = null;
@@ -94,7 +102,6 @@ public class MatchDaoImpl implements MatchDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao find by id operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("MatchDao find by id operation is failed");
         } finally {
             closeResultSet(set);
@@ -104,11 +111,12 @@ public class MatchDaoImpl implements MatchDao {
         return match;
     }
 
+
     /**
-     * Retrieves a list of match entries from the database
+     * Retrieves a list of unplayed matches from the database.
      *
-     * @return List<Match>
-     * @throws DAOException
+     * @return {@code List<Match>} - the list of unplayed matches.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public List<Match> getUnplayedMatches() throws DAOException {
         Connection connection = null;
@@ -136,7 +144,6 @@ public class MatchDaoImpl implements MatchDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao get matches operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("MatchDao get matches operation is failed");
         } finally {
             closeResultSet(set);
@@ -146,11 +153,12 @@ public class MatchDaoImpl implements MatchDao {
         return list;
     }
 
+
     /**
-     * Deletes a match entry from the database
+     * Deletes a match entry from the database.
      *
-     * @param match
-     * @throws DAOException
+     * @param match the {@link by.academy.it.entity.Match} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Match match) throws DAOException {
         Connection connection = null;
@@ -162,7 +170,6 @@ public class MatchDaoImpl implements MatchDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot delete a match in DAO", e);
-            e.printStackTrace();
             throw new DAOException("MatchDao cannot delete a match");
         } finally {
             closeStatement(statement);

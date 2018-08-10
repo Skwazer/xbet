@@ -5,44 +5,48 @@ import by.academy.it.dao.MatchDao;
 import by.academy.it.dao.TeamDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Match;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 /**
- * This class works with MatchDao and TeamDao
+ * This class works with {@link by.academy.it.dao.MatchDao} and {@link by.academy.it.dao.TeamDao}.
  *
  */
 public class MatchService {
 
-    private static final Logger logger = LogManager.getLogger(MatchService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
     private TeamDao teamDao = DaoFactory.getInstance().getTeamDao();
     private static MatchService instance;
 
     /**
-     * Prohibits creating instance of class outside the class
+     * Prohibits creating instance of class outside the class.
      */
     private MatchService() {
     }
 
+
     /**
-     * Returns an instance of the MatchService;
-     * @return MatchService
+     * Creates {@code MatchService} instance if it is not created and returns it.
+     *
+     * @return {@code MatchService} instance.
      */
     public static MatchService getInstance() {
         if (instance == null) {
             instance = new MatchService();
+            logger.info("MatchService instance has been created");
         }
         return instance;
     }
 
+
     /**
-     * Retrieves a list of match entities through MatchDao
+     * Retrieves a list of unpalyed match entities through {@link by.academy.it.dao.MatchDao}.
      *
-     * @return List<Match>
-     * @throws ServiceException
+     * @return {@code List<Match>} - the list of unplayed matches.
+     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
     public List<Match> getUnplayedMatches() throws ServiceException {
         List<Match> list;
@@ -58,18 +62,18 @@ public class MatchService {
             }
         } catch (DAOException e) {
             logger.error("MatchService cannot get a matches list", e);
-            e.printStackTrace();
             throw new ServiceException("MatchService cannot get a matches list");
         }
         return list;
     }
 
+
     /**
-     * Retrieves a match entry through MatchDao
+     * Retrieves a match entry by id through {@link by.academy.it.dao.MatchDao}.
      *
-     * @param id
-     * @return Match
-     * @throws ServiceException
+     * @param id the id of a match.
+     * @return the {@link by.academy.it.entity.Match} entity.
+     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
     public Match getMatchById(int id) throws ServiceException {
         Match match;
@@ -83,17 +87,18 @@ public class MatchService {
             }
         } catch (DAOException e) {
             logger.error("MatchService cannot get a match by id", e);
-            e.printStackTrace();
             throw new ServiceException("MatchService cannot get a matchby id");
         }
         return match;
     }
 
+
     /**
-     * Finds teams by team1_id and team2_id fields and sets them to team1 and team2 fields
+     * Finds teams by {@code team1_id} and {@code team2_id} fields
+     * and sets them to {@code team1} and {@code team2} fields.
      *
-     * @param match
-     * @throws DAOException
+     * @param match the {@link by.academy.it.entity.Match} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void setTeams(Match match) throws DAOException {
         match.setTeam1(teamDao.findById(match.getTeam1_id()));

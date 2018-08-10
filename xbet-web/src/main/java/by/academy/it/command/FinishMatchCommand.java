@@ -5,8 +5,8 @@ import by.academy.it.entity.Match;
 import by.academy.it.entity.Result;
 import by.academy.it.entity.User;
 import by.academy.it.service.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,18 +17,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * This command randomly finishes the match
+ * This command randomly finishes the match.
  *
  */
 public class FinishMatchCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(FinishMatchCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(FinishMatchCommand.class);
     private BetService betService = BetService.getInstance();
     private ResultService resultService = ResultService.getInstance();
     private MatchService matchService = MatchService.getInstance();
     private UserService userService = UserService.getInstance();
-
-
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,7 +64,6 @@ public class FinishMatchCommand extends Command {
                 response.sendRedirect(getReferrerURL(request));
             } catch (Exception e) {
                 logger.error("An exception occurred during finish match operation", e);
-                e.printStackTrace();
                 request.getSession().setAttribute(ERROR_MESSAGE, FINISH_ERROR);
 
                 response.sendRedirect(request.getContextPath() + ERROR);
@@ -97,7 +94,6 @@ public class FinishMatchCommand extends Command {
                 betService.updateBet(bet);
                 logger.info("bet with id [" + bet.getId() + "] " + bet.getStatus());
             }
-
         }
     }
 

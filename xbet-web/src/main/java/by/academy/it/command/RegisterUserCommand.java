@@ -3,19 +3,19 @@ package by.academy.it.command;
 import by.academy.it.entity.User;
 import by.academy.it.service.ServiceException;
 import by.academy.it.service.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This command creates a new user in the database and puts user's data in the session
+ * This command creates a new user in the database and puts user's data in the session.
  */
 public class RegisterUserCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(RegisterUserCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterUserCommand.class);
     private UserService userService = UserService.getInstance();
 
     @Override
@@ -43,7 +43,6 @@ public class RegisterUserCommand extends Command {
                 }
             } catch (ServiceException e) {
                 logger.error("An exception occurred during login validation", e);
-                e.printStackTrace();
                 request.getSession().setAttribute(ERROR_MESSAGE, LOGIN_EXCEPTION);
 
                 response.sendRedirect(request.getContextPath() + ERROR);

@@ -4,8 +4,8 @@ import by.academy.it.entity.Bet;
 import by.academy.it.entity.User;
 import by.academy.it.service.BetService;
 import by.academy.it.service.UserService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,12 +14,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * This command retrieves a match id, a bet and amount and creates a bet entry
+ * This command retrieves a match id, a bet and amount and creates a bet entry.
  *
  */
 public class ConfirmBetCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(ConfirmBetCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfirmBetCommand.class);
     private UserService userService = UserService.getInstance();
     private BetService betService = BetService.getInstance();
 
@@ -57,7 +57,6 @@ public class ConfirmBetCommand extends Command {
 
             } catch (Exception e) {
                 logger.error("An exception occurred during create bet operation", e);
-                e.printStackTrace();
                 request.getSession().setAttribute(ERROR_MESSAGE, BET_ERROR);
 
                 response.sendRedirect(request.getContextPath() + ERROR);

@@ -3,8 +3,8 @@ package by.academy.it.dao;
 import by.academy.it.entity.Result;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,11 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Works with a <code>Result</code> entity class and have access to the 'results' database table
+ * Works with a {@link by.academy.it.entity.Result} entity class and has access to the 'results' database table.
  *
  */
 public class ResultDaoImpl implements ResultDao {
-    private static final Logger logger = LogManager.getLogger(ResultDaoImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(ResultDaoImpl.class);
     private static ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.results " +
@@ -25,15 +26,22 @@ public class ResultDaoImpl implements ResultDao {
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.results WHERE matches_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.results WHERE matches_id = ?";
 
+
+    /**
+     * Constructs an instance of {@code ResultDaoImpl} with the specified connection pool.
+     *
+     * @param connectionPool the connection pool.
+     */
     public ResultDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
     }
 
+
     /**
-     * Creates a new result entry in the database
+     * Creates a new result entry in the database.
      *
-     * @param result
-     * @throws DAOException
+     * @param result the {@link by.academy.it.entity.Result} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Result result) throws DAOException {
         Connection connection = null;
@@ -50,7 +58,6 @@ public class ResultDaoImpl implements ResultDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao cannot create a result in DAO", e);
-            e.printStackTrace();
             throw new DAOException("ResultDao cannot create a result");
         } finally {
             closeStatement(statement);
@@ -58,12 +65,13 @@ public class ResultDaoImpl implements ResultDao {
         }
     }
 
+
     /**
-     * Retrieves a result entry from the database
+     * Retrieves a result entry by match id from the database.
      *
-     * @param matchId
-     * @return Result entity
-     * @throws DAOException
+     * @param matchId the id of a match.
+     * @return {@link by.academy.it.entity.Result} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public Result findByMatchId(int matchId) throws DAOException {
         Connection connection = null;
@@ -87,7 +95,6 @@ public class ResultDaoImpl implements ResultDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao find by match id operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("ResultDao find by match id operation is failed");
         } finally {
             closeResultSet(set);
@@ -97,11 +104,12 @@ public class ResultDaoImpl implements ResultDao {
         return result;
     }
 
+
     /**
-     * Deletes a result entry from the database
+     * Deletes a result entry from the database.
      *
-     * @param result
-     * @throws DAOException
+     * @param result the {@link by.academy.it.entity.Result} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Result result) throws DAOException {
         Connection connection = null;
@@ -113,7 +121,6 @@ public class ResultDaoImpl implements ResultDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao cannot delete a result in DAO", e);
-            e.printStackTrace();
             throw new DAOException("ResultDao cannot delete a result");
         } finally {
             closeStatement(statement);

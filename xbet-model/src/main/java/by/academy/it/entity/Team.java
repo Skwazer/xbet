@@ -3,7 +3,7 @@ package by.academy.it.entity;
 import java.io.Serializable;
 
 /**
- * Representation of database table 'teams'
+ * Representation of database table 'teams'.
  */
 public class Team implements Serializable {
 
@@ -12,18 +12,35 @@ public class Team implements Serializable {
     private Integer id;
     private String name;
 
+
+    /**
+     * The {@code id} field getter.
+     * @return a value of the {@code id} field.
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * The {@code id} field setter.
+     * @param id value to set.
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * The {@code name} field getter.
+     * @return a value of the {@code name} field.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * The {@code name} field setter.
+     * @param name value to set.
+     */
     public void setName(String name) {
         this.name = name;
     }

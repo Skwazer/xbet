@@ -1,8 +1,7 @@
 package by.academy.it.dao;
 
-import by.academy.it.entity.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,15 +9,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Root dao interface. Defines default methods
+ * Root Dao interface. Defines default Dao methods.
  */
 public interface Dao {
-    Logger logger = LogManager.getLogger(Dao.class);
 
-    /*
-    * Closes a connection
+    Logger logger = LoggerFactory.getLogger(Dao.class);
+
+
+    /**
+    * Closes a connection.
     *
-    * @param connection
+    * @param connection a {@code java.sql.Connection} implementation.
     */
     default void closeConnection(Connection connection) {
         if (connection != null) {
@@ -26,15 +27,15 @@ public interface Dao {
                 connection.close();
             } catch (SQLException e) {
                 logger.error("Cannot close a connection");
-                e.printStackTrace();
             }
         }
     }
 
-    /*
-     * Closes a statement
+
+    /**
+     * Closes a statement.
      *
-     * @param statement
+     * @param statement a {@code java.sql.Statement} implementation.
      */
     default void closeStatement(Statement statement) {
         if (statement != null) {
@@ -42,15 +43,15 @@ public interface Dao {
                 statement.close();
             } catch (SQLException e) {
                 logger.error("Cannot close a statement");
-                e.printStackTrace();
             }
         }
     }
 
-    /*
-     * Closes a resultSet
+
+    /**
+     * Closes a resultSet.
      *
-     * @param resultSet
+     * @param resultSet a {@code java.sql.ResultSet} implementation.
      */
     default void closeResultSet(ResultSet resultSet) {
         if (resultSet != null) {
@@ -58,7 +59,6 @@ public interface Dao {
                 resultSet.close();
             } catch (SQLException e) {
                 logger.error("Cannot close a resultSet");
-                e.printStackTrace();
             }
         }
     }

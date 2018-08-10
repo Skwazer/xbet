@@ -1,7 +1,7 @@
 package by.academy.it.command;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This command checks if the user's data is located in the session through ajax
+ * This command checks if the user's data is located in the session through ajax.
  *
  */
 public class CheckIsUserLoggedInCommand extends Command {
 
-    private static final Logger logger = LogManager.getLogger(CheckIsUserLoggedInCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(CheckIsUserLoggedInCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

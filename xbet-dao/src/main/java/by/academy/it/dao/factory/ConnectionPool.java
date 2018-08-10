@@ -1,7 +1,7 @@
 package by.academy.it.dao.factory;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.*;
@@ -10,11 +10,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 /**
- * ConnectionPool holds created connections, because creating a network connection to a database server is expensive.
+ * This class handles created connections, because creating a network connection to a database is an expensive operation.
  */
 public class ConnectionPool {
     private static ConnectionPool connectionPool;
-    private final static Logger logger = LogManager.getLogger(ConnectionPool.class);
+    private final static Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("database");
     private static final String URL = BUNDLE.getString("URL");
     private static final String USERNAME = BUNDLE.getString("USERNAME");
@@ -26,7 +26,7 @@ public class ConnectionPool {
     private BlockingQueue<Connection> usedConnections;
 
     /**
-     * Prohibits creating instance of class outside the class
+     * Prohibits creating instance of class outside the class.
      */
     private ConnectionPool(){
         try {
@@ -37,8 +37,9 @@ public class ConnectionPool {
         }
     }
 
+
     /**
-     * Initializes the connection pool;
+     * Initializes the connection pool.
      *
      */
     public void init() {
@@ -58,10 +59,11 @@ public class ConnectionPool {
         logger.info("The connection pool has been initialized");
     }
 
+
     /**
-     * Shutdowns the connection pool;
+     * Shutdowns the connection pool.
      *
-     * @throws ConnectionPoolException
+     * @throws by.academy.it.dao.factory.ConnectionPoolException if an exception occurred during shutdown operation.
      */
     public void shutdownConnectionPool() throws ConnectionPoolException {
         ArrayList<Connection> connectionsToDelete = new ArrayList<>();
@@ -86,10 +88,11 @@ public class ConnectionPool {
         }
     }
 
+
     /**
-     * Returns an instance of the data source;
+     * Returns an instance of the {@code ConnectionPool}.
      *
-     * @return ConnectionPool
+     * @return {@code ConnectionPool} instance.
      */
     public static ConnectionPool getInstance() {
         if (connectionPool == null) {
@@ -99,11 +102,12 @@ public class ConnectionPool {
         return connectionPool;
     }
 
+
     /**
-     * Returns a connection
+     * Returns an available connection.
      *
-     * @return Connection
-     * @throws ConnectionPoolException
+     * @return a {@code java.sql.Connection} implementation.
+     * @throws by.academy.it.dao.factory.ConnectionPoolException if an exception occurred during the operation.
      */
     public Connection getConnection() throws ConnectionPoolException {
         Connection connection = null;
@@ -119,7 +123,7 @@ public class ConnectionPool {
 
 
     /**
-     * An implementation of the Connection interface
+     * An implementation of the Connection interface.
      */
     private class PooledConnection implements Connection {
         private Connection connection;
@@ -146,13 +150,11 @@ public class ConnectionPool {
             connection.setAutoCommit(true);
 
             if (!usedConnections.remove(this)) {
-                throw new SQLException(
-                        "Error deleting connection from the given away connections pool.");
+                throw new SQLException("Error deleting connection from the given away connections pool.");
             }
 
             if (!availableConnections.offer(this)) {
-                throw new SQLException(
-                        "Error allocating connection in the pool.");
+                throw new SQLException("Error allocating connection in the pool.");
             }
         }
 

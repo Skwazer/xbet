@@ -3,8 +3,8 @@ package by.academy.it.dao;
 import by.academy.it.entity.Role;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,26 +12,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Works with a <code>Role</code> entity class and have access to the 'roles' database table
+ * Works with a {@link by.academy.it.entity.Role} entity class and has access to the 'roles' database table.
  *
  */
 public class RoleDaoImpl implements RoleDao {
-    private static final Logger logger = LogManager.getLogger(RoleDaoImpl.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(RoleDaoImpl.class);
     private static ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.roles (role) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.roles WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.roles WHERE role = ?";
 
+
+    /**
+     * Constructs an instance of {@code RoleDaoImpl} with the specified connection pool.
+     *
+     * @param connectionPool the connection pool.
+     */
     public RoleDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
     }
 
+
     /**
-     * Creates a new role entry in the database
+     * Creates a new role entry in the database.
      *
-     * @param role
-     * @throws DAOException
+     * @param role the {@link by.academy.it.entity.Role} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Role role) throws DAOException {
         Connection connection = null;
@@ -43,7 +51,6 @@ public class RoleDaoImpl implements RoleDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot create a role in DAO", e);
-            e.printStackTrace();
             throw new DAOException("RoleDao cannot create a role");
         } finally {
             closeStatement(statement);
@@ -51,12 +58,13 @@ public class RoleDaoImpl implements RoleDao {
         }
     }
 
+
     /**
-     * Retrieves a role entry from the database
+     * Retrieves a role entry by id from the database.
      *
-     * @param id
-     * @return Role entity
-     * @throws DAOException
+     * @param id the id of a role.
+     * @return {@link by.academy.it.entity.Role} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public Role findById(int id) throws DAOException {
         Connection connection = null;
@@ -75,7 +83,6 @@ public class RoleDaoImpl implements RoleDao {
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao find by login operation is failed", e);
-            e.printStackTrace();
             throw new DAOException("RoleDao find by id operation is failed");
         } finally {
             closeResultSet(set);
@@ -85,11 +92,12 @@ public class RoleDaoImpl implements RoleDao {
         return role;
     }
 
+
     /**
-     * Deletes a role entry from the database
+     * Deletes a role entry from the database.
      *
-     * @param role
-     * @throws DAOException
+     * @param role the {@link by.academy.it.entity.Role} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Role role) throws DAOException {
         Connection connection = null;
@@ -101,7 +109,6 @@ public class RoleDaoImpl implements RoleDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot delete a role in DAO", e);
-            e.printStackTrace();
             throw new DAOException("RoleDao cannot delete a role");
         } finally {
             closeStatement(statement);
