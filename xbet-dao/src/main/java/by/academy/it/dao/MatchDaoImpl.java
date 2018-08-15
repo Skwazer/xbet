@@ -62,7 +62,7 @@ public class MatchDaoImpl implements MatchDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot create a match in DAO", e);
-            throw new DAOException("MatchDao cannot create a match");
+            throw new DAOException("MatchDao cannot create a match", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);
@@ -89,20 +89,20 @@ public class MatchDaoImpl implements MatchDao {
             set = statement.executeQuery();
             if (set.next()) {
                 match = new Match();
-                match.setId(set.getInt("id"));
-                match.setDate(set.getDate("date"));
-                match.setTeam1_id(set.getInt("team1_id"));
-                match.setTeam2_id(set.getInt("team2_id"));
-                match.setVictory1(set.getDouble("1"));
-                match.setDraw(set.getDouble("X"));
-                match.setVictory2(set.getDouble("2"));
-                match.setVictory1OrDraw(set.getDouble("1X"));
-                match.setVictory1Or2(set.getDouble("12"));
-                match.setVictory2OrDraw(set.getDouble("2X"));
+                match.setId(set.getInt(ID));
+                match.setDate(set.getDate(DATE));
+                match.setTeam1_id(set.getInt(TEAM1_ID));
+                match.setTeam2_id(set.getInt(TEAM2_ID));
+                match.setVictory1(set.getDouble(VICTORY1));
+                match.setDraw(set.getDouble(DRAW));
+                match.setVictory2(set.getDouble(VICTORY2));
+                match.setVictory1OrDraw(set.getDouble(VICTORY1_OR_DRAW));
+                match.setVictory1Or2(set.getDouble(VICTORY1_OR_2));
+                match.setVictory2OrDraw(set.getDouble(VICTORY2_OR_DRAW));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao find by id operation is failed", e);
-            throw new DAOException("MatchDao find by id operation is failed");
+            throw new DAOException("MatchDao find by id operation is failed", e);
         } finally {
             closeResultSet(set);
             closeStatement(statement);
@@ -130,21 +130,21 @@ public class MatchDaoImpl implements MatchDao {
             Match match;
             while (set.next()) {
                 match = new Match();
-                match.setId(set.getInt("id"));
-                match.setDate(set.getDate("date"));
-                match.setTeam1_id(set.getInt("team1_id"));
-                match.setTeam2_id(set.getInt("team2_id"));
-                match.setVictory1(set.getDouble("1"));
-                match.setDraw(set.getDouble("X"));
-                match.setVictory2(set.getDouble("2"));
-                match.setVictory1OrDraw(set.getDouble("1X"));
-                match.setVictory1Or2(set.getDouble("12"));
-                match.setVictory2OrDraw(set.getDouble("2X"));
+                match.setId(set.getInt(ID));
+                match.setDate(set.getDate(DATE));
+                match.setTeam1_id(set.getInt(TEAM1_ID));
+                match.setTeam2_id(set.getInt(TEAM2_ID));
+                match.setVictory1(set.getDouble(VICTORY1));
+                match.setDraw(set.getDouble(DRAW));
+                match.setVictory2(set.getDouble(VICTORY2));
+                match.setVictory1OrDraw(set.getDouble(VICTORY1_OR_DRAW));
+                match.setVictory1Or2(set.getDouble(VICTORY1_OR_2));
+                match.setVictory2OrDraw(set.getDouble(VICTORY2_OR_DRAW));
                 list.add(match);
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao get matches operation is failed", e);
-            throw new DAOException("MatchDao get matches operation is failed");
+            throw new DAOException("MatchDao get matches operation is failed", e);
         } finally {
             closeResultSet(set);
             closeStatement(statement);
@@ -170,7 +170,7 @@ public class MatchDaoImpl implements MatchDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot delete a match in DAO", e);
-            throw new DAOException("MatchDao cannot delete a match");
+            throw new DAOException("MatchDao cannot delete a match", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);

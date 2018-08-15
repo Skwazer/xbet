@@ -60,7 +60,7 @@ VALUES ( 1, '1', 1, 2, 2, 1);
 INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
 VALUES ( 2, '1', 4, 3, 4, 3);
 INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
-VALUES ( 3, '1', 5, 6, 2, 0);
+VALUES ( 3, 'X', 5, 6, 2, 0);
 INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
 VALUES ( 5, '2', 10, 9, 4, 5);
 

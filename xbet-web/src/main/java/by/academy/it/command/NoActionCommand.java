@@ -8,18 +8,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This command is used when the application doesn't have a command for received URL.
+ * Extends {@link by.academy.it.command.Command} class, used when the application doesn't have a command for received URL.
  *
  */
 public class NoActionCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(NoActionCommand.class);
 
+    /**
+     * Sends redirect to error page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().setAttribute(ERROR_MESSAGE, NO_COMMAND);
+        request.getSession().setAttribute(ERROR_MESSAGE, "no.command");
         logger.info("redirect to error page");
-
         response.sendRedirect(request.getContextPath() + ERROR);
     }
 }

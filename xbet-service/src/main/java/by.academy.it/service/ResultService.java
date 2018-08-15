@@ -18,7 +18,7 @@ public class ResultService {
     private static ResultService instance;
 
     /**
-     * Prohibits creating instance of class outside the class.
+     * Prohibits creating an instance of class outside the class.
      */
     private ResultService() {
     }
@@ -49,7 +49,7 @@ public class ResultService {
             resultDao.create(result);
         } catch (DAOException e) {
             logger.error("ResultService cannot create a result", e);
-            throw new ServiceException("ResultService cannot create a result");
+            throw new ServiceException("ResultService cannot create a result", e);
         }
     }
 

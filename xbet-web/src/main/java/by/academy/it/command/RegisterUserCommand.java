@@ -34,11 +34,11 @@ public class RegisterUserCommand extends Command {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);
-            user.setBalance(0);
+            user.setBalance(0d);
             user.setRole(2);
             try {
                 if (!userService.isPasswordCorrectForLogin(login, password)) {
-                    userService.createUser(user);
+                    userService.createNewUser(user);
                     user = userService.findUserByLogin(login);
                 }
             } catch (ServiceException e) {

@@ -1,21 +1,19 @@
-package by.academy.it.command;
+package by.academy.it.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
- * This class is a root class for commands, contains constants and useful methods.
+ * Root service interface.
  */
-public abstract class Command {
+public interface Service {
 
-    private static final Logger logger = LoggerFactory.getLogger(Command.class);
+    Logger logger = LoggerFactory.getLogger(Service.class);
 
     public static final String USER = "user";
+    public static final String USERS = "users";
     public static final String CURRENT_URI = "currentURI";
     public static final String MAIN = "/main/";
     public static final String PATH = "/WEB-INF/jsp/";
@@ -32,7 +30,7 @@ public abstract class Command {
     public static final String HOME = "/main/home";
     public static final String LOGIN_FAILURE = "login.failure";
     public static final String MESSAGE = "message";
-    public static final String INCORRECT_PASSWORD = "incorrectPassword";
+    public static final String INCORRECT_PASSWORD = "password.incorrect";
     public static final String LOGIN_EXCEPTION = "login.exception";
     public static final String NO_COMMAND = "noCommand";
     public static final String MATCH = "match";
@@ -58,31 +56,37 @@ public abstract class Command {
     public static final String BETS_EXCEPTION = "bets.error";
     public static final String BETS = "bets";
     public static final String FINISH_ERROR = "finish.error";
-    public static final String FIRST_WON = "1";
-    public static final String SECOND_WON = "2";
-    public static final String DRAW = "X";
     public static final String NUMBER_ERROR = "number.error";
-
+    public static final char FIRST_WON =  '1';
+    public static final char SECOND_WON = '2';
+    public static final char DRAW = 'X';
+    public static final String NO_USERS_ERROR = "no.users.error";
+    public static final String USERS_ERROR = "users.error";
+    public static final String BALANCE = "balance";
+    public static final String ROLE = "role";
+    public static final String CREATE_USER_ERROR = "create.user.error";
+    public static final String CREATE = "/create";
+    public static final String UPDATE_USER = "update-user";
+    public static final String SHOW_UPDATE_USER_ERROR = "show.update.user.error";
+    public static final String SHOW_UPDATE_USER_PARAMETER_ERROR = "show.update.user.parameter.error";
+    String ID = "id";
+    String USER_MESSAGE = "userMessage";
+    String CREATE_USER_MESSAGE = "create.user.message";
+    String UPDATE_USER_MESSAGE = "update.user.message";
+    String DELETE_USER_ERROR = "delete.user.error";
+    String DELETE_USER_MESSAGE = "delete.user.message";
+    String WON = "won";
+    String LOST = "lost";
+    String USER_NOT_FOUND = "user.not.found";
 
 
     /**
-     * Abstract method. Commands must provide an implementation.
+     * Creates the referrer URI from a request.
      *
      * @param request {@code HttpServletRequest} request.
-     * @param response {@code HttpServletResponse} response.
-     * @throws ServletException if the request could not be handled.
-     * @throws IOException if an input or output error is detected.
+     * @return referrer URI.
      */
-    public abstract void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
-
-
-    /**
-     * creates the referrer uri from a request.
-     *
-     * @param request {@code httpservletrequest} request.
-     * @return referrer uri.
-     */
-    String getReferrerURI(HttpServletRequest request) {
+    default String getReferrerURI(HttpServletRequest request) {
         String URI = request.getSession().getAttribute(CURRENT_URI).toString();
         URI = URI.replaceFirst(request.getContextPath(), "");
         URI = URI.replaceFirst(PATH, "");
@@ -100,7 +104,7 @@ public abstract class Command {
      * @param request {@code HttpServletRequest} request.
      * @return referrer path.
      */
-    String getReferrerPath(HttpServletRequest request) {
+    default String getReferrerPath(HttpServletRequest request) {
         String URI = request.getSession().getAttribute(CURRENT_URI).toString();
         String path = URI.replaceFirst(request.getContextPath(), "");
         logger.info("referrer path: " + path);
@@ -115,7 +119,7 @@ public abstract class Command {
      * @param string a string to check.
      * @return {@code true} if a string is neither null nor empty, {@code false} otherwise.
      */
-    boolean isValidString(String string) {
+    default boolean isValidString(String string) {
         return string != null && !string.trim().isEmpty();
     }
 }

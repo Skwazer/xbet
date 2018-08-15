@@ -1,34 +1,33 @@
 package by.academy.it.command;
 
+import by.academy.it.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
-import java.util.Locale;
 
 /**
- * This command sets the locale of the application.
+ * Extends {@link by.academy.it.command.Command} class, sets the locale of the application.
  */
 public class ChangeLocaleCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ChangeLocaleCommand.class);
+    private UserService userService = UserService.getInstance();
 
+    /**
+     *  Delegates changing the locale to {@link by.academy.it.service.UserService}.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String lang = request.getParameter(LANG);
-        Locale locale;
-        if ("ru".equals(lang)) {
-            locale = new Locale("ru", "RU");
-        } else {
-            locale = Locale.US;
-        }
-        Config.set(request.getSession(), Config.FMT_LOCALE, locale);
-        logger.info("locale has been changed - "  + locale);
-
-        response.sendRedirect(getReferrerURL(request));
+       logger.info("change locale operation");
+       userService.changeLocale(request, response);
     }
 }

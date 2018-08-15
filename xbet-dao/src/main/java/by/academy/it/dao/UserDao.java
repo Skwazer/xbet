@@ -2,6 +2,8 @@ package by.academy.it.dao;
 
 import by.academy.it.entity.User;
 
+import java.util.List;
+
 /**
  * Defines {@code UserDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
  */
@@ -17,12 +19,13 @@ public interface UserDao extends Dao {
 
 
     /**
-     * Updates a user's entry.
+     * Updates a user's balance.
      *
-     * @param user the {@link by.academy.it.entity.User} entity.
+     * @param login the user login.
+     * @param balance the user balance.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void update(User user) throws DAOException;
+    void updateBalance(String login, double balance) throws DAOException;
 
 
     /**
@@ -48,9 +51,28 @@ public interface UserDao extends Dao {
     /**
      * Deletes a user entry.
      *
-     * @param  user the {@link by.academy.it.entity.User} entity.
+     * @param  id the user id.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void delete(User user) throws DAOException;
+    void delete(int id) throws DAOException;
+
+
+    /**
+     * Retrieves a list of user entries.
+     *
+     * @return  the {@code List<User>} - a list of users.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<User> getUsers() throws DAOException;
+
+
+    /**
+     * Updates a user's entry.
+     *
+     * @param user the {@link by.academy.it.entity.User} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    void update(User user) throws DAOException;
+
 
 }

@@ -18,7 +18,7 @@ public class BetServiceTest {
         bet.setMatch_id(5);
         bet.setBetResult("X");
         bet.setBet(1.1111);
-        bet.setMoney(111);
+        bet.setMoney(111d);
         bet.setStatus("test");
         betDao.create(bet);
         assertNotNull(betDao.findByUserId(1));

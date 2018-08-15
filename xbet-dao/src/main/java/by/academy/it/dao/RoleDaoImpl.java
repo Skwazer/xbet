@@ -51,7 +51,7 @@ public class RoleDaoImpl implements RoleDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot create a role in DAO", e);
-            throw new DAOException("RoleDao cannot create a role");
+            throw new DAOException("RoleDao cannot create a role", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);
@@ -78,12 +78,12 @@ public class RoleDaoImpl implements RoleDao {
             set = statement.executeQuery();
             if (set.next()) {
                 role = new Role();
-                role.setId(set.getInt("id"));
-                role.setRole(set.getString("role"));
+                role.setId(set.getInt(ID));
+                role.setRole(set.getString(ROLE));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao find by login operation is failed", e);
-            throw new DAOException("RoleDao find by id operation is failed");
+            throw new DAOException("RoleDao find by id operation is failed", e);
         } finally {
             closeResultSet(set);
             closeStatement(statement);
@@ -109,7 +109,7 @@ public class RoleDaoImpl implements RoleDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot delete a role in DAO", e);
-            throw new DAOException("RoleDao cannot delete a role");
+            throw new DAOException("RoleDao cannot delete a role", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);

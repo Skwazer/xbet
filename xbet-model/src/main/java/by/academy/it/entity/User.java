@@ -15,7 +15,7 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private String email;
-    private Integer balance;
+    private Double balance;
     private Integer role;
 
     /**
@@ -118,7 +118,7 @@ public class User implements Serializable {
      * The {@code balance} field getter.
      * @return a value of the {@code balance} field.
      */
-    public Integer getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
@@ -126,7 +126,7 @@ public class User implements Serializable {
      * The {@code balance} field setter.
      * @param balance value to set.
      */
-    public void setBalance(Integer balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 
@@ -153,26 +153,26 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        if (id != user.id) return false;
-        if (balance != user.balance) return false;
-        if (role != user.role) return false;
+        if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        return email != null ? email.equals(user.email) : user.email == null;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (balance != null ? !balance.equals(user.balance) : user.balance != null) return false;
+        return role != null ? role.equals(user.role) : user.role == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + balance;
-        result = 31 * result + role;
+        result = 31 * result + (balance != null ? balance.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
         return result;
     }
 

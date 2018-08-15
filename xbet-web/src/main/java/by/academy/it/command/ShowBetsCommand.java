@@ -24,18 +24,20 @@ public class ShowBetsCommand extends Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) request.getSession().getAttribute(USER);
-        try {
-            List<Bet> list = betService.getUsersBets(user.getId());
-            request.getSession().setAttribute(BETS, list);
-            logger.info("bets list is retrieved");
+        if (user != null) {
+            try {
+                List<Bet> list = betService.getUsersBets(user.getId());
+                request.getSession().setAttribute(BETS, list);
+                logger.info("bets list is retrieved");
 
-            request.getRequestDispatcher(PATH + BETS + JSP).forward(request, response);
+            } catch (Exception e) {
+                logger.error("An exception occurred during get bets list operation", e);
+                request.getSession().setAttribute(ERROR_MESSAGE, BETS_EXCEPTION);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during get bets list operation", e);
-            request.getSession().setAttribute(ERROR_MESSAGE, BETS_EXCEPTION);
-
-            response.sendRedirect(request.getContextPath() + ERROR);
+                response.sendRedirect(request.getContextPath() + ERROR);
+                return;
+            }
         }
+        request.getRequestDispatcher(PATH + BETS + JSP).forward(request, response);
     }
 }

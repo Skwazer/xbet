@@ -1,6 +1,5 @@
 package by.academy.it.command;
 
-import by.academy.it.service.ServiceException;
 import by.academy.it.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,40 +10,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This command validates user login during registration through ajax.
+ * Extends {@link by.academy.it.command.Command} class, validates user login during registration through ajax.
  */
 public class CheckNewUserLoginCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckNewUserLoginCommand.class);
     private UserService userService = UserService.getInstance();
 
+    /**
+     * Delegates login check to {@link by.academy.it.service.UserService}.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String login = request.getParameter("key");
-        if (isValidString(login) && isValidLogin(login)) {
-            response.setHeader(RESULT, SUCCESS);
-        } else {
-            response.setHeader(RESULT, FAILURE);
-        }
-        request.getRequestDispatcher(getReferrerPath(request)).forward(request, response);
+        logger.info("checking new user login");
+        userService.checkNewUserLogin(request, response);
     }
 
-    private boolean isValidLogin(String login) {
-        boolean result = false;
-        if (isValidString(login)) {
-            try {
-                if (userService.isExistingLogin(login)) {
-                    logger.info("this login already exists");
-                } else {
-                    logger.info("this login is free");
-                    result = true;
-                }
-            } catch (ServiceException e) {
-                logger.error("An exception occurred during login validation", e);
-            }
-        } else {
-            logger.info("this login is not valid");
-        }
-        return result;
-    }
 }

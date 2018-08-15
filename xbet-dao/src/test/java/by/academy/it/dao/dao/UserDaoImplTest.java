@@ -1,6 +1,5 @@
 package by.academy.it.dao.dao;
 
-import by.academy.it.dao.DAOException;
 import by.academy.it.dao.UserDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.User;
@@ -20,12 +19,12 @@ public class UserDaoImplTest {
         user.setFirstName("Qwerty");
         user.setLastName("Qwerty");
         user.setEmail("qwerty@mail.ru");
-        user.setBalance(100500);
+        user.setBalance(100500d);
         user.setRole(2);
         userDao.create(user);
         User user1 = userDao.findByLogin(user.getLogin());
         assertEquals(user.getLogin(), user1.getLogin());
-        userDao.delete(user);
+        userDao.delete(user1.getId());
     }
 
     @Test
@@ -36,9 +35,9 @@ public class UserDaoImplTest {
         user.setFirstName("User");
         user.setLastName("User");
         user.setEmail("user@mail.ru");
-        user.setBalance(150);
+        user.setBalance(150d);
         user.setRole(2);
-        userDao.update(user);
+        userDao.updateBalance(user.getLogin(), user.getBalance());
     }
 
     @Test
@@ -51,13 +50,6 @@ public class UserDaoImplTest {
     public void findById() throws Exception {
         User user = userDao.findById(1);
         assertNotNull(user);
-    }
-
-    @Test
-    public void delete() throws Exception {
-        User user = new User();
-        user.setLogin("ivan");
-        userDao.delete(user);
     }
 
 }

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class DaoFactory {
+
     private static DaoFactory instance;
     private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(DaoFactory.class);
@@ -22,7 +23,7 @@ public class DaoFactory {
 
 
     /**
-     * Prohibits creating instance of class outside the class.
+     * Prohibits creating an instance of class outside the class.
      */
     private DaoFactory() {
     }

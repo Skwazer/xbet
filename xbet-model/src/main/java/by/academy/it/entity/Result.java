@@ -11,7 +11,7 @@ public class Result implements Serializable {
 
     private Integer id;
     private Integer matchId;
-    private String result;
+    private Character result;
     private Integer winnerId;
     private Integer loserId;
     private Integer winnerGoals;
@@ -53,7 +53,7 @@ public class Result implements Serializable {
      * The {@code result} field getter.
      * @return a value of the {@code result} field.
      */
-    public String getResult() {
+    public Character getResult() {
         return result;
     }
 
@@ -61,7 +61,7 @@ public class Result implements Serializable {
      * The {@code result} field setter.
      * @param result value to set.
      */
-    public void setResult(String result) {
+    public void setResult(Character result) {
         this.result = result;
     }
 
@@ -136,24 +136,24 @@ public class Result implements Serializable {
 
         Result result1 = (Result) o;
 
-        if (id != result1.id) return false;
-        if (matchId != result1.matchId) return false;
-        if (winnerId != result1.winnerId) return false;
-        if (loserId != result1.loserId) return false;
-        if (winnerGoals != result1.winnerGoals) return false;
-        if (loserGoals != result1.loserGoals) return false;
-        return result != null ? result.equals(result1.result) : result1.result == null;
+        if (id != null ? !id.equals(result1.id) : result1.id != null) return false;
+        if (matchId != null ? !matchId.equals(result1.matchId) : result1.matchId != null) return false;
+        if (result != null ? !result.equals(result1.result) : result1.result != null) return false;
+        if (winnerId != null ? !winnerId.equals(result1.winnerId) : result1.winnerId != null) return false;
+        if (loserId != null ? !loserId.equals(result1.loserId) : result1.loserId != null) return false;
+        if (winnerGoals != null ? !winnerGoals.equals(result1.winnerGoals) : result1.winnerGoals != null) return false;
+        return loserGoals != null ? loserGoals.equals(result1.loserGoals) : result1.loserGoals == null;
     }
 
     @Override
     public int hashCode() {
-        int result1 = id;
-        result1 = 31 * result1 + matchId;
+        int result1 = id != null ? id.hashCode() : 0;
+        result1 = 31 * result1 + (matchId != null ? matchId.hashCode() : 0);
         result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
-        result1 = 31 * result1 + winnerId;
-        result1 = 31 * result1 + loserId;
-        result1 = 31 * result1 + winnerGoals;
-        result1 = 31 * result1 + loserGoals;
+        result1 = 31 * result1 + (winnerId != null ? winnerId.hashCode() : 0);
+        result1 = 31 * result1 + (loserId != null ? loserId.hashCode() : 0);
+        result1 = 31 * result1 + (winnerGoals != null ? winnerGoals.hashCode() : 0);
+        result1 = 31 * result1 + (loserGoals != null ? loserGoals.hashCode() : 0);
         return result1;
     }
 

@@ -23,7 +23,7 @@ public class BetService {
     private static BetService instance;
 
     /**
-     * Prohibits creating instance of class outside the class.
+     * Prohibits creating an instance of class outside the class.
      */
     private BetService() {
     }
@@ -54,7 +54,7 @@ public class BetService {
             betDao.create(bet);
         } catch (DAOException e) {
             logger.error("BetService cannot create a bet", e);
-            throw new ServiceException("BetService cannot create a bet");
+            throw new ServiceException("BetService cannot create a bet", e);
         }
     }
 
@@ -69,8 +69,8 @@ public class BetService {
         try {
             betDao.update(bet);
         } catch (DAOException e) {
-            logger.error("BetService cannot update a bet", e);
-            throw new ServiceException("BetService cannot update a bet");
+            logger.error("BetService cannot updateBalance a bet", e);
+            throw new ServiceException("BetService cannot updateBalance a bet", e);
         }
     }
 
@@ -95,7 +95,7 @@ public class BetService {
             }
         } catch (DAOException e) {
             logger.error("BetService cannot get a bets list", e);
-            throw new ServiceException("BetService cannot get a bets list");
+            throw new ServiceException("BetService cannot get a bets list", e);
         }
         return list;
     }
@@ -121,7 +121,7 @@ public class BetService {
             }
         } catch (DAOException e) {
             logger.error("BetService cannot get a bets list", e);
-            throw new ServiceException("BetService cannot get a bets list");
+            throw new ServiceException("BetService cannot get a bets list", e);
         }
         return list;
     }

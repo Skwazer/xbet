@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, checks if the user is logged in through ajax.
+ * Extends {@link by.academy.it.command.Command} class, creates a user.
  *
  */
-public class CheckIsUserLoggedInCommand extends Command {
+public class CreateUserCommand extends Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(CheckIsUserLoggedInCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateUserCommand.class);
     private UserService userService = UserService.getInstance();
 
     /**
-     * Delegates operation to {@link by.academy.it.service.UserService}.
+     * Delegates create user operation to UserService.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -28,7 +28,7 @@ public class CheckIsUserLoggedInCommand extends Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("check if the user logged in");
-        userService.checkIsUserLoggedIn(request, response);
+        logger.info("creating of user");
+        userService.createUser(request, response);
     }
 }

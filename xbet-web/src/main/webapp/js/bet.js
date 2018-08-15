@@ -20,6 +20,8 @@ function checkAmount() {
                         form.submit();
                     } else if (result === "NOT_ENOUGH") {
                         alert("<c:out value="${balanceNotEnough}"/>");
+                    } else {
+                        alert("<c:out value="${numberError}"/>");
                     }
                 } else {
                     alert("<c:out value="${balanceError}"/>");

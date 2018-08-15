@@ -51,7 +51,7 @@ public class TeamDaoImpl implements TeamDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot create a team in DAO", e);
-            throw new DAOException("TeamDao cannot create a team");
+            throw new DAOException("TeamDao cannot create a team", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);
@@ -78,12 +78,12 @@ public class TeamDaoImpl implements TeamDao {
             set = statement.executeQuery();
             if (set.next()) {
                 team = new Team();
-                team.setId(set.getInt("id"));
-                team.setName(set.getString("name"));
+                team.setId(set.getInt(ID));
+                team.setName(set.getString(NAME));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao find by id operation is failed", e);
-            throw new DAOException("TeamDao find by login operation is failed");
+            throw new DAOException("TeamDao find by login operation is failed", e);
         } finally {
             closeResultSet(set);
             closeStatement(statement);
@@ -109,7 +109,7 @@ public class TeamDaoImpl implements TeamDao {
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot delete a role in DAO", e);
-            throw new DAOException("TeamDao cannot delete a role");
+            throw new DAOException("TeamDao cannot delete a role", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);

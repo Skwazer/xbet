@@ -13,23 +13,18 @@ import javax.servlet.ServletContextListener;
  *
  */
 public class ApplicationContextListener implements ServletContextListener {
+
     private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("Start of the application");
         ConnectionPool.getInstance().init();
-        logger.info("Connection Pool has been initialized");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         logger.info("Shutdown of the  application");
-        try {
-            ConnectionPool.getInstance().shutdownConnectionPool();
-        } catch (ConnectionPoolException e) {
-            logger.info("Connection Pool hasn't been closed");
-        }
-        logger.info("Connection Pool has been closed");
+        ConnectionPool.getInstance().shutdownConnectionPool();
     }
 }

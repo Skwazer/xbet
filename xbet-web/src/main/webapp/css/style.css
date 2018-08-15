@@ -268,8 +268,17 @@ textarea.input {
   border-bottom: 1px solid #DADADA;
 }
 
+.section-title>.primary-btn {
+  padding: 8px 12px;
+}
+
 .section-title .title {
   display: inline-block;
+}
+
+.section-title .message-title {
+  display: inline-block;
+  color: #1b6d85;
 }
 
 .section-title:after {

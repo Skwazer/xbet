@@ -6,11 +6,10 @@
 
 <fmt:bundle basename="i18n">
     <fmt:message key="error" var="error"/>
-    <fmt:message key="no.command" var="noCommand"/>
+    <%--<fmt:message key="no.command" var="noCommand"/>
     <fmt:message key="login.failure" var="loginFailure"/>
     <fmt:message key="login.exception" var="loginException"/>
     <fmt:message key="registration.error" var="registrationError"/>
-    <fmt:message key="database.exception" var="databaseEcxeption"/>
     <fmt:message key="matches.list.empty" var="matchesListEmpty"/>
     <fmt:message key="match.id.error" var="matchIdError"/>
     <fmt:message key="bet.param.error" var="betParamError"/>
@@ -20,6 +19,11 @@
     <fmt:message key="top.up.error" var="topupError"/>
     <fmt:message key="bets.error" var="betsError"/>
     <fmt:message key="finish.error" var="finishError"/>
+    <fmt:message key="number.error" var="numberError"/>
+    <fmt:message key="no.users.error" var="noUsersError"/>
+    <fmt:message key="users.error" var="usersError"/>
+    <fmt:message key="create.user.error" var="createUserError"/>
+    <fmt:message key="show.updateBalance.user.error" var="showUpdateUserError"/>--%>
 
 </fmt:bundle>
 
@@ -32,21 +36,11 @@
             <br>
             <h3>
                 <c:if test="${not empty errorMessage}">
-                    <c:if test="${errorMessage eq 'noCommand'}"><c:out value="${noCommand}"/></c:if>
-                    <c:if test="${errorMessage eq 'loginFailure'}"><c:out value="${loginFailure}"/></c:if>
-                    <c:if test="${errorMessage eq 'loginException'}"><c:out value="${loginException}"/></c:if>
-                    <c:if test="${errorMessage eq 'registrationError'}"><c:out value="${registrationError}"/></c:if>
-                    <c:if test="${errorMessage eq 'matchException'}"><c:out value="${databaseEcxeption}"/></c:if>
-                    <c:if test="${errorMessage eq 'matchesListEmpty'}"><c:out value="${matchesListEmpty}"/></c:if>
-                    <c:if test="${errorMessage eq 'matchIdError'}"><c:out value="${matchIdError}"/></c:if>
-                    <c:if test="${errorMessage eq 'betParamError'}"><c:out value="${betParamError}"/></c:if>
-                    <c:if test="${errorMessage eq 'betError'}"><c:out value="${betError}"/></c:if>
-                    <c:if test="${errorMessage eq 'balanceError'}"><c:out value="${balanceError}"/></c:if>
-                    <c:if test="${errorMessage eq 'amountError'}"><c:out value="${amountError}"/></c:if>
-                    <c:if test="${errorMessage eq 'topupError'}"><c:out value="${topupError}"/></c:if>
-                    <c:if test="${errorMessage eq 'betsError'}"><c:out value="${betsError}"/></c:if>
-                    <c:if test="${errorMessage eq 'finishError'}"><c:out value="${finishError}"/></c:if>
-
+                    <fmt:bundle basename="i18n">
+                        <fmt:message key="${errorMessage}" var="errorToShow"/>
+                    </fmt:bundle>
+                    <c:out value="${errorToShow}"/>
+                    <c:remove var="errorMessage" scope="session"/>
                 </c:if>
             </h3>
         </div>

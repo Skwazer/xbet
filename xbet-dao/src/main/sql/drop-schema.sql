@@ -10,5 +10,4 @@ DROP TABLE IF EXISTS `xbet`.`matches`;
 
 DROP TABLE IF EXISTS `xbet`.`teams`;
 
-
 DROP DATABASE IF EXISTS xbet;

@@ -18,6 +18,7 @@
     <fmt:message key="bet.amount" var="betAmount"/>
     <fmt:message key="amount.negative" var="amountNegative"/>
     <fmt:message key="my.bets" var="myBets"/>
+    <fmt:message key="users" var="usersTitle"/>
 
 </fmt:bundle>
 
@@ -113,7 +114,7 @@
                             </a>
                             <div class="custom-menu">
                                 <div id="shopping-cart">
-                                    <form id="balanceForm" class="clearfix" method="post">
+                                    <form id="balanceForm" class="clearfix" method="post"  onsubmit="return false;">
                                         <div class="form-group">
                                             <input id="balanceInput" type="number" class="form-control" name="amount"
                                                    placeholder="${betAmount}" style="margin-top: 10px"/>
@@ -188,6 +189,9 @@
                 <ul class="menu-list">
                     <li><a href="<c:url value="/main/home"/>"><c:out value="${home}"/></a></li>
                     <li><a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></li>
+                    <c:if test="${user.role eq 1}">
+                        <li><a href="<c:url value="/main/users"/>"><c:out value="${usersTitle}"/></a></li>
+                    </c:if>
                 </ul>
             </div>
             <!-- menu nav -->

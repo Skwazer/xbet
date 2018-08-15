@@ -14,7 +14,7 @@ public class Bet implements Serializable {
     private Integer match_id;
     private String betResult;
     private Double bet;
-    private Integer money;
+    private Double money;
     private String status;
     private Match match;
 
@@ -118,7 +118,7 @@ public class Bet implements Serializable {
      * The {@code money} field getter.
      * @return a value of the {@code money} field.
      */
-    public Integer getMoney() {
+    public Double getMoney() {
         return money;
     }
 
@@ -126,7 +126,7 @@ public class Bet implements Serializable {
      * The {@code money} field setter.
      * @param money value to set.
      */
-    public void setMoney(Integer money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

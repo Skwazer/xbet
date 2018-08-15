@@ -31,9 +31,9 @@ public class Controller extends HttpServlet {
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
-     * @param request  HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws IOException if an I/O error occurs
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Command command = FACTORY.getCommand(request);

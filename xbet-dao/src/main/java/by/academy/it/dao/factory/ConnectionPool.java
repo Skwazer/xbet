@@ -13,8 +13,10 @@ import java.util.concurrent.Executor;
  * This class handles created connections, because creating a network connection to a database is an expensive operation.
  */
 public class ConnectionPool {
+
     private static ConnectionPool connectionPool;
     private final static Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
+
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("database");
     private static final String URL = BUNDLE.getString("URL");
     private static final String USERNAME = BUNDLE.getString("USERNAME");
@@ -26,7 +28,7 @@ public class ConnectionPool {
     private BlockingQueue<Connection> usedConnections;
 
     /**
-     * Prohibits creating instance of class outside the class.
+     * Prohibits creating an instance of class outside the class.
      */
     private ConnectionPool(){
         try {
@@ -40,7 +42,6 @@ public class ConnectionPool {
 
     /**
      * Initializes the connection pool.
-     *
      */
     public void init() {
         try {
@@ -53,19 +54,17 @@ public class ConnectionPool {
 
                 availableConnections.add(pooledConnection);
             }
+            logger.info("The connection pool has been initialized");
         } catch (Exception e) {
             logger.error("The connection pool hasn't been initialized", e);
         }
-        logger.info("The connection pool has been initialized");
     }
 
 
     /**
      * Shutdowns the connection pool.
-     *
-     * @throws by.academy.it.dao.factory.ConnectionPoolException if an exception occurred during shutdown operation.
      */
-    public void shutdownConnectionPool() throws ConnectionPoolException {
+    public void shutdownConnectionPool() {
         ArrayList<Connection> connectionsToDelete = new ArrayList<>();
 
         connectionsToDelete.addAll(availableConnections);
@@ -80,11 +79,10 @@ public class ConnectionPool {
                     }
                     ((PooledConnection) con).reallyClose();
                 }
-                logger.info("The connection pool has been closed");
             }
+            logger.info("The connection pool has been closed");
         } catch (SQLException e) {
             logger.error("The connection pool hasn't been closed", e);
-            throw new ConnectionPoolException("Cannot close the connection pool");
         }
     }
 
@@ -98,6 +96,7 @@ public class ConnectionPool {
         if (connectionPool == null) {
             connectionPool = new ConnectionPool();
             connectionPool.init();
+            logger.info("The connection pool instance has been created");
         }
         return connectionPool;
     }
@@ -116,7 +115,7 @@ public class ConnectionPool {
             usedConnections.add(connection);
         } catch (Exception e) {
             logger.error("Cannot get a connection", e);
-            throw new ConnectionPoolException("Cannot get a connection");
+            throw new ConnectionPoolException("Cannot get a connection", e);
         }
         return connection;
     }
@@ -140,7 +139,7 @@ public class ConnectionPool {
         @Override
         public void close() throws SQLException {
             if (connection.isClosed()) {
-                throw new SQLException("Attempting to close closed connection.");
+                throw new SQLException("Attempting to close closed connection");
             }
 
             if (connection.isReadOnly()) {
@@ -150,11 +149,11 @@ public class ConnectionPool {
             connection.setAutoCommit(true);
 
             if (!usedConnections.remove(this)) {
-                throw new SQLException("Error deleting connection from the given away connections pool.");
+                throw new SQLException("Error deleting connection from the given away connections pool");
             }
 
             if (!availableConnections.offer(this)) {
-                throw new SQLException("Error allocating connection in the pool.");
+                throw new SQLException("Error allocating connection in the pool");
             }
         }
 

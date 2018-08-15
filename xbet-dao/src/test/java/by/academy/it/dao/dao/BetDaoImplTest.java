@@ -18,7 +18,7 @@ public class BetDaoImplTest {
         bet.setMatch_id(1);
         bet.setBetResult("1X");
         bet.setBet(1.31);
-        bet.setMoney(100500);
+        bet.setMoney(100500d);
         bet.setStatus("test_status");
         betDao.create(bet);
         assertFalse(betDao.findByUserId(1).isEmpty());

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Simple Command class to show static pages.
+ * Extends {@link by.academy.it.command.Command} class, shows jsp pages.
  *
  */
 public class ForwardRequestCommand extends Command {
@@ -21,10 +21,17 @@ public class ForwardRequestCommand extends Command {
         this.page = page;
     }
 
+    /**
+     * Forwards a request and response to a selected jsp.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.info("requested page is '" + page + "'");
-
         request.getRequestDispatcher(PATH + page + JSP).forward(request, response);
     }
 }

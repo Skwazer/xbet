@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Factory of commands.
+ * Factory of commands. Determines which command should handle a request.
  *
  */
 public class CommandFactory {
@@ -42,8 +42,20 @@ public class CommandFactory {
     private static final String POST_TOPUP = "POST/topup";
     private static final String GET_BETS = "GET/bets";
     private static final String POST_MATCHES = "POST/matches";
+    private static final String GET_USERS = "GET/users";
+    private static final String GET_CREATE_USER = "GET/create-user";
+    private static final String CREATE_USER = "create-user";
+    private static final String POST_CREATE_USER = "POST/create-user";
+    private static final String POST_CHANGE_USER = "POST/change-user";
+    private static final String POST_UPDATE_USER = "POST/update-user";
+    private static final String GET_UPDATE_USER = "GET/update-user";
+    private static final String GET_DELETE_USER = "GET/delete-user";
+    private static final String UPDATE_USER = "update-user";
 
 
+    /**
+     * Prohibits creating an instance of class outside the class. Initializes the commands/URI map.
+     */
     private CommandFactory() {
 
         commands = new HashMap<>();
@@ -61,20 +73,28 @@ public class CommandFactory {
         commands.put(NO_COMMAND, new NoActionCommand());
         commands.put(GET_MATCHES, new ShowUnplayedMatchesCommand());
         commands.put(POST_CHECK, new CheckIsUserLoggedInCommand());
-        commands.put(POST_PLACE, new PlaceBetCommand());
+        commands.put(POST_PLACE, new ShowPlaceBetPageCommand());
         commands.put(GET_BET, new ForwardRequestCommand(BET));
         commands.put(POST_BET, new ConfirmBetCommand());
         commands.put(POST_BALANCE, new CheckBalanceCommand());
         commands.put(POST_TOPUP, new TopUpBalanceCommand());
         commands.put(GET_BETS, new ShowBetsCommand());
         commands.put(POST_MATCHES, new FinishMatchCommand());
+        commands.put(GET_USERS, new ShowUsersCommand());
+        commands.put(GET_CREATE_USER, new ForwardRequestCommand(CREATE_USER));
+        commands.put(POST_CREATE_USER, new CreateUserCommand());
+        commands.put(POST_UPDATE_USER, new ShowUpdateUserPageCommand());
+        commands.put(POST_CHANGE_USER, new UpdateUserCommand());
+        commands.put(GET_DELETE_USER, new DeleteUserCommand());
+        commands.put(GET_UPDATE_USER, new ForwardRequestCommand(UPDATE_USER));
 
     }
 
+
     /**
-     * Returns an factory instance.
+     * Creates {@code CommandFactory} instance if it is not created and returns it.
      *
-     * @return CommandFactory
+     * @return {@code CommandFactory} instance.
      */
     public static CommandFactory getInstance() {
         if (instance == null) {
@@ -83,18 +103,18 @@ public class CommandFactory {
         return instance;
     }
 
+
     /**
-     * Returns appropriate command by the requested path.
+     * Returns an appropriate command by the requested path.
      *
-     * @param request HttpServletRequest
-     * @return Command
-     *
+     * @param request {@code HttpServletRequest} request.
+     * @return {@link by.academy.it.command.Command} instance.
      */
     public Command getCommand(HttpServletRequest request) {
         String commandKey = request.getMethod() + request.getPathInfo();
         logger.info("request key is " + commandKey);
         if (!commands.containsKey(commandKey)) {
-            logger.warn("Command not found");
+            logger.warn("command not found");
             return commands.get(NO_COMMAND);
         }
         return commands.get(commandKey);

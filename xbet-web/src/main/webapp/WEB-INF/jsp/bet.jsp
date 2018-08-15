@@ -24,6 +24,7 @@
     <fmt:message key="balance.not.enough" var="balanceNotEnough"/>
     <fmt:message key="amount.negative" var="amountNegative"/>
     <fmt:message key="bet.placed" var="betPlaced"/>
+    <fmt:message key="number.error" var="numberError"/>
 
 </fmt:bundle>
 
@@ -77,7 +78,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form id="checkoutForm" class="clearfix" method="post">
+                        <form id="checkoutForm" class="clearfix" method="post" onsubmit="return false;">
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-2">
                                     <div class="form-group">

@@ -1,6 +1,5 @@
 package by.academy.it.command;
 
-import by.academy.it.service.ServiceException;
 import by.academy.it.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,35 +10,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This command authenticates login through ajax.
+ * Extends {@link by.academy.it.command.Command} class, authenticates login through ajax.
  */
 public class AuthenticateLoginCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticateLoginCommand.class);
     private UserService userService = UserService.getInstance();
 
+    /**
+     * Delegates login authentication to {@link by.academy.it.service.UserService}.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String login = request.getParameter("key");
-        if (isValidString(login)) {
-            logger.info("Authentication of login");
-            try {
-                if (userService.isExistingLogin(login)) {
-                    logger.info("this login exists");
-                    response.setHeader(RESULT, SUCCESS);
-                } else {
-                    logger.info("this login doesn't exists");
-                    response.setHeader(RESULT, FAILURE);
-                }
-            } catch (ServiceException e) {
-                logger.error("An exception occurred during login authentication", e);
-                response.setHeader(RESULT, null);
-            }
-        } else {
-            logger.info("this login is not valid");
-            response.setHeader(RESULT, FAILURE);
-        }
-        request.getRequestDispatcher(getReferrerPath(request)).forward(request, response);
+        logger.info("authentication of login");
+        userService.authenticateLogin(request, response);
     }
 
 }

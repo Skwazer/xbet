@@ -8,13 +8,17 @@ import by.academy.it.entity.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * This class works with {@link by.academy.it.dao.MatchDao} and {@link by.academy.it.dao.TeamDao}.
  *
  */
-public class MatchService {
+public class MatchService implements Service {
 
     private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
@@ -22,7 +26,7 @@ public class MatchService {
     private static MatchService instance;
 
     /**
-     * Prohibits creating instance of class outside the class.
+     * Prohibits creating an instance of class outside the class.
      */
     private MatchService() {
     }
@@ -62,7 +66,7 @@ public class MatchService {
             }
         } catch (DAOException e) {
             logger.error("MatchService cannot get a matches list", e);
-            throw new ServiceException("MatchService cannot get a matches list");
+            throw new ServiceException("MatchService cannot get a matches list", e);
         }
         return list;
     }
@@ -87,7 +91,7 @@ public class MatchService {
             }
         } catch (DAOException e) {
             logger.error("MatchService cannot get a match by id", e);
-            throw new ServiceException("MatchService cannot get a matchby id");
+            throw new ServiceException("MatchService cannot get a matchby id", e);
         }
         return match;
     }
@@ -104,5 +108,66 @@ public class MatchService {
         match.setTeam1(teamDao.findById(match.getTeam1_id()));
         match.setTeam2(teamDao.findById(match.getTeam2_id()));
     }
+
+
+    /**
+     * Retrieves a match id, finds match, puts it in the session and sends to user 'place bet' page
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void placeBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String matchId = request.getParameter(MATCH_ID);
+        if (isValidString(matchId)) {
+            try {
+                int id = Integer.parseInt(matchId);
+                Match match = getMatchById(id);
+                logger.info("match has been retrieved - [" + match.getId() + "]");
+                request.getSession().setAttribute(MATCH, match);
+
+                response.sendRedirect(request.getContextPath() + MAIN_BET);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during get match operation", e);
+                request.getSession().setAttribute(ERROR_MESSAGE, MATCH_EXCEPTION);
+
+                response.sendRedirect(request.getContextPath() + ERROR);
+            }
+        } else {
+            logger.error("Match id is not valid");
+            request.getSession().setAttribute(ERROR_MESSAGE, MATCH_ID_ERROR);
+
+            response.sendRedirect(request.getContextPath() + ERROR);
+        }
+    }
+
+
+    /**
+     * Retrieves a list of unplayed matches, puts it in the session and sends to 'matches' page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
+     */
+    public void showUnplayedMatches(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            List<Match> list = getUnplayedMatches();
+            logger.info("Matches have been found");
+            request.setAttribute(MATCHES_LIST, list);
+
+            request.getRequestDispatcher(PATH + MATCHES + JSP).forward(request, response);
+
+        } catch (ServiceException e) {
+            logger.error("An exception occurred during get unplayed matches operation", e);
+            request.getSession().setAttribute(ERROR_MESSAGE, MATCH_EXCEPTION);
+
+            response.sendRedirect(request.getContextPath() + ERROR);
+        }
+    }
+
+
+
 
 }

@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Works with a {@link by.academy.it.entity.User} entity class and has access to the 'users' database table.
@@ -23,10 +25,13 @@ public class UserDaoImpl implements UserDao {
     private static final String CREATE_QUERY = "INSERT INTO xbet.users " +
             "(login, password, first_name, last_name, email, balance, role_id)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE xbet.users SET balance = ? WHERE login = ?";
+    private static final String UPDATE_BALANCE_QUERY = "UPDATE xbet.users SET balance = ? WHERE login = ?";
+    private static final String UPDATE_USER_QUERY = "UPDATE xbet.users SET login = ?, password = ?," +
+            " first_name = ?, last_name = ?, email = ?, balance = ?, role_id = ? WHERE id = ?";
     private static final String GET_BY_LOGIN_QUERY = "SELECT * FROM xbet.users WHERE login = ?";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.users WHERE id = ?";
-    private static final String DELETE_QUERY = "DELETE FROM xbet.users WHERE login = ?";
+    private static final String DELETE_QUERY = "DELETE FROM xbet.users WHERE id = ?";
+    private static final String GET_USERS_QUERY = "SELECT * FROM xbet.users";
 
 
     /**
@@ -56,12 +61,12 @@ public class UserDaoImpl implements UserDao {
             statement.setString(3, user.getFirstName());
             statement.setString(4, user.getLastName());
             statement.setString(5, user.getEmail());
-            statement.setInt(6, user.getBalance());
+            statement.setDouble(6, user.getBalance());
             statement.setInt(7, user.getRole());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot create a user in DAO", e);
-            throw new DAOException("UserDao cannot create a user");
+            throw new DAOException("UserDao cannot create a user", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);
@@ -80,13 +85,45 @@ public class UserDaoImpl implements UserDao {
         PreparedStatement statement = null;
         try {
             connection = pool.getConnection();
-            statement = connection.prepareStatement(UPDATE_QUERY);
-            statement.setInt(1, user.getBalance());
-            statement.setString(2, user.getLogin());
+            statement = connection.prepareStatement(UPDATE_USER_QUERY);
+            statement.setString(1, user.getLogin());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getFirstName());
+            statement.setString(4, user.getLastName());
+            statement.setString(5, user.getEmail());
+            statement.setDouble(6, user.getBalance());
+            statement.setInt(7, user.getRole());
+            statement.setInt(8, user.getId());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot update a user in DAO", e);
-            throw new DAOException("UserDao cannot update a user");
+            throw new DAOException("UserDao cannot update a user", e);
+        } finally {
+            closeStatement(statement);
+            closeConnection(connection);
+        }
+    }
+
+
+    /**
+     * Updates a user's entry in the database.
+     *
+     * @param login the user login.
+     * @param balance the user balance.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public void updateBalance(String login, double balance) throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = pool.getConnection();
+            statement = connection.prepareStatement(UPDATE_BALANCE_QUERY);
+            statement.setDouble(1, balance);
+            statement.setString(2, login);
+            statement.execute();
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("UserDao cannot update user balance in DAO", e);
+            throw new DAOException("UserDao cannot update user balance", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);
@@ -113,18 +150,18 @@ public class UserDaoImpl implements UserDao {
             set = statement.executeQuery();
             if (set.next()) {
                 user = new User();
-                user.setId(set.getInt("id"));
-                user.setLogin(set.getString("login"));
-                user.setPassword(set.getString("password"));
-                user.setFirstName(set.getString("first_name"));
-                user.setLastName(set.getString("last_name"));
-                user.setEmail(set.getString("email"));
-                user.setBalance(set.getInt("balance"));
-                user.setRole(set.getInt("role_id"));
+                user.setId(set.getInt(ID));
+                user.setLogin(set.getString(LOGIN));
+                user.setPassword(set.getString(PASSWORD));
+                user.setFirstName(set.getString(FIRST_NAME));
+                user.setLastName(set.getString(LAST_NAME));
+                user.setEmail(set.getString(EMAIL));
+                user.setBalance(set.getDouble(BALANCE));
+                user.setRole(set.getInt(ROLE_ID));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
-            throw new DAOException("UserDao find by login operation is failed");
+            throw new DAOException("UserDao find by login operation is failed", e);
         } finally {
             closeResultSet(set);
             closeStatement(statement);
@@ -154,18 +191,18 @@ public class UserDaoImpl implements UserDao {
             set = statement.executeQuery();
             if (set.next()) {
                 user = new User();
-                user.setId(set.getInt("id"));
-                user.setLogin(set.getString("login"));
-                user.setPassword(set.getString("password"));
-                user.setFirstName(set.getString("first_name"));
-                user.setLastName(set.getString("last_name"));
-                user.setEmail(set.getString("email"));
-                user.setBalance(set.getInt("balance"));
-                user.setRole(set.getInt("role_id"));
+                user.setId(set.getInt(ID));
+                user.setLogin(set.getString(LOGIN));
+                user.setPassword(set.getString(PASSWORD));
+                user.setFirstName(set.getString(FIRST_NAME));
+                user.setLastName(set.getString(LAST_NAME));
+                user.setEmail(set.getString(EMAIL));
+                user.setBalance(set.getDouble(BALANCE));
+                user.setRole(set.getInt(ROLE_ID));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
-            throw new DAOException("UserDao find by login operation is failed");
+            throw new DAOException("UserDao find by login operation is failed", e);
         } finally {
             closeResultSet(set);
             closeStatement(statement);
@@ -178,24 +215,65 @@ public class UserDaoImpl implements UserDao {
     /**
      * Deletes a user entry from the database.
      *
-     * @param  user the {@link by.academy.it.entity.User} entity.
+     * @param  id the user id.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    public void delete(User user) throws DAOException {
+    public void delete(int id) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = pool.getConnection();
             statement = connection.prepareStatement(DELETE_QUERY);
-            statement.setString(1, user.getLogin());
+            statement.setInt(1, id);
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot delete a user in DAO", e);
-            throw new DAOException("UserDao cannot delete a user");
+            throw new DAOException("UserDao cannot delete a user", e);
         } finally {
             closeStatement(statement);
             closeConnection(connection);
         }
+    }
+
+
+    /**
+     * Retrieves a list of user entries.
+     *
+     * @return  the {@code List<User>} - a list of users.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    @Override
+    public List<User> getUsers() throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<User> list = new ArrayList<>();
+        User user = null;
+        try {
+            connection = pool.getConnection();
+            statement = connection.prepareStatement(GET_USERS_QUERY);
+            set = statement.executeQuery();
+            while (set.next()) {
+                user = new User();
+                user.setId(set.getInt(ID));
+                user.setLogin(set.getString(LOGIN));
+                user.setPassword(set.getString(PASSWORD));
+                user.setFirstName(set.getString(FIRST_NAME));
+                user.setLastName(set.getString(LAST_NAME));
+                user.setEmail(set.getString(EMAIL));
+                user.setBalance(set.getDouble(BALANCE));
+                user.setRole(set.getInt(ROLE_ID));
+                list.add(user);
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("UserDao find users operation is failed", e);
+            throw new DAOException("UserDao users login operation is failed", e);
+        } finally {
+            closeResultSet(set);
+            closeStatement(statement);
+            closeConnection(connection);
+        }
+        return list;
     }
 
 
