@@ -44,11 +44,9 @@ public class ResultDaoImpl implements ResultDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Result result) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(CREATE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
+        {
             statement.setInt(1, result.getMatchId());
             statement.setString(2, result.getResult().toString());
             statement.setInt(3, result.getWinnerId());
@@ -59,9 +57,6 @@ public class ResultDaoImpl implements ResultDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao cannot create a result in DAO", e);
             throw new DAOException("ResultDao cannot create a result", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -112,19 +107,15 @@ public class ResultDaoImpl implements ResultDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Result result) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
             statement.setInt(1, result.getMatchId());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao cannot delete a result in DAO", e);
             throw new DAOException("ResultDao cannot delete a result", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
+
 }

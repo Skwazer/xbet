@@ -1,6 +1,6 @@
 package by.academy.it.command;
 
-import by.academy.it.service.UserService;
+import by.academy.it.service.BetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,15 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, sets the locale of the application.
+ * Extends {@link by.academy.it.command.Command} class, retrieves a list of the user's bets and sends it to 'bets page'.
+ *
  */
-public class ChangeLocaleCommand extends Command {
+public class ShowUserBetsCommand extends Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(ChangeLocaleCommand.class);
-    private UserService userService = UserService.getInstance();
+    private static final Logger logger = LoggerFactory.getLogger(ShowUserBetsCommand.class);
+    private BetService betService = BetService.getInstance();
 
     /**
-     *  Delegates changing the locale to {@link by.academy.it.service.UserService}.
+     * Delegates operation to {@link by.academy.it.service.BetService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -27,8 +28,7 @@ public class ChangeLocaleCommand extends Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       logger.info("change locale operation");
-       userService.changeLocale(request, response);
+        logger.info("show user bets operation");
+        betService.showUserBets(request, response);
     }
-
 }

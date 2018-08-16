@@ -13,6 +13,7 @@ import java.io.IOException;
 public class EncodingFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(EncodingFilter.class);
+    private static final String UTF_8 = "UTF-8";
 
     /**
      * Sets the character encoding in the request and response.
@@ -25,8 +26,8 @@ public class EncodingFilter implements Filter {
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding(UTF_8);
+        response.setCharacterEncoding(UTF_8);
         logger.info("filter has set a character encoding to UTF-8");
 
         chain.doFilter(request, response);

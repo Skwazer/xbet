@@ -51,11 +51,9 @@ public class UserDaoImpl implements UserDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(User user) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(CREATE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
+        {
             statement.setString(1, user.getLogin());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
@@ -67,9 +65,6 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot create a user in DAO", e);
             throw new DAOException("UserDao cannot create a user", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -81,11 +76,9 @@ public class UserDaoImpl implements UserDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void update(User user) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(UPDATE_USER_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_QUERY))
+        {
             statement.setString(1, user.getLogin());
             statement.setString(2, user.getPassword());
             statement.setString(3, user.getFirstName());
@@ -98,9 +91,6 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot update a user in DAO", e);
             throw new DAOException("UserDao cannot update a user", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -113,20 +103,15 @@ public class UserDaoImpl implements UserDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void updateBalance(String login, double balance) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(UPDATE_BALANCE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_BALANCE_QUERY))
+        {
             statement.setDouble(1, balance);
             statement.setString(2, login);
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot update user balance in DAO", e);
             throw new DAOException("UserDao cannot update user balance", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -219,19 +204,14 @@ public class UserDaoImpl implements UserDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(int id) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
             statement.setInt(1, id);
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot delete a user in DAO", e);
             throw new DAOException("UserDao cannot delete a user", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -244,15 +224,11 @@ public class UserDaoImpl implements UserDao {
      */
     @Override
     public List<User> getUsers() throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        List<User> list = new ArrayList<>();
-        User user = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(GET_USERS_QUERY);
-            set = statement.executeQuery();
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(GET_USERS_QUERY);
+             ResultSet set = statement.executeQuery()) {
+            List<User> list = new ArrayList<>();
+            User user = null;
             while (set.next()) {
                 user = new User();
                 user.setId(set.getInt(ID));
@@ -265,16 +241,11 @@ public class UserDaoImpl implements UserDao {
                 user.setRole(set.getInt(ROLE_ID));
                 list.add(user);
             }
+            return list;
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find users operation is failed", e);
             throw new DAOException("UserDao users login operation is failed", e);
-        } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
         }
-        return list;
     }
-
 
 }

@@ -45,11 +45,9 @@ public class MatchDaoImpl implements MatchDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Match match) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(CREATE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
+        {
             statement.setDate(1, match.getDate());
             statement.setInt(2, match.getTeam1_id());
             statement.setInt(3, match.getTeam2_id());
@@ -63,9 +61,6 @@ public class MatchDaoImpl implements MatchDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot create a match in DAO", e);
             throw new DAOException("MatchDao cannot create a match", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -119,14 +114,11 @@ public class MatchDaoImpl implements MatchDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public List<Match> getUnplayedMatches() throws DAOException {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet set = null;
-        List<Match> list = new ArrayList<Match>();
-        try {
-            connection = pool.getConnection();
-            statement = connection.createStatement();
-            set = statement.executeQuery(GET_UNPLAYED_MATCHES_QUERY);
+        try (Connection connection = pool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet set =statement.executeQuery(GET_UNPLAYED_MATCHES_QUERY))
+        {
+            List<Match> list = new ArrayList<Match>();
             Match match;
             while (set.next()) {
                 match = new Match();
@@ -142,15 +134,11 @@ public class MatchDaoImpl implements MatchDao {
                 match.setVictory2OrDraw(set.getDouble(VICTORY2_OR_DRAW));
                 list.add(match);
             }
+            return list;
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao get matches operation is failed", e);
             throw new DAOException("MatchDao get matches operation is failed", e);
-        } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
         }
-        return list;
     }
 
 
@@ -161,19 +149,14 @@ public class MatchDaoImpl implements MatchDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Match match) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
             statement.setInt(1, match.getId());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot delete a match in DAO", e);
             throw new DAOException("MatchDao cannot delete a match", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 }

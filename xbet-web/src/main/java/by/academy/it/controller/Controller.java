@@ -2,6 +2,8 @@ package by.academy.it.controller;
 
 import by.academy.it.command.Command;
 import by.academy.it.command.CommandFactory;
+import by.academy.it.command.Constants;
+import by.academy.it.command.NoActionCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +64,7 @@ public class Controller extends HttpServlet {
             command.execute(request, response);
         } catch (Exception e) {
             logger.error("Command execution is failed", e);
-            response.sendRedirect(request.getContextPath() + Command.ERROR);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN_ERROR);
         }
     }
 

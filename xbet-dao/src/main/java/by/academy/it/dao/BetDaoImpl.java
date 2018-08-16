@@ -45,11 +45,9 @@ public class BetDaoImpl implements BetDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Bet bet) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(CREATE_QUERY);
+        try (Connection connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
+        {
             statement.setInt(1, bet.getUser_id());
             statement.setInt(2, bet.getMatch_id());
             statement.setString(3, bet.getBetResult());
@@ -60,9 +58,6 @@ public class BetDaoImpl implements BetDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao cannot create a bet in DAO", e);
             throw new DAOException("BetDao cannot create a bet", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -79,7 +74,7 @@ public class BetDaoImpl implements BetDao {
         PreparedStatement statement = null;
         ResultSet set = null;
         List<Bet> list = new ArrayList<>();
-        try{
+        try {
             connection = pool.getConnection();
             statement = connection.prepareStatement(GET_BY_USER_ID_QUERY);
             statement.setInt(1, userId);
@@ -115,19 +110,14 @@ public class BetDaoImpl implements BetDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Bet bet) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = pool.getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
             statement.setInt(1, bet.getMatch_id());
             statement.execute();
         } catch (SQLException  | ConnectionPoolException e) {
             logger.error("BetDao cannot delete a bet in DAO", e);
             throw new DAOException("BetDao cannot delete a bet", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -145,7 +135,7 @@ public class BetDaoImpl implements BetDao {
         PreparedStatement statement = null;
         ResultSet set = null;
         List<Bet> list = new ArrayList<>();
-        try{
+        try {
             connection = pool.getConnection();
             statement = connection.prepareStatement(GET_BY_MATCH_ID_QUERY);
             statement.setInt(1, matchId);
@@ -182,20 +172,15 @@ public class BetDaoImpl implements BetDao {
      */
     @Override
     public void update(Bet bet) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(UPDATE_BET_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_BET_QUERY))
+        {
             statement.setString(1, bet.getStatus());
             statement.setInt(2, bet.getId());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao cannot create a bet in DAO", e);
             throw new DAOException("BetDao cannot create a bet", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 

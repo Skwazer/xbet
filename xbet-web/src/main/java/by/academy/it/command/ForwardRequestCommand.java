@@ -17,7 +17,7 @@ public class ForwardRequestCommand extends Command {
     private static final Logger logger = LoggerFactory.getLogger(ForwardRequestCommand.class);
     private String page;
 
-    public ForwardRequestCommand(String page) {
+    ForwardRequestCommand(String page) {
         this.page = page;
     }
 
@@ -32,6 +32,7 @@ public class ForwardRequestCommand extends Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.info("requested page is '" + page + "'");
-        request.getRequestDispatcher(PATH + page + JSP).forward(request, response);
+        request.getRequestDispatcher(Constants.PATH + page + Constants.JSP).forward(request, response);
     }
+
 }

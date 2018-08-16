@@ -42,19 +42,14 @@ public class RoleDaoImpl implements RoleDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Role role) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(CREATE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
+        {
             statement.setString(1, role.getRole());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot create a role in DAO", e);
             throw new DAOException("RoleDao cannot create a role", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -100,19 +95,14 @@ public class RoleDaoImpl implements RoleDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Role role) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
             statement.setString(1, role.getRole());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot delete a role in DAO", e);
             throw new DAOException("RoleDao cannot delete a role", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 }

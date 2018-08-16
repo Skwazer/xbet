@@ -24,8 +24,9 @@ public class NoActionCommand extends Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().setAttribute(ERROR_MESSAGE, "no.command");
+        request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NO_COMMAND);
         logger.info("redirect to error page");
-        response.sendRedirect(request.getContextPath() + ERROR);
+        response.sendRedirect(request.getContextPath() + Constants.MAIN_ERROR);
     }
+
 }

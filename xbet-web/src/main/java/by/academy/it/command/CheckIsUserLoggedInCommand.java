@@ -31,4 +31,5 @@ public class CheckIsUserLoggedInCommand extends Command {
         logger.info("check if the user logged in");
         userService.checkIsUserLoggedIn(request, response);
     }
+
 }

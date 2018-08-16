@@ -42,19 +42,14 @@ public class TeamDaoImpl implements TeamDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void create(Team team) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(CREATE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
+        {
             statement.setString(1, team.getName());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot create a team in DAO", e);
             throw new DAOException("TeamDao cannot create a team", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 
@@ -100,19 +95,14 @@ public class TeamDaoImpl implements TeamDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public void delete(Team team) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = pool.getConnection();
-            statement = connection.prepareStatement(DELETE_QUERY);
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
             statement.setString(1, team.getName());
             statement.execute();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot delete a role in DAO", e);
             throw new DAOException("TeamDao cannot delete a role", e);
-        } finally {
-            closeStatement(statement);
-            closeConnection(connection);
         }
     }
 

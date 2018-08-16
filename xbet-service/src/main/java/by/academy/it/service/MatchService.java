@@ -18,7 +18,7 @@ import java.util.List;
  * This class works with {@link by.academy.it.dao.MatchDao} and {@link by.academy.it.dao.TeamDao}.
  *
  */
-public class MatchService implements Service {
+public class MatchService{
 
     private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
@@ -118,27 +118,27 @@ public class MatchService implements Service {
      * @throws IOException if an input or output error is detected.
      */
     public void placeBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String matchId = request.getParameter(MATCH_ID);
-        if (isValidString(matchId)) {
+        String matchId = request.getParameter(Constants.MATCH_ID);
+        if (Utils.isValidString(matchId)) {
             try {
                 int id = Integer.parseInt(matchId);
                 Match match = getMatchById(id);
                 logger.info("match has been retrieved - [" + match.getId() + "]");
-                request.getSession().setAttribute(MATCH, match);
+                request.getSession().setAttribute(Constants.MATCH, match);
 
-                response.sendRedirect(request.getContextPath() + MAIN_BET);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN_BET);
 
             } catch (Exception e) {
                 logger.error("An exception occurred during get match operation", e);
-                request.getSession().setAttribute(ERROR_MESSAGE, MATCH_EXCEPTION);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
 
-                response.sendRedirect(request.getContextPath() + ERROR);
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         } else {
             logger.error("Match id is not valid");
-            request.getSession().setAttribute(ERROR_MESSAGE, MATCH_ID_ERROR);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_ID_ERROR);
 
-            response.sendRedirect(request.getContextPath() + ERROR);
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
 
@@ -155,19 +155,16 @@ public class MatchService implements Service {
         try {
             List<Match> list = getUnplayedMatches();
             logger.info("Matches have been found");
-            request.setAttribute(MATCHES_LIST, list);
+            request.setAttribute(Constants.MATCHES_LIST, list);
 
-            request.getRequestDispatcher(PATH + MATCHES + JSP).forward(request, response);
+            request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
 
         } catch (ServiceException e) {
             logger.error("An exception occurred during get unplayed matches operation", e);
-            request.getSession().setAttribute(ERROR_MESSAGE, MATCH_EXCEPTION);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
 
-            response.sendRedirect(request.getContextPath() + ERROR);
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
-
-
-
 
 }

@@ -3,7 +3,6 @@ package by.academy.it.command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,8 +24,9 @@ public class LogoutCommand extends Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().setAttribute(USER, null);
+        request.getSession().setAttribute(Constants.USER, null);
         logger.info("logout is successful");
-        response.sendRedirect(request.getContextPath() + HOME);
+        response.sendRedirect(request.getContextPath() + Constants.MAIN_HOME);
     }
+
 }

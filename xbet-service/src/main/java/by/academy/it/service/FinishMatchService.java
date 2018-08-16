@@ -18,7 +18,7 @@ import java.util.Random;
  * This class randomly finishes the match.
  *
  */
-public class FinishMatchService implements Service {
+public class FinishMatchService{
 
     private static final Logger logger = LoggerFactory.getLogger(FinishMatchService.class);
     private static FinishMatchService instance;
@@ -57,8 +57,8 @@ public class FinishMatchService implements Service {
      * @throws IOException if an input or output error is detected.
      */
     public void finishMatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String matchIdParam = request.getParameter(MATCH_ID);
-        if (isValidString(matchIdParam)) {
+        String matchIdParam = request.getParameter(Constants.MATCH_ID);
+        if (Utils.isValidString(matchIdParam)) {
             try {
                 int matchId = Integer.parseInt(matchIdParam);
                 Match match = MatchService.getInstance().getMatchById(matchId);
@@ -67,7 +67,7 @@ public class FinishMatchService implements Service {
                 result.setMatchId(matchId);
                 ResultEntry resultEntry = new ResultEntry();
                 result.setResult(resultEntry.resultSymbol);
-                if (resultEntry.resultSymbol == FIRST_WON){
+                if (resultEntry.resultSymbol == Constants.FIRST_WON){
                     result.setWinnerId(match.getTeam1_id());
                     result.setLoserId(match.getTeam2_id());
                     result.setWinnerGoals(resultEntry.team1goals);
@@ -84,26 +84,26 @@ public class FinishMatchService implements Service {
                 checkBets(matchId, result.getResult());
 
                 HttpSession session = request.getSession();
-                User user = userService.findUserByLogin(((User) session.getAttribute(USER)).getLogin());
-                User sessionUser = (User) session.getAttribute(USER);
+                User user = userService.findUserByLogin(((User) session.getAttribute(Constants.USER)).getLogin());
+                User sessionUser = (User) session.getAttribute(Constants.USER);
                 if (!user.getBalance().equals(sessionUser.getBalance())) {
                     sessionUser.setBalance(user.getBalance());
-                    session.setAttribute(USER, sessionUser);
+                    session.setAttribute(Constants.USER, sessionUser);
                     logger.info("user balance in the session has been updated");
                 }
 
-                response.sendRedirect(getReferrerURI(request));
+                response.sendRedirect(Utils.getReferrerURI(request));
             } catch (Exception e) {
                 logger.error("An exception occurred during finish match operation", e);
-                request.getSession().setAttribute(ERROR_MESSAGE, FINISH_ERROR);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.FINISH_ERROR);
 
-                response.sendRedirect(request.getContextPath() + ERROR);
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         } else {
             logger.error("Match id parameter is not valid");
-            request.getSession().setAttribute(ERROR_MESSAGE, MATCH_ID_ERROR);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_ID_ERROR);
 
-            response.sendRedirect(request.getContextPath() + ERROR);
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
 
@@ -122,13 +122,13 @@ public class FinishMatchService implements Service {
             for (Bet bet : list) {
                 for (char c : bet.getBetResult().toCharArray()) {
                     if (result == c) {
-                        bet.setStatus(WON);
+                        bet.setStatus(Constants.WON);
                         User user = userService.findUserById(bet.getUser_id());
                         userService.updateUserBalance(user.getLogin(), bet.getMoney() * bet.getBet());
                         logger.info("user balance in the database has been updated");
                         break;
                     } else {
-                        bet.setStatus(LOST);
+                        bet.setStatus(Constants.LOST);
                     }
                 }
                 betService.updateBet(bet);
@@ -157,11 +157,11 @@ public class FinishMatchService implements Service {
             team2goals = random.nextInt(6);
 
             if (team1goals > team2goals) {
-                resultSymbol = FIRST_WON;
+                resultSymbol = Constants.FIRST_WON;
             } else if (team1goals < team2goals) {
-                resultSymbol = SECOND_WON;
+                resultSymbol = Constants.SECOND_WON;
             } else {
-                resultSymbol = DRAW;
+                resultSymbol = Constants.DRAW;
             }
         }
     }
