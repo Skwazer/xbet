@@ -12,21 +12,41 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Main controller for all pages.
+ * Main controller for all requests.
  */
 public class Controller extends HttpServlet {
+
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
     private static final CommandFactory FACTORY = CommandFactory.getInstance();
 
+
+    /**
+     * Handles {@code GET} requests.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
 
+
+    /**
+     * Handles {@code POST} requests.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
+
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.

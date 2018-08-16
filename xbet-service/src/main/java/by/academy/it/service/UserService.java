@@ -249,7 +249,6 @@ public class UserService implements Service {
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
-     * @throws ServletException if the request could not be handled.
      * @throws IOException if an input or output error is detected.
      */
     public void deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException {

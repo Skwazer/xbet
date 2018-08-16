@@ -43,7 +43,7 @@ public class ConnectionPool {
     /**
      * Initializes the connection pool.
      */
-    public void init() {
+    public void init() throws ConnectionPoolException {
         try {
             Class.forName(DRIVER);
             availableConnections = new ArrayBlockingQueue<>(maxConnections);
@@ -57,6 +57,7 @@ public class ConnectionPool {
             logger.info("The connection pool has been initialized");
         } catch (Exception e) {
             logger.error("The connection pool hasn't been initialized", e);
+            throw new ConnectionPoolException("The connection pool hasn't been initialized", e);
         }
     }
 
@@ -64,7 +65,7 @@ public class ConnectionPool {
     /**
      * Shutdowns the connection pool.
      */
-    public void shutdownConnectionPool() {
+    public void shutdownConnectionPool() throws ConnectionPoolException {
         ArrayList<Connection> connectionsToDelete = new ArrayList<>();
 
         connectionsToDelete.addAll(availableConnections);
@@ -83,6 +84,7 @@ public class ConnectionPool {
             logger.info("The connection pool has been closed");
         } catch (SQLException e) {
             logger.error("The connection pool hasn't been closed", e);
+            throw new ConnectionPoolException("The connection pool hasn't been closed", e);
         }
     }
 
@@ -95,7 +97,13 @@ public class ConnectionPool {
     public static ConnectionPool getInstance() {
         if (connectionPool == null) {
             connectionPool = new ConnectionPool();
-            connectionPool.init();
+            //TODO: delete init() invocation.
+            try {
+                connectionPool.init();
+            } catch (ConnectionPoolException e) {
+                e.printStackTrace();
+            }
+
             logger.info("The connection pool instance has been created");
         }
         return connectionPool;

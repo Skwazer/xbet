@@ -10,15 +10,21 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * This filter gets a locale from the request, and sets it into the application context.
+ * This filter sets the locale of the application.
  */
 public class LocaleFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(LocaleFilter.class);
 
-    public void destroy() {
-    }
-
+    /**
+     * Gets a locale from the request, and sets it into the application context
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @param chain {@code FilterChain} chain.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest req = (HttpServletRequest) request;
         Locale locale = request.getLocale();
@@ -26,6 +32,11 @@ public class LocaleFilter implements Filter {
         logger.info("locale has been set - "  + locale);
 
         chain.doFilter(req, response);
+    }
+
+    @Override
+    public void destroy() {
+
     }
 
     public void init(FilterConfig config) throws ServletException {

@@ -16,15 +16,33 @@ public class ApplicationContextListener implements ServletContextListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
 
+    /**
+     * Initializes connection pool.
+     *
+     * @param sce ServletContextEvent.
+     */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         logger.info("Start of the application");
-        ConnectionPool.getInstance().init();
+        try {
+            ConnectionPool.getInstance().init();
+        } catch (ConnectionPoolException e) {
+            logger.error("Application hasn't been started", e);
+        }
     }
 
+    /**
+     * Shutdowns connection pool.
+     *
+     * @param sce ServletContextEvent.
+     */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         logger.info("Shutdown of the  application");
-        ConnectionPool.getInstance().shutdownConnectionPool();
+        try {
+            ConnectionPool.getInstance().shutdownConnectionPool();
+        } catch (ConnectionPoolException e) {
+            logger.error("Application hasn't been shutdowned", e);
+        }
     }
 }
