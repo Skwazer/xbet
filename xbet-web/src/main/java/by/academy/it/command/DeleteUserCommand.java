@@ -31,4 +31,5 @@ public class DeleteUserCommand extends Command {
         logger.info("delete user operation");
         userService.deleteUser(request, response);
     }
+
 }

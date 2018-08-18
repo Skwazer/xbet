@@ -32,4 +32,5 @@ public class ConfirmBetCommand extends Command {
         logger.info("confirm bet operation");
         userService.confirmBet(request, response);
     }
+
 }

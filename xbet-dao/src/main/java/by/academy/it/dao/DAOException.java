@@ -1,7 +1,7 @@
 package by.academy.it.dao;
 
 /**
- * This exception is thrown when an exception occurs during {@link Dao} instances work.
+ * This exception is thrown when an exception occurs during {@code Dao} instances work.
  *
  */
 public class DAOException extends Exception {

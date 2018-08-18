@@ -95,11 +95,11 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `xbet`.`results` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `matches_id` INT(11) NOT NULL,
-  `result` CHAR(1) NOT NULL,
-  `winner_id` INT(11) NOT NULL,
-  `loser_id` INT(11) NOT NULL,
-  `winner_goals` INT(11) NOT NULL,
-  `loser_goals` INT(11) NOT NULL,
+  `result` VARCHAR(1) NOT NULL,
+  `team1_id` INT(11) NOT NULL,
+  `team2_id` INT(11) NOT NULL,
+  `team1_goals` INT(11) NOT NULL,
+  `team2_goals` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `matches_id_idx` (`matches_id` ASC),
   CONSTRAINT `matches_id`
@@ -107,13 +107,13 @@ CREATE TABLE IF NOT EXISTS `xbet`.`results` (
     REFERENCES `xbet`.`matches` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `winner_id`
-  FOREIGN KEY (`winner_id`)
+  CONSTRAINT `team1_id`
+  FOREIGN KEY (`team1_id`)
   REFERENCES `xbet`.`teams` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `loser_id`
-  FOREIGN KEY (`loser_id`)
+  CONSTRAINT `team2_id`
+  FOREIGN KEY (`team2_id`)
   REFERENCES `xbet`.`teams` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

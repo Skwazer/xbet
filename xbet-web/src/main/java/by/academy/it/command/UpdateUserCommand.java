@@ -28,4 +28,5 @@ public class UpdateUserCommand extends Command {
         logger.info("updating user data");
         userService.updateUser(request, response);
     }
+
 }

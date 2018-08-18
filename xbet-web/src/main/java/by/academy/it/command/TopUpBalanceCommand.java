@@ -18,7 +18,7 @@ public class TopUpBalanceCommand extends Command {
     private UserService userService = UserService.getInstance();
 
     /**
-     * Delegates top up balance to {@link by.academy.it.service.MatchService}.
+     * Delegates top up balance to {@link by.academy.it.service.UserService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -29,4 +29,5 @@ public class TopUpBalanceCommand extends Command {
         logger.info("top up balance operation");
         userService.topup(request, response);
     }
+
 }

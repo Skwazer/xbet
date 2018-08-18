@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 public class ResultService {
 
     private static final Logger logger = LoggerFactory.getLogger(ResultService.class);
-    private ResultDao resultDao = DaoFactory.getInstance().getResultDao();
     private static ResultService instance;
+    private ResultDao resultDao = DaoFactory.getInstance().getResultDao();
 
     /**
      * Prohibits creating an instance of class outside the class.

@@ -20,7 +20,7 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
-    private static ConnectionPool pool;
+    private ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.users " +
             "(login, password, first_name, last_name, email, balance, role_id)" +
@@ -61,7 +61,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(5, user.getEmail());
             statement.setDouble(6, user.getBalance());
             statement.setInt(7, user.getRole());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot create a user in DAO", e);
             throw new DAOException("UserDao cannot create a user", e);
@@ -87,10 +87,10 @@ public class UserDaoImpl implements UserDao {
             statement.setDouble(6, user.getBalance());
             statement.setInt(7, user.getRole());
             statement.setInt(8, user.getId());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
-            logger.error("UserDao cannot update a user in DAO", e);
-            throw new DAOException("UserDao cannot update a user", e);
+            logger.error("UserDao cannot updateStatus a user in DAO", e);
+            throw new DAOException("UserDao cannot updateStatus a user", e);
         }
     }
 
@@ -108,10 +108,10 @@ public class UserDaoImpl implements UserDao {
         {
             statement.setDouble(1, balance);
             statement.setString(2, login);
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
-            logger.error("UserDao cannot update user balance in DAO", e);
-            throw new DAOException("UserDao cannot update user balance", e);
+            logger.error("UserDao cannot updateStatus user balance in DAO", e);
+            throw new DAOException("UserDao cannot updateStatus user balance", e);
         }
     }
 
@@ -135,22 +135,22 @@ public class UserDaoImpl implements UserDao {
             set = statement.executeQuery();
             if (set.next()) {
                 user = new User();
-                user.setId(set.getInt(ID));
-                user.setLogin(set.getString(LOGIN));
-                user.setPassword(set.getString(PASSWORD));
-                user.setFirstName(set.getString(FIRST_NAME));
-                user.setLastName(set.getString(LAST_NAME));
-                user.setEmail(set.getString(EMAIL));
-                user.setBalance(set.getDouble(BALANCE));
-                user.setRole(set.getInt(ROLE_ID));
+                user.setId(set.getInt(Constants.ID));
+                user.setLogin(set.getString(Constants.LOGIN));
+                user.setPassword(set.getString(Constants.PASSWORD));
+                user.setFirstName(set.getString(Constants.FIRST_NAME));
+                user.setLastName(set.getString(Constants.LAST_NAME));
+                user.setEmail(set.getString(Constants.EMAIL));
+                user.setBalance(set.getDouble(Constants.BALANCE));
+                user.setRole(set.getInt(Constants.ROLE_ID));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
             throw new DAOException("UserDao find by login operation is failed", e);
         } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return user;
     }
@@ -176,22 +176,22 @@ public class UserDaoImpl implements UserDao {
             set = statement.executeQuery();
             if (set.next()) {
                 user = new User();
-                user.setId(set.getInt(ID));
-                user.setLogin(set.getString(LOGIN));
-                user.setPassword(set.getString(PASSWORD));
-                user.setFirstName(set.getString(FIRST_NAME));
-                user.setLastName(set.getString(LAST_NAME));
-                user.setEmail(set.getString(EMAIL));
-                user.setBalance(set.getDouble(BALANCE));
-                user.setRole(set.getInt(ROLE_ID));
+                user.setId(set.getInt(Constants.ID));
+                user.setLogin(set.getString(Constants.LOGIN));
+                user.setPassword(set.getString(Constants.PASSWORD));
+                user.setFirstName(set.getString(Constants.FIRST_NAME));
+                user.setLastName(set.getString(Constants.LAST_NAME));
+                user.setEmail(set.getString(Constants.EMAIL));
+                user.setBalance(set.getDouble(Constants.BALANCE));
+                user.setRole(set.getInt(Constants.ROLE_ID));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
             throw new DAOException("UserDao find by login operation is failed", e);
         } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return user;
     }
@@ -208,7 +208,7 @@ public class UserDaoImpl implements UserDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
         {
             statement.setInt(1, id);
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot delete a user in DAO", e);
             throw new DAOException("UserDao cannot delete a user", e);
@@ -231,14 +231,14 @@ public class UserDaoImpl implements UserDao {
             User user = null;
             while (set.next()) {
                 user = new User();
-                user.setId(set.getInt(ID));
-                user.setLogin(set.getString(LOGIN));
-                user.setPassword(set.getString(PASSWORD));
-                user.setFirstName(set.getString(FIRST_NAME));
-                user.setLastName(set.getString(LAST_NAME));
-                user.setEmail(set.getString(EMAIL));
-                user.setBalance(set.getDouble(BALANCE));
-                user.setRole(set.getInt(ROLE_ID));
+                user.setId(set.getInt(Constants.ID));
+                user.setLogin(set.getString(Constants.LOGIN));
+                user.setPassword(set.getString(Constants.PASSWORD));
+                user.setFirstName(set.getString(Constants.FIRST_NAME));
+                user.setLastName(set.getString(Constants.LAST_NAME));
+                user.setEmail(set.getString(Constants.EMAIL));
+                user.setBalance(set.getDouble(Constants.BALANCE));
+                user.setRole(set.getInt(Constants.ROLE_ID));
                 list.add(user);
             }
             return list;

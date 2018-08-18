@@ -19,7 +19,7 @@ public class FinishMatchCommand extends Command {
     private FinishMatchService finishMatchService = FinishMatchService.getInstance();
 
     /**
-     * Delegates operation to {@link by.academy.it.service.UserService}.
+     * Delegates operation to {@link by.academy.it.service.FinishMatchService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.

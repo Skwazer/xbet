@@ -31,4 +31,5 @@ public class ShowUsersCommand extends Command {
         logger.info("show users operation");
         userService.showUsers(request, response);
     }
+
 }

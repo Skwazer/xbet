@@ -31,4 +31,5 @@ public class ShowUserBetsCommand extends Command {
         logger.info("show user bets operation");
         betService.showUserBets(request, response);
     }
+
 }

@@ -5,9 +5,9 @@ import by.academy.it.entity.Match;
 import java.util.List;
 
 /**
- * Defines {@code MatchDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
+ * Defines {@code MatchDao} methods.
  */
-public interface MatchDao extends Dao {
+public interface MatchDao {
 
     /**
      * Creates a new match entry.
@@ -44,4 +44,5 @@ public interface MatchDao extends Dao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void delete(Match match) throws DAOException;
+
 }

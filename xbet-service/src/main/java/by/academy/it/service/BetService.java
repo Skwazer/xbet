@@ -23,9 +23,9 @@ import java.util.List;
 public class BetService {
 
     private static final Logger logger = LoggerFactory.getLogger(BetService.class);
+    private static BetService instance;
     private BetDao betDao = DaoFactory.getInstance().getBetDao();
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
-    private static BetService instance;
 
     /**
      * Prohibits creating an instance of class outside the class.
@@ -72,7 +72,7 @@ public class BetService {
      */
     public void updateBet(Bet bet) throws ServiceException {
         try {
-            betDao.update(bet);
+            betDao.updateStatus(bet);
         } catch (DAOException e) {
             logger.error("BetService cannot updateBalance a bet", e);
             throw new ServiceException("BetService cannot updateBalance a bet", e);

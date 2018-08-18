@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class RoleDaoImpl implements RoleDao {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleDaoImpl.class);
-    private static ConnectionPool pool;
+    private ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.roles (role) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.roles WHERE id = ?";
@@ -46,7 +46,7 @@ public class RoleDaoImpl implements RoleDao {
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
         {
             statement.setString(1, role.getRole());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot create a role in DAO", e);
             throw new DAOException("RoleDao cannot create a role", e);
@@ -73,16 +73,16 @@ public class RoleDaoImpl implements RoleDao {
             set = statement.executeQuery();
             if (set.next()) {
                 role = new Role();
-                role.setId(set.getInt(ID));
-                role.setRole(set.getString(ROLE));
+                role.setId(set.getInt(Constants.ID));
+                role.setRole(set.getString(Constants.ROLE));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao find by login operation is failed", e);
             throw new DAOException("RoleDao find by id operation is failed", e);
         } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return role;
     }
@@ -99,7 +99,7 @@ public class RoleDaoImpl implements RoleDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
         {
             statement.setString(1, role.getRole());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot delete a role in DAO", e);
             throw new DAOException("RoleDao cannot delete a role", e);

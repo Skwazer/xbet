@@ -42,6 +42,8 @@ public class ConnectionPool {
 
     /**
      * Initializes the connection pool.
+     *
+     * @throws by.academy.it.dao.factory.ConnectionPoolException if an error occurred during the operation.
      */
     public void init() throws ConnectionPoolException {
         try {
@@ -64,6 +66,8 @@ public class ConnectionPool {
 
     /**
      * Shutdowns the connection pool.
+     *
+     * @throws by.academy.it.dao.factory.ConnectionPoolException if an error occurred during the operation.
      */
     public void shutdownConnectionPool() throws ConnectionPoolException {
         ArrayList<Connection> connectionsToDelete = new ArrayList<>();

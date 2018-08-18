@@ -3,9 +3,9 @@ package by.academy.it.dao;
 import by.academy.it.entity.Result;
 
 /**
- * Defines {@code ResultDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
+ * Defines {@code ResultDao} methods.
  */
-public interface ResultDao extends Dao {
+public interface ResultDao {
 
     /**
      * Creates a new result entry.
@@ -33,4 +33,5 @@ public interface ResultDao extends Dao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void delete(Result result) throws DAOException;
+
 }

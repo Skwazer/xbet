@@ -17,7 +17,7 @@ import java.util.List;
 public class MatchDaoImpl implements MatchDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MatchDaoImpl.class);
-    private static ConnectionPool pool;
+    private ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.matches " +
             "(date, team1_id, team2_id, `1`, X, `2`, `1X`, `12`, `2X`) " +
@@ -57,7 +57,7 @@ public class MatchDaoImpl implements MatchDao {
             statement.setDouble( 7, match.getVictory1OrDraw());
             statement.setDouble( 8, match.getVictory1Or2());
             statement.setDouble( 9, match.getVictory2OrDraw());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot create a match in DAO", e);
             throw new DAOException("MatchDao cannot create a match", e);
@@ -84,24 +84,24 @@ public class MatchDaoImpl implements MatchDao {
             set = statement.executeQuery();
             if (set.next()) {
                 match = new Match();
-                match.setId(set.getInt(ID));
-                match.setDate(set.getDate(DATE));
-                match.setTeam1_id(set.getInt(TEAM1_ID));
-                match.setTeam2_id(set.getInt(TEAM2_ID));
-                match.setVictory1(set.getDouble(VICTORY1));
-                match.setDraw(set.getDouble(DRAW));
-                match.setVictory2(set.getDouble(VICTORY2));
-                match.setVictory1OrDraw(set.getDouble(VICTORY1_OR_DRAW));
-                match.setVictory1Or2(set.getDouble(VICTORY1_OR_2));
-                match.setVictory2OrDraw(set.getDouble(VICTORY2_OR_DRAW));
+                match.setId(set.getInt(Constants.ID));
+                match.setDate(set.getDate(Constants.DATE));
+                match.setTeam1_id(set.getInt(Constants.TEAM1_ID));
+                match.setTeam2_id(set.getInt(Constants.TEAM2_ID));
+                match.setVictory1(set.getDouble(Constants.VICTORY1));
+                match.setDraw(set.getDouble(Constants.DRAW));
+                match.setVictory2(set.getDouble(Constants.VICTORY2));
+                match.setVictory1OrDraw(set.getDouble(Constants.VICTORY1_OR_DRAW));
+                match.setVictory1Or2(set.getDouble(Constants.VICTORY1_OR_2));
+                match.setVictory2OrDraw(set.getDouble(Constants.VICTORY2_OR_DRAW));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao find by id operation is failed", e);
             throw new DAOException("MatchDao find by id operation is failed", e);
         } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return match;
     }
@@ -122,16 +122,16 @@ public class MatchDaoImpl implements MatchDao {
             Match match;
             while (set.next()) {
                 match = new Match();
-                match.setId(set.getInt(ID));
-                match.setDate(set.getDate(DATE));
-                match.setTeam1_id(set.getInt(TEAM1_ID));
-                match.setTeam2_id(set.getInt(TEAM2_ID));
-                match.setVictory1(set.getDouble(VICTORY1));
-                match.setDraw(set.getDouble(DRAW));
-                match.setVictory2(set.getDouble(VICTORY2));
-                match.setVictory1OrDraw(set.getDouble(VICTORY1_OR_DRAW));
-                match.setVictory1Or2(set.getDouble(VICTORY1_OR_2));
-                match.setVictory2OrDraw(set.getDouble(VICTORY2_OR_DRAW));
+                match.setId(set.getInt(Constants.ID));
+                match.setDate(set.getDate(Constants.DATE));
+                match.setTeam1_id(set.getInt(Constants.TEAM1_ID));
+                match.setTeam2_id(set.getInt(Constants.TEAM2_ID));
+                match.setVictory1(set.getDouble(Constants.VICTORY1));
+                match.setDraw(set.getDouble(Constants.DRAW));
+                match.setVictory2(set.getDouble(Constants.VICTORY2));
+                match.setVictory1OrDraw(set.getDouble(Constants.VICTORY1_OR_DRAW));
+                match.setVictory1Or2(set.getDouble(Constants.VICTORY1_OR_2));
+                match.setVictory2OrDraw(set.getDouble(Constants.VICTORY2_OR_DRAW));
                 list.add(match);
             }
             return list;
@@ -153,7 +153,7 @@ public class MatchDaoImpl implements MatchDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
         {
             statement.setInt(1, match.getId());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao cannot delete a match in DAO", e);
             throw new DAOException("MatchDao cannot delete a match", e);

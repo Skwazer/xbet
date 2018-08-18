@@ -19,7 +19,7 @@ public class ShowUpdateUserPageCommand extends Command {
     private UserService userService = UserService.getInstance();
 
     /**
-     * Delegates operation to UserService.
+     * Delegates operation to {@link by.academy.it.service.UserService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -31,4 +31,5 @@ public class ShowUpdateUserPageCommand extends Command {
         logger.info("retrieving a user to update");
         userService.showUpdateUserPage(request, response);
     }
+
 }

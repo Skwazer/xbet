@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class TeamDaoImpl implements TeamDao {
 
     private static final Logger logger = LoggerFactory.getLogger(TeamDaoImpl.class);
-    private static ConnectionPool pool;
+    private ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.teams (name) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.teams WHERE id = ?";
@@ -46,7 +46,7 @@ public class TeamDaoImpl implements TeamDao {
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
         {
             statement.setString(1, team.getName());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot create a team in DAO", e);
             throw new DAOException("TeamDao cannot create a team", e);
@@ -73,16 +73,16 @@ public class TeamDaoImpl implements TeamDao {
             set = statement.executeQuery();
             if (set.next()) {
                 team = new Team();
-                team.setId(set.getInt(ID));
-                team.setName(set.getString(NAME));
+                team.setId(set.getInt(Constants.ID));
+                team.setName(set.getString(Constants.NAME));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao find by id operation is failed", e);
             throw new DAOException("TeamDao find by login operation is failed", e);
         } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return team;
     }
@@ -99,7 +99,7 @@ public class TeamDaoImpl implements TeamDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
         {
             statement.setString(1, team.getName());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao cannot delete a role in DAO", e);
             throw new DAOException("TeamDao cannot delete a role", e);

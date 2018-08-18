@@ -736,7 +736,7 @@ color: #f8694a !important;
   }
   #responsive-nav .dropdown.open .custom-menu {
     display: block;
-    min-width: auto;
+    /*min-width: auto;*/
     -webkit-transform: translate(0px, 0px);
     -ms-transform: translate(0px, 0px);
     transform: translate(0px, 0px);
@@ -832,7 +832,7 @@ color: #f8694a !important;
 ===========================================================*/
 
 #home .home-wrap {
-  margin-left: 270px;
+  margin: 20px 100px;
 }
 
 #home-slick .banner {

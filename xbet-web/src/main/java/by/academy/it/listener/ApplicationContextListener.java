@@ -28,6 +28,7 @@ public class ApplicationContextListener implements ServletContextListener {
             ConnectionPool.getInstance().init();
         } catch (ConnectionPoolException e) {
             logger.error("Application hasn't been started", e);
+            throw new RuntimeException("Application hasn't been started", e);
         }
     }
 
@@ -38,11 +39,12 @@ public class ApplicationContextListener implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        logger.info("Shutdown of the  application");
+        logger.info("Shutdown of the application");
         try {
             ConnectionPool.getInstance().shutdownConnectionPool();
         } catch (ConnectionPoolException e) {
             logger.error("Application hasn't been shutdowned", e);
+            throw new RuntimeException("Application hasn't been shutdowned", e);
         }
     }
 }

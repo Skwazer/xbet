@@ -5,9 +5,9 @@ import by.academy.it.entity.User;
 import java.util.List;
 
 /**
- * Defines {@code UserDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
+ * Defines {@code UserDao} methods.
  */
-public interface UserDao extends Dao {
+public interface UserDao {
 
     /**
      * Creates a new user entry.
@@ -73,6 +73,5 @@ public interface UserDao extends Dao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void update(User user) throws DAOException;
-
 
 }

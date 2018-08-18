@@ -20,6 +20,7 @@ public class DaoFactory {
     private RoleDao roleDao;
     private TeamDao teamDao;
     private UserDao userDao;
+    private TransactionalDao transactionalDao;
 
 
     /**
@@ -45,7 +46,7 @@ public class DaoFactory {
 
     /**
      * Creates {@code BetDao} instance if it is not created.
-     * Passes a connectionPool as a constructor parameter and returns the Dao instance.
+     * Passes a connectionPool as a constructor parameter and returns the BetDao instance.
      *
      * @return {@link by.academy.it.dao.BetDao} instance.
      */
@@ -130,6 +131,21 @@ public class DaoFactory {
             logger.info("DaoFactory created a ResultDao");
         }
         return resultDao;
+    }
+
+
+    /**
+     * Creates {@code TransactionalDao} instance if it is not created.
+     * Passes a connectionPool as a constructor parameter and returns the {@code TransactionalDao} instance.
+     *
+     * @return {@link by.academy.it.dao.TransactionalDao} instance.
+     */
+    public TransactionalDao getTransactionalDao() {
+        if (transactionalDao == null) {
+            transactionalDao = new TransactionalDaoImpl(connectionPool);
+            logger.info("DaoFactory created a TransactionalDao");
+        }
+        return transactionalDao;
     }
 
 }

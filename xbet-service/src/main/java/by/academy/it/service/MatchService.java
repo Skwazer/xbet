@@ -21,9 +21,9 @@ import java.util.List;
 public class MatchService{
 
     private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
+    private static MatchService instance;
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
     private TeamDao teamDao = DaoFactory.getInstance().getTeamDao();
-    private static MatchService instance;
 
     /**
      * Prohibits creating an instance of class outside the class.
@@ -111,7 +111,7 @@ public class MatchService{
 
 
     /**
-     * Retrieves a match id, finds match, puts it in the session and sends to user 'place bet' page
+     * Retrieves a match id, finds match, puts it in the session and sends to user 'place bet' page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.

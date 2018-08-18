@@ -3,9 +3,9 @@ package by.academy.it.dao;
 import by.academy.it.entity.Team;
 
 /**
- * Defines {@code TeamDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
+ * Defines {@code TeamDao} methods.
  */
-public interface TeamDao extends Dao {
+public interface TeamDao {
 
 
     /**
@@ -34,4 +34,5 @@ public interface TeamDao extends Dao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void delete(Team team) throws DAOException;
+
 }

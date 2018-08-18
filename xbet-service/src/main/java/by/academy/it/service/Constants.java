@@ -1,9 +1,10 @@
 package by.academy.it.service;
 
 /**
- * This class contain string constants.
+ * This class contain string constants for Services.
  */
-public class Constants {
+class Constants {
+
     static final String USER = "user";
     static final String USERS = "users";
     static final String CURRENT_URI = "currentURI";
@@ -38,7 +39,6 @@ public class Constants {
     static final String AMOUNT = "amount";
     static final String BET_PARAM_ERROR = "bet.param.error";
     static final String BET_ERROR = "bet.error";
-    static final String BALANCE_ERROR = "balance.error";
     static final String NOT_ENOUGH = "NOT_ENOUGH";
     static final String KEY = "key";
     static final String AMOUNT_ERROR = "amount.error";
@@ -48,9 +48,9 @@ public class Constants {
     static final String BETS = "bets";
     static final String FINISH_ERROR = "finish.error";
     static final String NUMBER_ERROR = "number.error";
-    static final char FIRST_WON = '1';
-    static final char SECOND_WON = '2';
-    static final char DRAW = 'X';
+    static final String FIRST_WON = "1";
+    static final String SECOND_WON = "2";
+    static final String DRAW = "X";
     static final String NO_USERS_ERROR = "no.users.error";
     static final String USERS_ERROR = "users.error";
     static final String BALANCE = "balance";
@@ -68,4 +68,5 @@ public class Constants {
     static final String WON = "won";
     static final String LOST = "lost";
     static final String USER_NOT_FOUND = "user.not.found";
+    static final String DELETE_YOURSELF_MESSAGE = "delete.yourself.message";
 }

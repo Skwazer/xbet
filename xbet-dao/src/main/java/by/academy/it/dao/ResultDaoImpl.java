@@ -18,10 +18,10 @@ import java.sql.SQLException;
 public class ResultDaoImpl implements ResultDao {
 
     private static final Logger logger = LoggerFactory.getLogger(ResultDaoImpl.class);
-    private static ConnectionPool pool;
+    private ConnectionPool pool;
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.results " +
-            "(matches_id, result, winner_id, loser_id, winner_goals, loser_goals) " +
+            "(matches_id, result, team1_id, team2_id, team1_goals, team2_goals) " +
             "VALUES ( ?, ?, ?, ?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.results WHERE matches_id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.results WHERE matches_id = ?";
@@ -48,12 +48,12 @@ public class ResultDaoImpl implements ResultDao {
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
         {
             statement.setInt(1, result.getMatchId());
-            statement.setString(2, result.getResult().toString());
-            statement.setInt(3, result.getWinnerId());
-            statement.setInt(4, result.getLoserId());
-            statement.setInt(5, result.getWinnerGoals());
-            statement.setInt( 6, result.getLoserGoals());
-            statement.execute();
+            statement.setString(2, result.getResult());
+            statement.setInt(3, result.getTeam1_id());
+            statement.setInt(4, result.getTeam2_id());
+            statement.setInt(5, result.getTeam1_goals());
+            statement.setInt( 6, result.getTeam2_goals());
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao cannot create a result in DAO", e);
             throw new DAOException("ResultDao cannot create a result", e);
@@ -80,21 +80,21 @@ public class ResultDaoImpl implements ResultDao {
             set = statement.executeQuery();
             if (set.next()) {
                 result = new Result();
-                result.setId(set.getInt(ID));
-                result.setMatchId(set.getInt(MATCHES_ID));
-                result.setResult(set.getString(RESULT).charAt(0));
-                result.setWinnerId(set.getInt(WINNER_ID));
-                result.setLoserId(set.getInt(LOSER_ID));
-                result.setWinnerGoals(set.getInt(WINNER_GOALS));
-                result.setLoserGoals(set.getInt(LOSER_GOALS));
+                result.setId(set.getInt(Constants.ID));
+                result.setMatchId(set.getInt(Constants.MATCHES_ID));
+                result.setResult(set.getString(Constants.RESULT));
+                result.setTeam1_id(set.getInt(Constants.TEAM1_ID));
+                result.setTeam2_id(set.getInt(Constants.TEAM2_ID));
+                result.setTeam1_goals(set.getInt(Constants.TEAM1_GOALS));
+                result.setTeam2_goals(set.getInt(Constants.TEAM2_GOALS));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao find by match id operation is failed", e);
             throw new DAOException("ResultDao find by match id operation is failed", e);
         } finally {
-            closeResultSet(set);
-            closeStatement(statement);
-            closeConnection(connection);
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return result;
     }
@@ -111,7 +111,7 @@ public class ResultDaoImpl implements ResultDao {
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
         {
             statement.setInt(1, result.getMatchId());
-            statement.execute();
+            statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao cannot delete a result in DAO", e);
             throw new DAOException("ResultDao cannot delete a result", e);

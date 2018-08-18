@@ -55,13 +55,13 @@ INSERT INTO xbet.matches (date, team1_id, team2_id, `1`, X, `2`, `1X`, `12`, `2X
 VALUES ( '2018-07-11', 11, 16, 1.84, 2.3, 3.57, 1.12, 1.28, 1.21);
 
 
-INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
+INSERT INTO xbet.results (matches_id, result, team1_id, team2_id, team1_goals, team2_goals)
 VALUES ( 1, '1', 1, 2, 2, 1);
-INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
+INSERT INTO xbet.results (matches_id, result, team1_id, team2_id, team1_goals, team2_goals)
 VALUES ( 2, '1', 4, 3, 4, 3);
-INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
-VALUES ( 3, 'X', 5, 6, 2, 0);
-INSERT INTO xbet.results (matches_id, result, winner_id, loser_id, winner_goals, loser_goals)
+INSERT INTO xbet.results (matches_id, result, team1_id, team2_id, team1_goals, team2_goals)
+VALUES ( 3, '1', 5, 6, 2, 0);
+INSERT INTO xbet.results (matches_id, result, team1_id, team2_id, team1_goals, team2_goals)
 VALUES ( 5, '2', 10, 9, 4, 5);
 
 

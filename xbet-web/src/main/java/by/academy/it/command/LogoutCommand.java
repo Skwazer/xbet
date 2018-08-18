@@ -1,5 +1,6 @@
 package by.academy.it.command;
 
+import by.academy.it.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +15,10 @@ import java.io.IOException;
 public class LogoutCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(LogoutCommand.class);
+    private UserService userService = UserService.getInstance();
 
     /**
-     * Deletes user's data from the session.
+     * Delegates logout operation to {@link by.academy.it.service.UserService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -24,9 +26,8 @@ public class LogoutCommand extends Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.getSession().setAttribute(Constants.USER, null);
-        logger.info("logout is successful");
-        response.sendRedirect(request.getContextPath() + Constants.MAIN_HOME);
+        logger.info("logout operation");
+        userService.logout(request, response);
     }
 
 }

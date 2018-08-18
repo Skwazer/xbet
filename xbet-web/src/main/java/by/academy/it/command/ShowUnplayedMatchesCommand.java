@@ -31,4 +31,5 @@ public class ShowUnplayedMatchesCommand extends Command {
         logger.info("show unplayed matches operation");
         matchService.showUnplayedMatches(request, response);
     }
+
 }

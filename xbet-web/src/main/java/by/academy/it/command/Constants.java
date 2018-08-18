@@ -1,15 +1,13 @@
 package by.academy.it.command;
 
 /**
- * This class contain string constants.
+ * This class contain string constants for Commands.
  */
 public class Constants {
 
     static final String ERROR_MESSAGE = "errorMessage";
     public static final String MAIN_ERROR = "/main/error";
     static final String NO_COMMAND = "no.command";
-    static final String USER = "user";
-    static final String MAIN_HOME = "/main/home";
     static final String PATH = "/WEB-INF/jsp/";
     static final String JSP = ".jsp";
 

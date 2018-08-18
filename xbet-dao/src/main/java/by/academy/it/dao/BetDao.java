@@ -5,9 +5,9 @@ import by.academy.it.entity.Bet;
 import java.util.List;
 
 /**
- * Defines {@code BetDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
+ * Defines {@code BetDao} methods.
  */
-public interface BetDao extends Dao {
+public interface BetDao {
 
     /**
      * Creates a new bet entry.
@@ -52,5 +52,6 @@ public interface BetDao extends Dao {
      * @param bet the {@link by.academy.it.entity.Bet} entity.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void update(Bet bet) throws DAOException;
+    void updateStatus(Bet bet) throws DAOException;
+
 }

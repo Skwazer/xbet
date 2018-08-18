@@ -4,21 +4,74 @@
 
 <%@include file="header.jsp"%>
 
-<!-- section -->
-<div class="section">
+
+<!-- HOME -->
+<div id="home">
     <!-- container -->
     <div class="container">
-        <!-- row -->
-        <div class="text-center">
-            <h2><c:out value="${title}"/></h2>
-            <br>
+        <!-- home wrap -->
+        <div class="home-wrap">
+            <!-- home slick -->
+            <div id="home-slick">
+                <!-- banner -->
+                <div class="banner banner-1">
+                    <img src="<c:url value="/img/football1.jpg"/>" alt="football">
+                    <div class="banner-caption text-center">
+                        <h1 class="primary-color">X-BET</h1>
+                        <h2 class="white-color font-weak"><c:out value="${xbet}"/></h2>
+                        <br/>
+                        <button class="primary-btn">
+                            <a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></button>
+                    </div>
+                </div>
+                <!-- /banner -->
+
+                <!-- banner -->
+                <div class="banner banner-1">
+                    <img src="<c:url value="/img/football2.jpg"/>" alt="football">
+                    <div class="banner-caption text-center">
+                        <h1 class="primary-color">X-BET</h1>
+                        <h2 class="white-color font-weak"><c:out value="${xbet}"/></h2>
+                        <br/>
+                        <button class="primary-btn">
+                            <a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></button>
+                    </div>
+                </div>
+                <!-- /banner -->
+
+                <!-- banner -->
+                <div class="banner banner-1">
+                    <img src="<c:url value="/img/football3.jpg"/>" alt="football">
+                    <div class="banner-caption text-center">
+                        <h1 class="primary-color">X-BET</h1>
+                        <h2 class="white-color font-weak"><c:out value="${xbet}"/></h2>
+                        <br/>
+                        <button class="primary-btn">
+                            <a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></button>
+                    </div>
+                </div>
+                <!-- /banner -->
+
+                <!-- banner -->
+                <div class="banner banner-1">
+                    <img src="<c:url value="/img/football4.jpg"/>" alt="football">
+                    <div class="banner-caption text-center">
+                        <h1 class="primary-color">X-BET</h1>
+                        <h2 class="white-color font-weak"><c:out value="${xbet}"/></h2>
+                        <br/>
+                        <button class="primary-btn">
+                            <a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></button>
+                    </div>
+                </div>
+                <!-- /banner -->
+            </div>
+            <!-- /home slick -->
         </div>
-        <img src="<c:url value="/img/fooltball.jpg"/>" alt="image" class="img-responsive center-block" />
-        <!-- /row -->
+        <!-- /home wrap -->
     </div>
     <!-- /container -->
 </div>
-<!-- /section -->
+<!-- /HOME -->
 
 
 <%@include file="footer.jsp"%>

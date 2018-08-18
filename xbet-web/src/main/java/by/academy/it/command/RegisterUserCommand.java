@@ -29,4 +29,5 @@ public class RegisterUserCommand extends Command {
         logger.info("register user operation");
         userService.registerUser(request, response);
     }
+
 }

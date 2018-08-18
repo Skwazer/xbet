@@ -19,6 +19,7 @@
     <fmt:message key="amount.negative" var="amountNegative"/>
     <fmt:message key="my.bets" var="myBets"/>
     <fmt:message key="users" var="usersTitle"/>
+    <fmt:message key="xbet" var="xbet"/>
 
 </fmt:bundle>
 

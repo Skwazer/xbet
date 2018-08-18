@@ -1,6 +1,7 @@
 package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
+import by.academy.it.dao.TransactionalDao;
 import by.academy.it.dao.UserDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
@@ -18,15 +19,15 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * This class works with {@link by.academy.it.dao.UserDao} class.
+ * This class works with {@link by.academy.it.dao.UserDao} and {@link by.academy.it.dao.TransactionalDao} class.
  *
  */
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    private UserDao userDao = DaoFactory.getInstance().getUserDao();
-    private BetService betService = BetService.getInstance();
     private static UserService instance;
+    private UserDao userDao = DaoFactory.getInstance().getUserDao();
+    private TransactionalDao transactionalDao = DaoFactory.getInstance().getTransactionalDao();
 
     /**
      * Prohibits creating an instance of class outside the class.
@@ -169,9 +170,7 @@ public class UserService {
 
                 HttpSession session = request.getSession();
                 User user = (User) session.getAttribute(Constants.USER);
-                user = updateUserBalance(user.getLogin(), -amount);
-                session.setAttribute(Constants.USER, user);
-                logger.info("user's balance has been updated");
+                double balance = user.getBalance() - amount;
 
                 Bet bet = new Bet();
                 bet.setUser_id(user.getId());
@@ -180,13 +179,17 @@ public class UserService {
                 bet.setBet(betValue);
                 bet.setMoney(amount);
                 bet.setStatus("active");
-                betService.createBet(bet);
-                logger.info("bet entry has been created");
 
+                logger.debug("start of transaction");
+                transactionalDao.placeBet(user.getLogin(), balance, bet);
+                logger.debug("transaction is finished");
+                user.setBalance(balance);
+
+                logger.info("bet has been placed");
                 request.setAttribute(Constants.CONFIRM_MESSAGE, Constants.SUCCESS);
                 request.getRequestDispatcher(Utils.getReferrerPath(request)).forward(request, response);
 
-            } catch (ServiceException e) {
+            } catch (Exception e) {
                 logger.error("An exception occurred during create bet operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BET_ERROR);
 
@@ -215,8 +218,9 @@ public class UserService {
             user = userDao.findByLogin(login);
             if (user != null) {
                 double balance = user.getBalance() + amount;
-                user.setBalance(balance);
                 userDao.updateBalance(login, balance);
+                user.setBalance(balance);
+                logger.info("user's balance has been updated");
             } else {
                 logger.error("UserService cannot updateBalance user's balance");
                 throw new ServiceException("UserService cannot updateBalance user's balance");
@@ -240,11 +244,19 @@ public class UserService {
         String key = request.getParameter(Constants.KEY);
         try {
             int id = Integer.parseInt(key);
-            userDao.delete(id);
-            logger.info("user has been deleted");
-            request.getSession().setAttribute(Constants.USER_MESSAGE, Constants.DELETE_USER_MESSAGE);
 
+            HttpSession session = request.getSession();
+            User sessionUser = (User) session.getAttribute(Constants.USER);
+            if (sessionUser.getId() != id) {
+                userDao.delete(id);
+                logger.info("user has been deleted");
+                session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_USER_MESSAGE);
+            } else {
+                logger.warn("You cannot delete yourself");
+                session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_YOURSELF_MESSAGE);
+            }
             response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.USERS);
+
         } catch (Exception e) {
             logger.error("UserService cannot delete a user", e);
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_USER_ERROR);
@@ -311,7 +323,7 @@ public class UserService {
      * @return the {@link by.academy.it.entity.User} entity.
      * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
-    User findUserById(int id) throws ServiceException {
+    private User findUserById(int id) throws ServiceException {
         User user;
         try {
             user = userDao.findById(id);
@@ -384,11 +396,13 @@ public class UserService {
         if (Utils.isValidString(key)) {
             try {
                 int id = Integer.parseInt(key);
-                User user = userDao.findById(id);
+                User user = findUserById(id);
                 if (user != null) {
                     request.getSession().setAttribute("updateUser", user);
                     logger.info("user has been retrieved");
+
                     response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_USER);
+
                 } else {
                     logger.warn("User with such id has not been found");
                     request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USER_NOT_FOUND);
@@ -396,7 +410,7 @@ public class UserService {
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
             } catch (Exception e) {
-                logger.error("An exception occurred during show updateBalance user page operation", e);
+                logger.error("An exception occurred during show update user page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_USER_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -442,11 +456,18 @@ public class UserService {
             user.setRole(role);
             userDao.update(user);
 
+            HttpSession session = request.getSession();
+            User sessionUser = (User) session.getAttribute(Constants.USER);
+            if (user.getLogin().equals((sessionUser.getLogin()))) {
+                session.setAttribute(Constants.USER, user);
+            }
+
             logger.info("user has been updated");
-            request.getSession().setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
-            response.sendRedirect(request.getContextPath() +Constants. MAIN + Constants.USERS);
+            session.setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.USERS);
+
         } catch (Exception e) {
-            logger.error("An exception occurred during show updateBalance user page operation", e);
+            logger.error("An exception occurred during update user operation", e);
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_USER_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -593,13 +614,12 @@ public class UserService {
         if (Utils.isValidString(param)) {
             try {
                 double amount = Double.parseDouble(param);
-                String login = ((User) request.getSession().getAttribute(Constants.USER)).getLogin();
-                User user = updateUserBalance(login, amount);
-                user.setPassword(null);
-                request.getSession().setAttribute(Constants.USER, user);
-                logger.info("user's balance has been updated");
+                User sessionUser = (User) request.getSession().getAttribute(Constants.USER);
+                User user = updateUserBalance(sessionUser.getLogin(), amount);
+                sessionUser.setBalance(user.getBalance());
 
                 response.sendRedirect(Utils.getReferrerURI(request));
+
             } catch (NumberFormatException e) {
                 logger.error("Wrong number format", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_ERROR);
@@ -647,23 +667,20 @@ public class UserService {
             user.setBalance(0d);
             user.setRole(2);
             try {
-                if (!isPasswordCorrectForLogin(login, password)) {
-                    userDao.create(user);
-                    user = findUserByLogin(login);
-                }
+                userDao.create(user);
+                user = findUserByLogin(user.getLogin());
+                user.setPassword(null);
+                request.getSession().setAttribute(Constants.USER, user);
+                logger.info("user has been registered");
+
+                response.sendRedirect(request.getContextPath() + Constants.HOME);
+
             } catch (ServiceException | DAOException e) {
                 logger.error("An exception occurred during login validation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.LOGIN_EXCEPTION);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                return;
             }
-            user.setPassword(null);
-            request.getSession().setAttribute(Constants.USER, user);
-            logger.info("user has been registered");
-
-            response.sendRedirect(request.getContextPath() + Constants.HOME);
-
         } else {
             logger.error("Registration data are not valid");
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.REGISTRATION_ERROR);
@@ -671,4 +688,19 @@ public class UserService {
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
+
+
+    /**
+     * Deletes user's data from the session.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().setAttribute(Constants.USER, null);
+        logger.info("logout is successful");
+        response.sendRedirect(request.getContextPath() + Constants.HOME);
+    }
+
 }

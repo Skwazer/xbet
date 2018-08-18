@@ -3,9 +3,9 @@ package by.academy.it.dao;
 import by.academy.it.entity.Role;
 
 /**
- * Defines {@code RoleDao} methods. Extends {@link by.academy.it.dao.Dao} interface.
+ * Defines {@code RoleDao} methods.
  */
-public interface RoleDao extends Dao {
+public interface RoleDao {
 
     /**
      * Creates a new role entry.
@@ -33,4 +33,5 @@ public interface RoleDao extends Dao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void delete(Role role) throws DAOException;
+
 }

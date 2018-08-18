@@ -1,5 +1,10 @@
 package by.academy.it.service;
 
+import by.academy.it.dao.BetDao;
+import by.academy.it.dao.MatchDao;
+import by.academy.it.dao.TransactionalDao;
+import by.academy.it.dao.UserDao;
+import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import by.academy.it.entity.Match;
 import by.academy.it.entity.Result;
@@ -18,13 +23,15 @@ import java.util.Random;
  * This class randomly finishes the match.
  *
  */
-public class FinishMatchService{
+public class FinishMatchService {
 
     private static final Logger logger = LoggerFactory.getLogger(FinishMatchService.class);
     private static FinishMatchService instance;
 
-    private static BetService betService = BetService.getInstance();
-    private static UserService userService = UserService.getInstance();
+    private BetDao betDao = DaoFactory.getInstance().getBetDao();
+    private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
+    private TransactionalDao transactionalDao = DaoFactory.getInstance().getTransactionalDao();
+    private UserDao userDao = DaoFactory.getInstance().getUserDao();
 
 
     /**
@@ -61,38 +68,43 @@ public class FinishMatchService{
         if (Utils.isValidString(matchIdParam)) {
             try {
                 int matchId = Integer.parseInt(matchIdParam);
-                Match match = MatchService.getInstance().getMatchById(matchId);
+                Match match = matchDao.findById(matchId);
 
                 Result result = new Result();
                 result.setMatchId(matchId);
                 ResultEntry resultEntry = new ResultEntry();
                 result.setResult(resultEntry.resultSymbol);
-                if (resultEntry.resultSymbol == Constants.FIRST_WON){
-                    result.setWinnerId(match.getTeam1_id());
-                    result.setLoserId(match.getTeam2_id());
-                    result.setWinnerGoals(resultEntry.team1goals);
-                    result.setLoserGoals(resultEntry.team2goals);
-                } else {
-                    result.setWinnerId(match.getTeam2_id());
-                    result.setLoserId(match.getTeam1_id());
-                    result.setWinnerGoals(resultEntry.team2goals);
-                    result.setLoserGoals(resultEntry.team1goals);
-                }
-                ResultService.getInstance().createResult(result);
-                logger.info("result has been created - " + result);
+                result.setTeam1_id(match.getTeam1_id());
+                result.setTeam2_id(match.getTeam2_id());
+                result.setTeam1_goals(resultEntry.team1goals);
+                result.setTeam2_goals(resultEntry.team2goals);
 
-                checkBets(matchId, result.getResult());
+                List<Bet> bets = betDao.findByMatchId(matchId);
+                if (!bets.isEmpty()) {
+                    bets.forEach(bet -> {
+                        if (bet.getBetResult().contains(result.getResult())) {
+                            bet.setStatus(Constants.WON);
+                        } else {
+                            bet.setStatus(Constants.LOST);
+                        }
+                    });
+                } else {
+                    logger.warn("no bets placed on this match");
+                }
+
+                logger.debug("start of transaction");
+                transactionalDao.finishMatch(result, bets);
+                logger.debug("transaction is finished");
 
                 HttpSession session = request.getSession();
-                User user = userService.findUserByLogin(((User) session.getAttribute(Constants.USER)).getLogin());
                 User sessionUser = (User) session.getAttribute(Constants.USER);
+                User user = userDao.findByLogin(sessionUser.getLogin());
                 if (!user.getBalance().equals(sessionUser.getBalance())) {
                     sessionUser.setBalance(user.getBalance());
-                    session.setAttribute(Constants.USER, sessionUser);
                     logger.info("user balance in the session has been updated");
                 }
-
                 response.sendRedirect(Utils.getReferrerURI(request));
+
             } catch (Exception e) {
                 logger.error("An exception occurred during finish match operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.FINISH_ERROR);
@@ -109,44 +121,12 @@ public class FinishMatchService{
 
 
     /**
-     * Finds all active bets, placed on this match, sets a bet status to
-     * 'won' or 'lost' and updates the user balance.
-     *
-     * @param matchId the id of a match.
-     * @param result string representation of a match result: '1' or 'X' or '2'.
-     * @throws ServiceException if an exception occurred during the operation.
-     */
-    private void checkBets(int matchId, char result) throws ServiceException {
-        List<Bet> list = betService.getMatchBets(matchId);
-        if (!list.isEmpty()) {
-            for (Bet bet : list) {
-                for (char c : bet.getBetResult().toCharArray()) {
-                    if (result == c) {
-                        bet.setStatus(Constants.WON);
-                        User user = userService.findUserById(bet.getUser_id());
-                        userService.updateUserBalance(user.getLogin(), bet.getMoney() * bet.getBet());
-                        logger.info("user balance in the database has been updated");
-                        break;
-                    } else {
-                        bet.setStatus(Constants.LOST);
-                    }
-                }
-                betService.updateBet(bet);
-                logger.info("bet with id [" + bet.getId() + "] - " + bet.getStatus());
-            }
-        } else {
-            logger.warn("no bets placed on this match");
-        }
-    }
-
-
-    /**
      * This class represents a random result of a match.
      */
     private class ResultEntry {
         int team1goals;
         int team2goals;
-        char resultSymbol;
+        String resultSymbol;
         ResultEntry() {
             getRandomResult();
         }

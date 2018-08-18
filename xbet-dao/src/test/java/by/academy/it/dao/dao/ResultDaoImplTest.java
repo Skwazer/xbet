@@ -15,20 +15,20 @@ public class ResultDaoImplTest {
     public void create() throws Exception {
         Result result = new Result();
         result.setMatchId(10);
-        result.setResult('Q');
-        result.setWinnerId(1);
-        result.setLoserId(2);
-        result.setWinnerGoals(22);
-        result.setLoserGoals(11);
+        result.setResult("Q");
+        result.setTeam1_id(1);
+        result.setTeam2_id(2);
+        result.setTeam1_goals(22);
+        result.setTeam2_goals(11);
         resultDao.create(result);
         Result result1 = resultDao.findByMatchId(10);
-        assertEquals("Q", result1.getResult().toString());
+        assertEquals("Q", result1.getResult());
     }
 
     @Test
     public void findByMatchId() throws Exception {
         Result result = resultDao.findByMatchId(1);
-        assertEquals("1", result.getResult().toString());
+        assertEquals("1", result.getResult());
     }
 
     @Test
