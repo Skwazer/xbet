@@ -1,6 +1,5 @@
-package by.academy.it.dao.dao;
+package by.academy.it.dao;
 
-import by.academy.it.dao.MatchDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Match;
 import org.junit.Test;
@@ -9,9 +8,10 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class MatchDaoImplTest {
+
 
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
 
@@ -41,7 +41,7 @@ public class MatchDaoImplTest {
 
     @Test
     public void getMatches() throws Exception {
-        List<Match> list = matchDao.getUnplayedMatches();
+        List<Match> list = matchDao.getUnplayedMatches(1);
         assertNotNull(list);
     }
 

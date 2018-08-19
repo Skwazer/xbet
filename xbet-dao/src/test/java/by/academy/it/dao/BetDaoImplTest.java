@@ -1,11 +1,10 @@
-package by.academy.it.dao.dao;
+package by.academy.it.dao;
 
-import by.academy.it.dao.BetDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 public class BetDaoImplTest {
 
@@ -21,12 +20,12 @@ public class BetDaoImplTest {
         bet.setMoney(100500d);
         bet.setStatus("test_status");
         betDao.create(bet);
-        assertFalse(betDao.findByUserId(1).isEmpty());
+        assertFalse(betDao.findByUserId(1, 0).isEmpty());
     }
 
     @Test
     public void findByUserId() throws Exception {
-        assertFalse(betDao.findByUserId(2).isEmpty());
+        assertFalse(betDao.findByUserId(2, 0).isEmpty());
     }
 
     @Test

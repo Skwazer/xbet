@@ -1,11 +1,11 @@
-package by.academy.it.dao.dao;
+package by.academy.it.dao;
 
-import by.academy.it.dao.UserDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.User;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class UserDaoImplTest {
 

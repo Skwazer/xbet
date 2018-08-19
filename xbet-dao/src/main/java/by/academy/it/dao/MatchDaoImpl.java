@@ -1,8 +1,8 @@
 package by.academy.it.dao;
 
-import by.academy.it.entity.Match;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
+import by.academy.it.entity.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,10 @@ public class MatchDaoImpl implements MatchDao {
     "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.matches WHERE id = ?";
     private static final String GET_UNPLAYED_MATCHES_QUERY = "SELECT * FROM xbet.matches WHERE id NOT IN " +
-            "(SELECT m.id FROM  xbet.matches m JOIN xbet.results r ON m.id = r.matches_id) ORDER BY date";
+            "(SELECT m.id FROM  xbet.matches m JOIN xbet.results r ON m.id = r.matches_id) " +
+            "ORDER BY date limit ?, 10";
+    private static final String GET_AMOUNT_OF_UNPLAYED_MATCHES_QUERY = "SELECT COUNT(*) FROM xbet.matches WHERE id " +
+            "NOT IN (SELECT m.id FROM  xbet.matches m JOIN xbet.results r ON m.id = r.matches_id)";
     private static final String DELETE_QUERY = "DELETE FROM xbet.matches WHERE id = ?";
 
 
@@ -110,15 +113,20 @@ public class MatchDaoImpl implements MatchDao {
     /**
      * Retrieves a list of unplayed matches from the database.
      *
+     * @param startFrom position from which the select operation is performed.
      * @return {@code List<Match>} - the list of unplayed matches.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    public List<Match> getUnplayedMatches() throws DAOException {
-        try (Connection connection = pool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet set =statement.executeQuery(GET_UNPLAYED_MATCHES_QUERY))
-        {
-            List<Match> list = new ArrayList<Match>();
+    public List<Match> getUnplayedMatches(int startFrom) throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<Match> list = new ArrayList<>(10);
+        try {
+            connection = pool.getConnection();
+            statement = connection.prepareStatement(GET_UNPLAYED_MATCHES_QUERY);
+            statement.setInt(1, startFrom);
+            set = statement.executeQuery();
             Match match;
             while (set.next()) {
                 match = new Match();
@@ -134,20 +142,46 @@ public class MatchDaoImpl implements MatchDao {
                 match.setVictory2OrDraw(set.getDouble(Constants.VICTORY2_OR_DRAW));
                 list.add(match);
             }
-            return list;
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao get matches operation is failed", e);
             throw new DAOException("MatchDao get matches operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
+        return list;
     }
 
 
     /**
-     * Deletes a match entry from the database.
+     * Retrieves amount of unplayed matches from the database.
      *
-     * @param match the {@link by.academy.it.entity.Match} entity.
+     * @return amount of unplayed matches.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
+    public int getAmountOfUnplayedMatches() throws DAOException {
+        int amount;
+        try (Connection connection = pool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet set = statement.executeQuery(GET_AMOUNT_OF_UNPLAYED_MATCHES_QUERY))
+        {
+            set.next();
+            amount = set.getInt(1);
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("MatchDao get amount of matches operation is failed", e);
+            throw new DAOException("MatchDao get amount of matches operation is failed", e);
+        }
+        return amount;
+    }
+
+
+        /**
+         * Deletes a match entry from the database.
+         *
+         * @param match the {@link by.academy.it.entity.Match} entity.
+         * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+         */
     public void delete(Match match) throws DAOException {
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))

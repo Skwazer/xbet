@@ -294,24 +294,33 @@ public class UserService {
      * @throws IOException if an input or output error is detected.
      */
     public void showUsers(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<User> list;
-        try {
-            list = userDao.getUsers();
-            if (!list.isEmpty()) {
-                logger.info("users list has been retrieved");
-                request.setAttribute("users", list);
-                request.getRequestDispatcher(Constants.PATH + Constants.USERS + Constants.JSP).forward(request, response);
-            } else {
-                logger.warn("Users list is empty");
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NO_USERS_ERROR);
+        String pageParam = request.getParameter(Constants.PAGE);
+        int page = Utils.checkPageParameter(pageParam);
+        int startFrom = Utils.calculateSelectStartPosition(page, request, response);
+        if (startFrom >= 0) {
+            List<User> list;
+            try {
+                list = userDao.getUsers(startFrom);
+                if (!list.isEmpty()) {
+                    logger.info("users list has been retrieved");
+                    double pages = Math.ceil(userDao.getAmountOfUsers() / 10d);
+                    request.setAttribute("users", list);
+                    request.setAttribute(Constants.CURRENT_PAGE, page);
+                    request.setAttribute(Constants.PAGES, pages);
+                    request.getRequestDispatcher(Constants.PATH + Constants.USERS + Constants.JSP)
+                            .forward(request, response);
+                } else {
+                    logger.warn("Users list is empty");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NO_USERS_ERROR);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                }
+            } catch (DAOException e) {
+                logger.error("UserService cannot find a users list", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USERS_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-        } catch (DAOException e) {
-            logger.error("UserService cannot find a users list", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USERS_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
 

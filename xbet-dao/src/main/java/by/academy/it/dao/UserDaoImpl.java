@@ -1,15 +1,12 @@
 package by.academy.it.dao;
 
-import by.academy.it.entity.User;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
+import by.academy.it.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +28,8 @@ public class UserDaoImpl implements UserDao {
     private static final String GET_BY_LOGIN_QUERY = "SELECT * FROM xbet.users WHERE login = ?";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.users WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.users WHERE id = ?";
-    private static final String GET_USERS_QUERY = "SELECT * FROM xbet.users";
+    private static final String GET_USERS_QUERY = "SELECT * FROM xbet.users limit ?, 10";
+    private static final String GET_AMOUNT_USERS_QUERY = "SELECT COUNT(*) FROM xbet.users";
 
 
     /**
@@ -219,16 +217,22 @@ public class UserDaoImpl implements UserDao {
     /**
      * Retrieves a list of user entries.
      *
+     * @param startFrom position from which the select operation is performed.
      * @return  the {@code List<User>} - a list of users.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     @Override
-    public List<User> getUsers() throws DAOException {
-        try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_USERS_QUERY);
-             ResultSet set = statement.executeQuery()) {
-            List<User> list = new ArrayList<>();
-            User user = null;
+    public List<User> getUsers(int startFrom) throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<User> list = new ArrayList<>(10);
+        try {
+            connection = pool.getConnection();
+            statement = connection.prepareStatement(GET_USERS_QUERY);
+            statement.setInt(1, startFrom);
+            set = statement.executeQuery();
+            User user;
             while (set.next()) {
                 user = new User();
                 user.setId(set.getInt(Constants.ID));
@@ -241,11 +245,37 @@ public class UserDaoImpl implements UserDao {
                 user.setRole(set.getInt(Constants.ROLE_ID));
                 list.add(user);
             }
-            return list;
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find users operation is failed", e);
             throw new DAOException("UserDao users login operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
+        return list;
+    }
+
+
+    /**
+     * Retrieves amount of users from the database.
+     *
+     * @return amount of users.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public int getAmountOfUsers() throws DAOException {
+        int amount;
+        try (Connection connection = pool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet set = statement.executeQuery(GET_AMOUNT_USERS_QUERY))
+        {
+            set.next();
+            amount = set.getInt(1);
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("MatchDao get amount of matches operation is failed", e);
+            throw new DAOException("MatchDao get amount of matches operation is failed", e);
+        }
+        return amount;
     }
 
 }

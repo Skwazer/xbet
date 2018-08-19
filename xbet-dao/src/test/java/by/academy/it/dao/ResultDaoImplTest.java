@@ -1,11 +1,10 @@
-package by.academy.it.dao.dao;
+package by.academy.it.dao;
 
-import by.academy.it.dao.ResultDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Result;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ResultDaoImplTest {
 

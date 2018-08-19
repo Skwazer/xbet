@@ -31,10 +31,20 @@ public interface MatchDao {
     /**
      * Retrieves a list of unplayed matches.
      *
+     * @param startFrom position from which the select operation is performed.
      * @return {@code List<Match>} - the list of unplayed matches.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    List<Match> getUnplayedMatches() throws DAOException;
+    List<Match> getUnplayedMatches(int startFrom) throws DAOException;
+
+
+    /**
+     * Retrieves amount of unplayed matches from the database.
+     *
+     * @return amount of unplayed matches.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    int getAmountOfUnplayedMatches() throws DAOException;
 
 
     /**

@@ -81,32 +81,6 @@ public class BetService {
 
 
     /**
-     * Retrieves a list of user's bets through {@link by.academy.it.dao.BetDao}.
-     *
-     * @param userId user's id.
-     * @return {@code List<Bet>} - a list of {@link by.academy.it.entity.Bet} entities.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
-     */
-    public List<Bet> getUsersBets(int userId) throws ServiceException {
-        List<Bet> list;
-        try {
-            list = betDao.findByUserId(userId);
-            if (!list.isEmpty()) {
-                for (Bet bet : list) {
-                    Match match = matchDao.findById(bet.getMatch_id());
-                    MatchService.getInstance().setTeams(match);
-                    bet.setMatch(match);
-                }
-            }
-        } catch (DAOException e) {
-            logger.error("BetService cannot get a bets list", e);
-            throw new ServiceException("BetService cannot get a bets list", e);
-        }
-        return list;
-    }
-
-
-    /**
      * Retrieves a list of bets placed on the match through {@link by.academy.it.dao.BetDao}.
      *
      * @param matchId the id of a match.
@@ -133,6 +107,33 @@ public class BetService {
 
 
     /**
+     * Retrieves a list of user's bets through {@link by.academy.it.dao.BetDao}.
+     *
+     * @param userId user's id.
+     * @param startFrom a position from which the select operation is performed.
+     * @return {@code List<Bet>} - a list of {@link by.academy.it.entity.Bet} entities.
+     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     */
+    private List<Bet> getUsersBets(int userId, int startFrom) throws ServiceException {
+        List<Bet> list;
+        try {
+            list = betDao.findByUserId(userId, startFrom);
+            if (!list.isEmpty()) {
+                for (Bet bet : list) {
+                    Match match = matchDao.findById(bet.getMatch_id());
+                    MatchService.getInstance().setTeams(match);
+                    bet.setMatch(match);
+                }
+            }
+        } catch (DAOException e) {
+            logger.error("BetService cannot get a bets list", e);
+            throw new ServiceException("BetService cannot get a bets list", e);
+        }
+        return list;
+    }
+
+
+    /**
      * Retrieves a list of the user's bets and sends it to 'bets page'.
      *
      * @param request {@code HttpServletRequest} request.
@@ -141,21 +142,30 @@ public class BetService {
      * @throws IOException if an input or output error is detected.
      */
     public void showUserBets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        User user = (User) request.getSession().getAttribute(Constants.USER);
-        if (user != null) {
-            try {
-                List<Bet> list = getUsersBets(user.getId());
-                request.getSession().setAttribute(Constants.BETS, list);
-                logger.info("bets list is retrieved");
+        String pageParam = request.getParameter(Constants.PAGE);
+        int page = Utils.checkPageParameter(pageParam);
+        int startFrom = Utils.calculateSelectStartPosition(page, request, response);
+        if (startFrom >= 0) {
+            User user = (User) request.getSession().getAttribute(Constants.USER);
+            if (user != null) {
+                try {
+                    List<Bet> list = getUsersBets(user.getId(), startFrom);
+                    double pages = Math.ceil(betDao.getAmountOfUserBets(user.getId()) / 10d);
+                    request.setAttribute(Constants.BETS, list);
+                    request.setAttribute(Constants.CURRENT_PAGE, page);
+                    request.setAttribute(Constants.PAGES, pages);
+                    logger.info("bets list is retrieved");
 
-            } catch (Exception e) {
-                logger.error("An exception occurred during get bets list operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
+                } catch (Exception e) {
+                    logger.error("An exception occurred during get bets list operation", e);
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
 
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                return;
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
             }
+            request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).forward(request, response);
         }
-        request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).forward(request, response);
     }
+
 }

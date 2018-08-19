@@ -84,6 +84,32 @@
                                 </tbody>
                             </table>
                         </div>
+                        <!-- pagination -->
+                        <div class="text-center">
+                            <ul class="store-pages">
+                                <c:if test="${currentPage > 1}">
+                                    <li><a href=<c:url value="/main/users?page=${currentPage-1}"/>>
+                                        <i class="fa fa-caret-left"></i></a></li>
+                                </c:if>
+                                <c:if test="${pages > 1}">
+                                    <c:forEach begin="1" end="${pages}" var="i">
+                                        <c:choose>
+                                            <c:when test="${currentPage == i}">
+                                                <li class="active">${i}</li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li><a href=<c:url value="/main/users?page=${i}"/>>${i}</a></li>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </c:if>
+                                <c:if test="${currentPage < pages}">
+                                    <li><a href=<c:url value="/main/users?page=${currentPage+1}"/>>
+                                        <i class="fa fa-caret-right"></i></a></li>
+                                </c:if>
+                            </ul>
+                        </div>
+                        <!-- /pagination -->
                     </div>
                 </div>
             </c:when>

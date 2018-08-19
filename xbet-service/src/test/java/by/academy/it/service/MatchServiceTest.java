@@ -2,7 +2,7 @@ package by.academy.it.service;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class MatchServiceTest {
 
@@ -10,7 +10,7 @@ public class MatchServiceTest {
 
     @Test
     public void getMatches() throws Exception {
-        assertNotNull(matchService.getUnplayedMatches());
+        assertNotNull(matchService.getUnplayedMatches(1));
     }
 
     @Test

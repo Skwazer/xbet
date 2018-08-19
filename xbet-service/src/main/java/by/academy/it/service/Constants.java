@@ -35,6 +35,12 @@ class Constants {
     static final String REGISTRATION_ERROR = "registration.error";
     static final String MATCHES = "matches";
     static final String MATCHES_LIST = "matchesList";
+    static final String MATCHES_LIST_EMPTY = "matches.list.empty";
+    static final String MATCHES_MESSAGE = "matchesMessage";
+    static final String PAGE_ERROR = "page.error";
+    static final String PAGE = "page";
+    static final String CURRENT_PAGE = "currentPage";
+    static final String PAGES = "pages";
     static final String BET = "bet";
     static final String AMOUNT = "amount";
     static final String BET_PARAM_ERROR = "bet.param.error";

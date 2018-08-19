@@ -5,7 +5,7 @@ import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class BetServiceTest {
 
@@ -21,7 +21,7 @@ public class BetServiceTest {
         bet.setMoney(111d);
         bet.setStatus("test");
         betDao.create(bet);
-        assertNotNull(betDao.findByUserId(1));
+        assertNotNull(betDao.findByUserId(1, 0));
     }
 
 }

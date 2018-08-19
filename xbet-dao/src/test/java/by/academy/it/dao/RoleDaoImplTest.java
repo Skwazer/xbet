@@ -1,11 +1,11 @@
-package by.academy.it.dao.dao;
+package by.academy.it.dao;
 
-import by.academy.it.dao.RoleDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Role;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class RoleDaoImplTest {
 

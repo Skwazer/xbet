@@ -1,12 +1,15 @@
 package by.academy.it.dao;
 
-import by.academy.it.entity.Bet;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
+import by.academy.it.entity.Bet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,8 @@ public class BetDaoImpl implements BetDao {
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.bets " +
             "(user_id, match_id, bet_result, bet, money, status) VALUES ( ?, ?, ?, ?, ?, ?)";
-    private static final String GET_BY_USER_ID_QUERY = "SELECT * FROM xbet.bets WHERE user_id = ?";
+    private static final String GET_BY_USER_ID_QUERY = "SELECT * FROM xbet.bets WHERE user_id = ? limit ?, 10";
+    private static final String GET_AMOUNT_BY_USER_ID_QUERY = "SELECT COUNT(*) FROM xbet.bets WHERE user_id = ?";
     private static final String GET_BY_MATCH_ID_QUERY =
             "SELECT * FROM xbet.bets WHERE match_id = ?  AND status = 'active'";
     private static final String DELETE_QUERY = "DELETE FROM xbet.bets WHERE match_id = ?";
@@ -66,18 +70,20 @@ public class BetDaoImpl implements BetDao {
      * Retrieves a list of bets from the database by user id.
      *
      * @param userId the id of a user.
+     * @param startFrom position from which the select operation is performed.
      * @return {@code List<Bet>} - the list of user's bets.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    public List<Bet> findByUserId(int userId) throws DAOException {
+    public List<Bet> findByUserId(int userId, int startFrom) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
-        List<Bet> list = new ArrayList<>();
+        List<Bet> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
             statement = connection.prepareStatement(GET_BY_USER_ID_QUERY);
             statement.setInt(1, userId);
+            statement.setInt(2, startFrom);
             set = statement.executeQuery();
             Bet bet;
             while (set.next()) {
@@ -100,6 +106,37 @@ public class BetDaoImpl implements BetDao {
             Utils.closeConnection(connection);
         }
         return list;
+    }
+
+
+    /**
+     * Retrieves amount of user bets from the database.
+     *
+     * @param userId the id of a user.
+     * @return amount of user bets.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public int getAmountOfUserBets(int userId) throws DAOException {
+        int amount;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            statement = connection.prepareStatement(GET_AMOUNT_BY_USER_ID_QUERY);
+            statement.setInt(1, userId);
+            set = statement.executeQuery();
+            set.next();
+            amount = set.getInt(1);
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("MatchDao get amount of matches operation is failed", e);
+            throw new DAOException("MatchDao get amount of matches operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
+        }
+        return amount;
     }
 
 

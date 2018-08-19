@@ -278,7 +278,7 @@ textarea.input {
 
 .section-title .message-title {
   display: inline-block;
-  color: #1b6d85;
+  color: #F8694A;
 }
 
 .section-title:after {
@@ -1278,7 +1278,7 @@ color: #f8694a !important;
 }
 
 .store-pages li.active {
-  color: #F8694A;
+  color: #F8694A !important;
 }
 
 /*=========================================================

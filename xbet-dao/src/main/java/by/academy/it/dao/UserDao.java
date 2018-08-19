@@ -60,10 +60,11 @@ public interface UserDao {
     /**
      * Retrieves a list of user entries.
      *
+     * @param startFrom position from which the select operation is performed.
      * @return  the {@code List<User>} - a list of users.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    List<User> getUsers() throws DAOException;
+    List<User> getUsers(int startFrom) throws DAOException;
 
 
     /**
@@ -73,5 +74,15 @@ public interface UserDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void update(User user) throws DAOException;
+
+
+    /**
+     * Retrieves amount of users.
+     *
+     * @return amount of users.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    int getAmountOfUsers() throws DAOException;
+
 
 }

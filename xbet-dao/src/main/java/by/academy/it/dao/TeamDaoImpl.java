@@ -1,8 +1,8 @@
 package by.academy.it.dao;
 
-import by.academy.it.entity.Team;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
+import by.academy.it.entity.Team;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class TeamDaoImpl implements TeamDao {
         PreparedStatement statement = null;
         ResultSet set = null;
         Team team = null;
-        try{
+        try {
             connection = pool.getConnection();
             statement = connection.prepareStatement(GET_BY_ID_QUERY);
             statement.setInt(1, id);

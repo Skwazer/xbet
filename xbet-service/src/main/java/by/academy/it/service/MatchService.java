@@ -47,32 +47,6 @@ public class MatchService{
 
 
     /**
-     * Retrieves a list of unpalyed match entities through {@link by.academy.it.dao.MatchDao}.
-     *
-     * @return {@code List<Match>} - the list of unplayed matches.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
-     */
-    public List<Match> getUnplayedMatches() throws ServiceException {
-        List<Match> list;
-        try {
-            list = matchDao.getUnplayedMatches();
-            if (!list.isEmpty()) {
-                for (Match match : list) {
-                    setTeams(match);
-                }
-            } else {
-                logger.error("MatchService matches list is null");
-                throw new ServiceException("MatchService matches list is null");
-            }
-        } catch (DAOException e) {
-            logger.error("MatchService cannot get a matches list", e);
-            throw new ServiceException("MatchService cannot get a matches list", e);
-        }
-        return list;
-    }
-
-
-    /**
      * Retrieves a match entry by id through {@link by.academy.it.dao.MatchDao}.
      *
      * @param id the id of a match.
@@ -152,19 +126,58 @@ public class MatchService{
      * @throws ServletException if the request could not be handled.
      */
     public void showUnplayedMatches(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            List<Match> list = getUnplayedMatches();
-            logger.info("Matches have been found");
-            request.setAttribute(Constants.MATCHES_LIST, list);
+        String pageParam = request.getParameter(Constants.PAGE);
+        int page = Utils.checkPageParameter(pageParam);
+        int startFrom = Utils.calculateSelectStartPosition(page, request, response);
+        if (startFrom >= 0) {
+            try {
+                List<Match> list = getUnplayedMatches(startFrom);
+                double pages = Math.ceil(matchDao.getAmountOfUnplayedMatches() / 10d);
+                if (!list.isEmpty()) {
+                    logger.info("Matches have been found");
+                    request.setAttribute(Constants.MATCHES_LIST, list);
+                    request.setAttribute(Constants.CURRENT_PAGE, page);
+                    request.setAttribute(Constants.PAGES, pages);
 
-            request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
+                    request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
+                } else {
+                    logger.warn("Matches have not been found");
+                    request.setAttribute(Constants.MATCHES_MESSAGE, Constants.MATCHES_LIST_EMPTY);
 
-        } catch (ServiceException e) {
-            logger.error("An exception occurred during get unplayed matches operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
+                    request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
+                }
+            } catch (ServiceException | DAOException e) {
+                logger.error("An exception occurred during get unplayed matches operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
 
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
         }
     }
+
+
+    /**
+     * Retrieves a list of unpalyed match entities through {@link by.academy.it.dao.MatchDao}.
+     *
+     * @param startFrom a position from which the select operation is performed.
+     * @return {@code List<Match>} - the list of unplayed matches.
+     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     */
+    List<Match> getUnplayedMatches(int startFrom) throws ServiceException {
+        List<Match> list;
+        try {
+            list = matchDao.getUnplayedMatches(startFrom);
+            if (!list.isEmpty()) {
+                for (Match match : list) {
+                    setTeams(match);
+                }
+            }
+        } catch (DAOException e) {
+            logger.error("MatchService cannot get a matches list", e);
+            throw new ServiceException("MatchService cannot get a matches list", e);
+        }
+        return list;
+    }
+
 
 }
