@@ -20,6 +20,8 @@
     <fmt:message key="my.bets" var="myBets"/>
     <fmt:message key="users" var="usersTitle"/>
     <fmt:message key="xbet" var="xbet"/>
+    <fmt:message key="management" var="management"/>
+    <fmt:message key="roles" var="rolesTitle"/>
 
 </fmt:bundle>
 
@@ -184,18 +186,26 @@
     <!-- container -->
     <div class="container">
         <div id="responsive-nav">
+            <!-- management nav -->
+            <c:if test="${user.role eq 1}">
+                <div class="category-nav">
+                    <span class="category-header"><c:out value="${management}"/><i class="fa fa-list"></i></span>
+                    <ul class="category-list">
+                        <li><a href="<c:url value="/main/users"/>"><c:out value="${usersTitle}"/></a></li>
+                        <li><a href="<c:url value="/main/roles"/>"><c:out value="${rolesTitle}"/></a></li>
+                    </ul>
+                </div>
+            </c:if>
+            <!-- /management nav -->
             <!-- menu nav -->
             <div class="menu-nav">
                 <span class="menu-header">Menu <i class="fa fa-bars"></i></span>
                 <ul class="menu-list">
                     <li><a href="<c:url value="/main/home"/>"><c:out value="${home}"/></a></li>
                     <li><a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></li>
-                    <c:if test="${user.role eq 1}">
-                        <li><a href="<c:url value="/main/users"/>"><c:out value="${usersTitle}"/></a></li>
-                    </c:if>
                 </ul>
             </div>
-            <!-- menu nav -->
+            <!-- /menu nav -->
         </div>
     </div>
     <!-- /container -->

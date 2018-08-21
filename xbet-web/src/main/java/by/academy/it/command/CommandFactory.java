@@ -49,8 +49,15 @@ public class CommandFactory {
         commands.put(Constants.POST_CREATE_USER, new CreateUserCommand());
         commands.put(Constants.POST_UPDATE_USER, new ShowUpdateUserPageCommand());
         commands.put(Constants.POST_CHANGE_USER, new UpdateUserCommand());
-        commands.put(Constants.GET_DELETE_USER, new DeleteUserCommand());
+        commands.put(Constants.POST_DELETE_USER, new DeleteUserCommand());
         commands.put(Constants.GET_UPDATE_USER, new ForwardRequestCommand(Constants.UPDATE_USER));
+        commands.put(Constants.GET_ROLES, new ShowRolesCommand());
+        commands.put(Constants.GET_CREATE_ROLE, new ForwardRequestCommand(Constants.CREATE_ROLE));
+        commands.put(Constants.POST_CREATE_ROLE, new CreateRoleCommand());
+        commands.put(Constants.POST_UPDATE_ROLE, new ShowUpdateRolePageCommand());
+        commands.put(Constants.GET_UPDATE_ROLE, new ForwardRequestCommand(Constants.UPDATE_ROLE));
+        commands.put(Constants.POST_CHANGE_ROLE, new UpdateRoleCommand());
+        commands.put(Constants.POST_DELETE_ROLE, new DeleteRoleCommand());
 
     }
 

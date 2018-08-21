@@ -225,7 +225,7 @@ function roleCheck() {
     } else if (role <= 0) {
         isRoleCorrect = false;
         roleMessage('NEGATIVE');
-    } else if (role > 2) {
+    } else if (role > 10) {
         isRoleCorrect = false;
         roleMessage('EXCESS');
     } else {

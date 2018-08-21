@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, finds the user by id and put it into the request.
+ * Implements {@link by.academy.it.command.Command}, finds the user by id and put it into the request.
  *
  */
-public class ShowUpdateUserPageCommand extends Command {
+public class ShowUpdateUserPageCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateUserPageCommand.class);
     private UserService userService = UserService.getInstance();

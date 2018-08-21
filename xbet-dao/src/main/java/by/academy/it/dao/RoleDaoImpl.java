@@ -1,15 +1,14 @@
 package by.academy.it.dao;
 
-import by.academy.it.entity.Role;
 import by.academy.it.dao.factory.ConnectionPool;
 import by.academy.it.dao.factory.ConnectionPoolException;
+import by.academy.it.entity.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Works with a {@link by.academy.it.entity.Role} entity class and has access to the 'roles' database table.
@@ -22,7 +21,9 @@ public class RoleDaoImpl implements RoleDao {
 
     private static final String CREATE_QUERY = "INSERT INTO xbet.roles (role) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.roles WHERE id = ?";
-    private static final String DELETE_QUERY = "DELETE FROM xbet.roles WHERE role = ?";
+    private static final String GET_ROLES_QUERY = "SELECT * FROM xbet.roles ORDER BY id";
+    private static final String UPDATE_QUERY = "UPDATE xbet.roles SET role = ? WHERE id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM xbet.roles WHERE id = ?";
 
 
     /**
@@ -89,20 +90,69 @@ public class RoleDaoImpl implements RoleDao {
 
 
     /**
-     * Deletes a role entry from the database.
+     * Retrieves a list of role entries from the database.
+     *
+     * @return {@link by.academy.it.entity.Role} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public List<Role> getRoles() throws DAOException {
+        List<Role> list = new ArrayList<>();
+        try (Connection connection = pool.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet set = statement.executeQuery(GET_ROLES_QUERY))
+        {
+            Role role;
+            while (set.next()) {
+                role = new Role();
+                role.setId(set.getInt(Constants.ID));
+                role.setRole(set.getString(Constants.ROLE));
+                list.add(role);
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("RoleDao get roles operation is failed", e);
+            throw new DAOException("RoleDao get roles operation is failed", e);
+        }
+        return list;
+    }
+
+
+    /**
+     * Updates a role entry in the database.
      *
      * @param role the {@link by.academy.it.entity.Role} entity.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    public void delete(Role role) throws DAOException {
+    public void update(Role role) throws DAOException {
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY))
+        {
+            statement.setString(1, role.getRole());
+            statement.setInt(2, role.getId());
+            statement.executeUpdate();
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("RoleDao cannot update a role in DAO", e);
+            throw new DAOException("RoleDao cannot update a role", e);
+        }
+    }
+
+
+    /**
+     * Deletes a role entry from the database.
+     *
+     * @param id - role id.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public void delete(int id) throws DAOException {
         try (Connection connection = pool.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
         {
-            statement.setString(1, role.getRole());
+            statement.setInt(1, id);
             statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao cannot delete a role in DAO", e);
             throw new DAOException("RoleDao cannot delete a role", e);
         }
     }
+
+
 }

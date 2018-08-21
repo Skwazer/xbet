@@ -1,5 +1,6 @@
 package by.academy.it.command;
 
+import by.academy.it.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,20 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, shows jsp pages.
+ * Implements {@link by.academy.it.command.Command}, shows a list of roles.
  *
  */
-public class ForwardRequestCommand implements Command {
+public class ShowRolesCommand implements Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(ForwardRequestCommand.class);
-    private String page;
-
-    ForwardRequestCommand(String page) {
-        this.page = page;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(ShowRolesCommand.class);
+    private RoleService roleService = RoleService.getInstance();
 
     /**
-     * Forwards a request and response to a selected jsp.
+     * Delegates show roles operation to {@link by.academy.it.service.RoleService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -31,8 +28,8 @@ public class ForwardRequestCommand implements Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        logger.info("requested page is '" + page + "'");
-        request.getRequestDispatcher(Constants.PATH + page + Constants.JSP).forward(request, response);
+        logger.info("show roles operation");
+        roleService.showRoles(request, response);
     }
 
 }

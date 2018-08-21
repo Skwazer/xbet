@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, randomly finishes the match.
+ * Implements {@link by.academy.it.command.Command}, randomly finishes the match.
  *
  */
-public class FinishMatchCommand extends Command {
+public class FinishMatchCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(FinishMatchCommand.class);
     private FinishMatchService finishMatchService = FinishMatchService.getInstance();

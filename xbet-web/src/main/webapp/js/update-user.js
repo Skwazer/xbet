@@ -167,7 +167,7 @@ function roleCheck() {
         alert("<c:out value="${roleRequired}"/>");
     } else if (role <= 0) {
         roleMessage('NEGATIVE');
-    } else if (role > 2) {
+    } else if (role > 10) {
         roleMessage('EXCESS');
     } else {
         roleMessage('SUCCESS');

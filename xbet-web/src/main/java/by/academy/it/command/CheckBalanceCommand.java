@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, checks the user's balance through ajax.
+ * Implements {@link by.academy.it.command.Command}, checks the user's balance through ajax.
  *
  */
-public class CheckBalanceCommand extends Command {
+public class CheckBalanceCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckBalanceCommand.class);
     private UserService userService = UserService.getInstance();

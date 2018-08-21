@@ -32,7 +32,7 @@ public class RoleDaoImplTest {
         Role role = new Role();
         role.setId(3);
         role.setRole("tester");
-        roleDao.delete(role);
+        roleDao.delete(3);
     }
 
 }

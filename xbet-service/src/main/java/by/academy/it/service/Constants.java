@@ -75,4 +75,24 @@ class Constants {
     static final String LOST = "lost";
     static final String USER_NOT_FOUND = "user.not.found";
     static final String DELETE_YOURSELF_MESSAGE = "delete.yourself.message";
+    static final String ROLES_ERROR = "roles.error";
+    static final String ROLES = "roles";
+    static final String NO_ROLES_ERROR = "no.roles.error";
+    static final String ROLE_ERROR = "role.error";
+    static final String ROLE_DATA_ERROR = "role.data.error";
+    static final String CREATE_ROLE_MESSAGE = "create.role.message";
+    static final String UPDATED_USER = "updateUser";
+    static final String UPDATED_ROLE = "updateRole";
+    static final String UPDATE_ROLE = "update-role";
+    static final String ROLE_MESSAGE = "roleMessage";
+    static final String ROLE_NOT_FOUND = "role.not.found";
+    static final String SHOW_UPDATE_ROLE_ERROR = "show.update.role.error";
+    static final String SHOW_UPDATE_ROLE_PARAMETER_ERROR = "show.update.role.parameter.error";
+    static final String UPDATE_ROLE_MESSAGE = "update.role.message";
+    static final String UPDATE_ROLE_ERROR = "update.role.error";
+    static final String UPDATE_FORBIDDEN = "update.forbidden";
+    static final String DELETE_FORBIDDEN = "delete.forbidden";
+    static final String DELETE_ROLE_MESSAGE = "delete.role.message";
+    static final String DELETE_ROLE_ERROR = "delete.role.error";
+
 }

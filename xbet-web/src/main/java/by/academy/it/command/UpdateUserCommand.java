@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, updates user's data.
+ * Implements {@link by.academy.it.command.Command}, updates user's data.
  */
-public class UpdateUserCommand extends Command {
+public class UpdateUserCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateUserCommand.class);
     private UserService userService = UserService.getInstance();

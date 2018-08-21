@@ -1,17 +1,14 @@
 package by.academy.it.command;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This class is a root class for commands.
+ * This interface is a root interface for commands.
  */
-public abstract class Command {
+public interface Command {
 
     /**
      * Abstract method. Commands must provide an implementation.
@@ -21,6 +18,6 @@ public abstract class Command {
      * @throws ServletException if the request could not be handled.
      * @throws IOException if an input or output error is detected.
      */
-    public abstract void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+    void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 
 }

@@ -42,6 +42,16 @@ public class Constants {
     static final String POST_CHANGE_USER = "POST/change-user";
     static final String POST_UPDATE_USER = "POST/update-user";
     static final String GET_UPDATE_USER = "GET/update-user";
-    static final String GET_DELETE_USER = "GET/delete-user";
+    static final String POST_DELETE_USER = "POST/delete-user";
     static final String UPDATE_USER = "update-user";
+    static final String GET_ROLES = "GET/roles";
+    static final String GET_CREATE_ROLE = "GET/create-role";
+    static final String CREATE_ROLE = "create-role";
+    static final String POST_CREATE_ROLE = "POST/create-role";
+    static final String POST_UPDATE_ROLE = "POST/update-role";
+    static final String GET_UPDATE_ROLE = "GET/update-role";
+    static final String UPDATE_ROLE = "update-role";
+    static final String POST_CHANGE_ROLE = "POST/change-role";
+    static final String POST_DELETE_ROLE = "POST/delete-role";
+
 }

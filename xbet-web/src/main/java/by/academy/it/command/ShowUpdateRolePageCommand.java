@@ -1,6 +1,6 @@
 package by.academy.it.command;
 
-import by.academy.it.service.BetService;
+import by.academy.it.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, retrieves a list of the user's bets and sends it to 'bets page'.
+ * Implements {@link by.academy.it.command.Command}, sends update role page to user.
  *
  */
-public class ShowUserBetsCommand implements Command {
+public class ShowUpdateRolePageCommand implements Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShowUserBetsCommand.class);
-    private BetService betService = BetService.getInstance();
+    private static final Logger logger = LoggerFactory.getLogger(ShowUpdateRolePageCommand.class);
+    private RoleService roleService = RoleService.getInstance();
 
     /**
-     * Delegates operation to {@link by.academy.it.service.BetService}.
+     * Delegates update role operation to {@link by.academy.it.service.RoleService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -28,8 +28,8 @@ public class ShowUserBetsCommand implements Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("show user bets operation");
-        betService.showUserBets(request, response);
+        logger.info("update role operation");
+        roleService.showUpdateRolePage(request, response);
     }
 
 }

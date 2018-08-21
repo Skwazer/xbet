@@ -14,7 +14,7 @@
     <fmt:message key="enter.balance" var="enterBalance"/>
     <fmt:message key="enter.role" var="enterRole"/>
     <fmt:message key="create" var="create"/>
-    <fmt:message key="manage" var="manage"/>
+    <fmt:message key="change" var="change"/>
 </fmt:bundle>
 
 <!-- section -->
@@ -76,7 +76,7 @@
                                         <td>
                                             <form class="clearfix" method="POST" action="<c:url value="/main/update-user"/>">
                                                 <input type="hidden" name="key" value="${user.id}">
-                                                <button class="main-btn"><c:out value="${manage}"/></button>
+                                                <button class="main-btn"><c:out value="${change}"/></button>
                                             </form>
                                         </td>
                                     </tr>

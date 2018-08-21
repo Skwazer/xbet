@@ -7,7 +7,6 @@
 <fmt:bundle basename="i18n">
     <fmt:message key="create.data" var="createData"/>
     <fmt:message key="admin.error" var="adminError"/>
-    <fmt:message key="create.data" var="createData"/>
     <fmt:message key="enter.login" var="enterLogin"/>
     <fmt:message key="enter.password" var="enterPassword"/>
     <fmt:message key="enter.firstname" var="enterFirstname"/>
@@ -114,13 +113,16 @@
                                 <div class="form-group">
                                     <label for="role"><c:out value="${enterRole}"/></label>
                                     <input id="role" class="input" type="number" name="role" onchange="roleCheck()"
-                                           value="<c:out value="${updateUser.role}"/>">
+                                           value="<c:out value="${updateUser.role}"/>"
+                                           <c:if test="${updateUser.id eq 1}">readonly</c:if>>
                                     <div id="roleDiv" style="display:none;"></div>
                                 </div>
                                 <button class="primary-btn pull-left"><c:out value="${update}"/></button>
-                                <button class="primary-btn pull-right">
-                                    <a href="<c:url value="/main/delete-user?key=${updateUser.id}"/>">
-                                        <c:out value="${delete}"/></a></button>
+                                <button form="deleteForm" class="primary-btn pull-right">
+                                    <c:out value="${delete}"/></button>
+                            </form>
+                            <form id="deleteForm" method="post" action="<c:url value="/main/delete-user"/>">
+                                <input type="hidden" name="key" value="${updateUser.id}">
                             </form>
                         </div>
                     </div>
@@ -140,7 +142,7 @@
 
 
 <script type="text/javascript" charset="UTF-8">
-    <%@include file="../../js/updateUser.js" %>
+    <%@include file="../../js/update-user.js" %>
 </script>
 
 

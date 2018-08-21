@@ -2,6 +2,8 @@ package by.academy.it.dao;
 
 import by.academy.it.entity.Role;
 
+import java.util.List;
+
 /**
  * Defines {@code RoleDao} methods.
  */
@@ -27,11 +29,29 @@ public interface RoleDao {
 
 
     /**
-     * Deletes a role entry.
+     * Retrieves a list of role entries.
+     *
+     * @return {@link by.academy.it.entity.Role} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Role> getRoles() throws DAOException;
+
+
+    /**
+     * Updates a role entry.
      *
      * @param role the {@link by.academy.it.entity.Role} entity.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void delete(Role role) throws DAOException;
+    void update(Role role) throws DAOException;
+
+
+    /**
+     * Deletes a role entry.
+     *
+     * @param id - role id.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    void delete(int id) throws DAOException;
 
 }

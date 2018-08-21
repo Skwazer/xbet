@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, authenticates login through ajax.
+ * Implements {@link by.academy.it.command.Command}, authenticates login through ajax.
  */
-public class AuthenticateLoginCommand extends Command {
+public class AuthenticateLoginCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticateLoginCommand.class);
     private UserService userService = UserService.getInstance();

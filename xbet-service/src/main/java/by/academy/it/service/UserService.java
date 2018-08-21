@@ -17,6 +17,7 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This class works with {@link by.academy.it.dao.UserDao} and {@link by.academy.it.dao.TransactionalDao} class.
@@ -316,7 +317,7 @@ public class UserService {
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
             } catch (DAOException e) {
-                logger.error("UserService cannot find a users list", e);
+                logger.error("UserService cannot get a users list", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USERS_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -407,7 +408,7 @@ public class UserService {
                 int id = Integer.parseInt(key);
                 User user = findUserById(id);
                 if (user != null) {
-                    request.getSession().setAttribute("updateUser", user);
+                    request.getSession().setAttribute(Constants.UPDATED_USER, user);
                     logger.info("user has been retrieved");
 
                     response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_USER);
@@ -467,7 +468,7 @@ public class UserService {
 
             HttpSession session = request.getSession();
             User sessionUser = (User) session.getAttribute(Constants.USER);
-            if (user.getLogin().equals((sessionUser.getLogin()))) {
+            if (Objects.equals(user.getId(), sessionUser.getId())) {
                 session.setAttribute(Constants.USER, user);
             }
 

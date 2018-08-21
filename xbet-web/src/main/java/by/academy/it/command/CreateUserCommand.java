@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, creates a user.
+ * Implements {@link by.academy.it.command.Command}, creates a user.
  *
  */
-public class CreateUserCommand extends Command {
+public class CreateUserCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateUserCommand.class);
     private UserService userService = UserService.getInstance();

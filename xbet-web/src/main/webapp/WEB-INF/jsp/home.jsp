@@ -44,7 +44,7 @@
                     <img src="<c:url value="/img/football3.jpg"/>" alt="football">
                     <div class="banner-caption text-center">
                         <h1 class="primary-color">X-BET</h1>
-                        <h2 class="white-color font-weak"><c:out value="${xbet}"/></h2>
+                        <h2 class="color-dark font-weak"><c:out value="${xbet}"/></h2>
                         <br/>
                         <button class="primary-btn">
                             <a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></button>

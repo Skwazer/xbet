@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command} class, finds match and puts it in the session.
+ * Implements {@link by.academy.it.command.Command}, finds match and puts it in the session.
  *
  */
-public class ShowPlaceBetPageCommand extends Command {
+public class ShowPlaceBetPageCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowPlaceBetPageCommand.class);
     private MatchService matchService = MatchService.getInstance();
