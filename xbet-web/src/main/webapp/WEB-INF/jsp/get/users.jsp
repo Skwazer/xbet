@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="header.jsp" %>
+<%@include file="../header.jsp" %>
 
 <fmt:bundle basename="i18n">
     <fmt:message key="admin.error" var="adminError"/>
@@ -42,7 +42,7 @@
                                     </c:otherwise>
                                 </c:choose>
 
-                                <button class="primary-btn pull-right"><a href="<c:url value="/main/create-user"/>">
+                                <button class="primary-btn pull-right"><a href="<c:url value="/main/create/user"/>">
                                     <c:out value="${create}"/></a></button>
                             </div>
                             <table class="table table-striped">
@@ -74,7 +74,7 @@
                                         </td>
                                         <td><c:out value="${user.role}"/></td>
                                         <td>
-                                            <form class="clearfix" method="POST" action="<c:url value="/main/update-user"/>">
+                                            <form class="clearfix" method="POST" action="<c:url value="/main/update/user"/>">
                                                 <input type="hidden" name="key" value="${user.id}">
                                                 <button class="main-btn"><c:out value="${change}"/></button>
                                             </form>
@@ -88,7 +88,7 @@
                         <div class="text-center">
                             <ul class="store-pages">
                                 <c:if test="${currentPage > 1}">
-                                    <li><a href=<c:url value="/main/users?page=${currentPage-1}"/>>
+                                    <li><a href=<c:url value="/main/get/users?page=${currentPage-1}"/>>
                                         <i class="fa fa-caret-left"></i></a></li>
                                 </c:if>
                                 <c:if test="${pages > 1}">
@@ -98,13 +98,13 @@
                                                 <li class="active">${i}</li>
                                             </c:when>
                                             <c:otherwise>
-                                                <li><a href=<c:url value="/main/users?page=${i}"/>>${i}</a></li>
+                                                <li><a href=<c:url value="/main/get/users?page=${i}"/>>${i}</a></li>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
                                 </c:if>
                                 <c:if test="${currentPage < pages}">
-                                    <li><a href=<c:url value="/main/users?page=${currentPage+1}"/>>
+                                    <li><a href=<c:url value="/main/get/users?page=${currentPage+1}"/>>
                                         <i class="fa fa-caret-right"></i></a></li>
                                 </c:if>
                             </ul>
@@ -125,4 +125,4 @@
 <!-- /section -->
 
 
-<%@include file="footer.jsp" %>
+<%@include file="../footer.jsp" %>

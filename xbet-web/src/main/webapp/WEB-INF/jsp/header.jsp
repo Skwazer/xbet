@@ -22,6 +22,7 @@
     <fmt:message key="xbet" var="xbet"/>
     <fmt:message key="management" var="management"/>
     <fmt:message key="roles" var="rolesTitle"/>
+    <fmt:message key="bets" var="betsTitle"/>
 
 </fmt:bundle>
 
@@ -191,8 +192,9 @@
                 <div class="category-nav">
                     <span class="category-header"><c:out value="${management}"/><i class="fa fa-list"></i></span>
                     <ul class="category-list">
-                        <li><a href="<c:url value="/main/users"/>"><c:out value="${usersTitle}"/></a></li>
-                        <li><a href="<c:url value="/main/roles"/>"><c:out value="${rolesTitle}"/></a></li>
+                        <li><a href="<c:url value="/main/get/users"/>"><c:out value="${usersTitle}"/></a></li>
+                        <li><a href="<c:url value="/main/get/roles"/>"><c:out value="${rolesTitle}"/></a></li>
+                        <li><a href="<c:url value="/main/get/bets"/>"><c:out value="${betsTitle}"/></a></li>
                     </ul>
                 </div>
             </c:if>

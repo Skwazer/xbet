@@ -44,20 +44,27 @@ public class CommandFactory {
         commands.put(Constants.POST_TOPUP, new TopUpBalanceCommand());
         commands.put(Constants.GET_BETS, new ShowUserBetsCommand());
         commands.put(Constants.POST_MATCHES, new FinishMatchCommand());
-        commands.put(Constants.GET_USERS, new ShowUsersCommand());
+        commands.put(Constants.GET_GET_USERS, new ShowUsersCommand());
         commands.put(Constants.GET_CREATE_USER, new ForwardRequestCommand(Constants.CREATE_USER));
         commands.put(Constants.POST_CREATE_USER, new CreateUserCommand());
         commands.put(Constants.POST_UPDATE_USER, new ShowUpdateUserPageCommand());
         commands.put(Constants.POST_CHANGE_USER, new UpdateUserCommand());
         commands.put(Constants.POST_DELETE_USER, new DeleteUserCommand());
         commands.put(Constants.GET_UPDATE_USER, new ForwardRequestCommand(Constants.UPDATE_USER));
-        commands.put(Constants.GET_ROLES, new ShowRolesCommand());
+        commands.put(Constants.GET_GET_ROLES, new ShowRolesCommand());
         commands.put(Constants.GET_CREATE_ROLE, new ForwardRequestCommand(Constants.CREATE_ROLE));
         commands.put(Constants.POST_CREATE_ROLE, new CreateRoleCommand());
         commands.put(Constants.POST_UPDATE_ROLE, new ShowUpdateRolePageCommand());
         commands.put(Constants.GET_UPDATE_ROLE, new ForwardRequestCommand(Constants.UPDATE_ROLE));
         commands.put(Constants.POST_CHANGE_ROLE, new UpdateRoleCommand());
         commands.put(Constants.POST_DELETE_ROLE, new DeleteRoleCommand());
+        commands.put(Constants.GET_GET_BETS, new ShowBetsCommand());
+        commands.put(Constants.GET_CREATE_BET, new ForwardRequestCommand(Constants.CREATE_BET));
+        commands.put(Constants.POST_CREATE_BET, new CreateBetCommand());
+        commands.put(Constants.POST_UPDATE_BET, new ShowUpdateBetPageCommand());
+        commands.put(Constants.GET_UPDATE_BET, new ForwardRequestCommand(Constants.UPDATE_BET));
+        commands.put(Constants.POST_CHANGE_BET, new UpdateBetCommand());
+        commands.put(Constants.POST_DELETE_BET, new DeleteBetCommand());
 
     }
 

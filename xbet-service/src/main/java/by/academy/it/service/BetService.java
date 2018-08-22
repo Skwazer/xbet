@@ -51,15 +51,83 @@ public class BetService {
     /**
      * Creates a bet entry through {@link by.academy.it.dao.BetDao}.
      *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
      */
-    public void createBet(Bet bet) throws ServiceException {
-        try {
-            betDao.create(bet);
-        } catch (DAOException e) {
-            logger.error("BetService cannot create a bet", e);
-            throw new ServiceException("BetService cannot create a bet", e);
+    public void createBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String userIdParam = request.getParameter(Constants.USER_ID);
+        String matchIdParam = request.getParameter(Constants.MATCH_ID);
+        String betResult = request.getParameter(Constants.BET_RESULT);
+        String betParam = request.getParameter(Constants.BET);
+        String moneyParam = request.getParameter(Constants.MONEY);
+        String status = request.getParameter(Constants.STATUS);
+
+        if (Utils.isValidString(userIdParam) && Utils.isValidString(matchIdParam) && Utils.isValidString(betResult)
+                && Utils.isValidString(betParam) && Utils.isValidString(moneyParam) && Utils.isValidString(status)) {
+            try {
+                int userId = Integer.parseInt(userIdParam);
+                int matchId = Integer.parseInt(matchIdParam);
+                double bet = Double.parseDouble(betParam);
+                double money = Double.parseDouble(moneyParam);
+
+                Bet bet1 = new Bet();
+                bet1.setUser_id(userId);
+                bet1.setMatch_id(matchId);
+                bet1.setBetResult(betResult);
+                bet1.setBet(bet);
+                bet1.setMoney(money);
+                bet1.setStatus(status);
+                betDao.create(bet1);
+
+                logger.info("bet has been created");
+                request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.CREATE_BET_MESSAGE);
+                response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during create bet operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_BET_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.error("Create bet data are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_DATA_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        }
+    }
+
+
+    /**
+     * Retrieves a bet by id through {@link by.academy.it.dao.BetDao} and sends a redirect to 'update bet' page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void showUpdateBetPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String key = request.getParameter(Constants.KEY);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                Bet bet = betDao.getById(id);
+                logger.info("bet has been retrieved");
+
+                request.getSession().setAttribute(Constants.UPDATED_BET, bet);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE + Constants.BET);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during show update bet page operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_BET_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Show update bet page operation parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_BET_PARAMETER_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
 
@@ -67,15 +135,44 @@ public class BetService {
     /**
      * Updates a bet entry through {@link by.academy.it.dao.BetDao}.
      *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
      */
-    public void updateBet(Bet bet) throws ServiceException {
+    public void updateBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String idParam = request.getParameter(Constants.ID);
+        String userIdParam = request.getParameter(Constants.USER_ID);
+        String matchIdParam = request.getParameter(Constants.MATCH_ID);
+        String betResult = request.getParameter(Constants.BET_RESULT);
+        String betParam = request.getParameter(Constants.BET);
+        String moneyParam = request.getParameter(Constants.MONEY);
+        String status = request.getParameter(Constants.STATUS);
         try {
-            betDao.updateStatus(bet);
-        } catch (DAOException e) {
-            logger.error("BetService cannot updateBalance a bet", e);
-            throw new ServiceException("BetService cannot updateBalance a bet", e);
+            int id = Integer.parseInt(idParam);
+            int userId = Integer.parseInt(userIdParam);
+            int matchId = Integer.parseInt(matchIdParam);
+            double bet = Double.parseDouble(betParam);
+            double money = Double.parseDouble(moneyParam);
+
+            Bet bet1 = new Bet();
+            bet1.setId(id);
+            bet1.setUser_id(userId);
+            bet1.setMatch_id(matchId);
+            bet1.setBetResult(betResult);
+            bet1.setBet(bet);
+            bet1.setMoney(money);
+            bet1.setStatus(status);
+            betDao.update(bet1);
+
+            logger.info("bet has been updated");
+            request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.UPDATE_BET_MESSAGE);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
+
+        } catch (Exception e) {
+            logger.error("An exception occurred during update bet operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_BET_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
 
@@ -119,11 +216,7 @@ public class BetService {
         try {
             list = betDao.findByUserId(userId, startFrom);
             if (!list.isEmpty()) {
-                for (Bet bet : list) {
-                    Match match = matchDao.findById(bet.getMatch_id());
-                    MatchService.getInstance().setTeams(match);
-                    bet.setMatch(match);
-                }
+                setMatches(list);
             }
         } catch (DAOException e) {
             logger.error("BetService cannot get a bets list", e);
@@ -165,6 +258,110 @@ public class BetService {
                 }
             }
             request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).forward(request, response);
+        }
+    }
+
+
+    /**
+     * Retrieves a list of all bets and sends it to 'bets page'.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void showAllBets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String pageParam = request.getParameter(Constants.PAGE);
+        int page = Utils.checkPageParameter(pageParam);
+        int startFrom = Utils.calculateSelectStartPosition(page, request, response);
+        if (startFrom >= 0) {
+                try {
+                    List<Bet> list = getAllBets(startFrom);
+                    double pages = Math.ceil(betDao.getAmountOfAllBets() / 10d);
+                    request.setAttribute(Constants.ALL_BETS, list);
+                    request.setAttribute(Constants.CURRENT_PAGE, page);
+                    request.setAttribute(Constants.PAGES, pages);
+
+                    logger.info("all bets list is retrieved");
+                    request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.BETS + Constants.JSP)
+                            .forward(request, response);
+
+                } catch (Exception e) {
+                    logger.error("An exception occurred during get all bets list operation", e);
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+        }
+    }
+
+
+    /**
+     * Retrieves a list of all bets through {@link by.academy.it.dao.BetDao}.
+     *
+     * @param startFrom a position from which the select operation is performed.
+     * @return {@code List<Bet>} - a list of {@link by.academy.it.entity.Bet} entities.
+     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     */
+    private List<Bet> getAllBets(int startFrom) throws ServiceException {
+        List<Bet> list;
+        try {
+            list = betDao.findAll(startFrom);
+            if (!list.isEmpty()) {
+                setMatches(list);
+            }
+        } catch (DAOException e) {
+            logger.error("BetService cannot get all bets list", e);
+            throw new ServiceException("BetService cannot get all bets list", e);
+        }
+        return list;
+    }
+
+
+    /**
+     * Finds a match by the {@code match_id} field and sets it to {@code match} field.
+     *
+     * @param list - the list of bets.
+     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     */
+    private void setMatches(List<Bet> list) throws ServiceException {
+        for (Bet bet : list) {
+            try {
+                Match match = matchDao.findById(bet.getMatch_id());
+                MatchService.getInstance().setTeams(match);
+                bet.setMatch(match);
+            } catch (DAOException e) {
+                logger.error("BetService cannot get a match or teams by id", e);
+                throw new ServiceException("BetService cannot get a match or teams by id", e);
+            }
+
+        }
+    }
+
+
+    /**
+     * Deletes a bet entry through {@link by.academy.it.dao.BetDao}.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void deleteBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String key = request.getParameter(Constants.KEY);
+        try {
+            int id = Integer.parseInt(key);
+            betDao.delete(id);
+
+            logger.info("bet has been deleted");
+            request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.DELETE_BET_MESSAGE);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
+
+        } catch (DAOException e) {
+            logger.error("An exception occurred during delete role operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
 

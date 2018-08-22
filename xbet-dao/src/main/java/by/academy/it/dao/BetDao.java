@@ -19,6 +19,16 @@ public interface BetDao {
 
 
     /**
+     * Retrieves a bet by id.
+     *
+     * @param id the id of a bet.
+     * @return {@link by.academy.it.entity.Bet} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public Bet getById(int id) throws DAOException ;
+
+
+    /**
      * Retrieves a list of bets by user id.
      *
      * @param userId the id of a user.
@@ -42,10 +52,19 @@ public interface BetDao {
     /**
      * Deletes a bet entry.
      *
+     * @param id the {@link by.academy.it.entity.Bet} id.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    void delete(int id) throws DAOException;
+
+
+    /**
+     * Updates a bet entry.
+     *
      * @param bet the {@link by.academy.it.entity.Bet} entity.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void delete(Bet bet) throws DAOException;
+    public void update(Bet bet) throws DAOException;
 
 
     /**
@@ -65,5 +84,24 @@ public interface BetDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     void updateStatus(Bet bet) throws DAOException;
+
+
+    /**
+     * Retrieves a list of all bets.
+     *
+     * @param startFrom position from which the select operation is performed.
+     * @return {@code List<Bet>} - the list of all bets.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Bet> findAll(int startFrom) throws DAOException;
+
+
+    /**
+     * Retrieves amount of all bets.
+     *
+     * @return amount of user bets.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    int getAmountOfAllBets() throws DAOException;
 
 }

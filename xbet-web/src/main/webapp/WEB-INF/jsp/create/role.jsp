@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="header.jsp" %>
+<%@include file="../header.jsp" %>
 
 <fmt:bundle basename="i18n">
     <fmt:message key="admin.error" var="adminError"/>
@@ -54,7 +54,7 @@
 <!-- /section -->
 
 <script type="text/javascript" charset="UTF-8">
-    <%@include file="../../js/create-role.js" %>
+    <%@include file="../../../js/create-role.js" %>
 </script>
 
-<%@include file="footer.jsp" %>
+<%@include file="../footer.jsp" %>

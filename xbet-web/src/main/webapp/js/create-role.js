@@ -21,7 +21,7 @@ function roleCheck() {
 function changeFormAction() {
     if (isRoleCorrect) {
         var form = document.getElementById('createForm');
-        form.action = "<c:url value="/main/create-role"/>";
+        form.action = "<c:url value="/main/create/role"/>";
         form.submit();
     } else {
         alert("<c:out value="${createData}"/>");

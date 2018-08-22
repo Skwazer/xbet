@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="header.jsp" %>
+<%@include file="../header.jsp" %>
 
 <fmt:bundle basename="i18n">
     <fmt:message key="create.data" var="createData"/>
@@ -30,7 +30,7 @@
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
                             <form id="updateForm" class="clearfix" method="post"
-                                  action="<c:url value="/main/change-role"/> ">
+                                  action="<c:url value="/main/change/role"/> ">
                                 <div class="form-group">
                                     <label for="id"><c:out value="ID"/></label>
                                     <input id="id" class="input" name="id"
@@ -46,7 +46,7 @@
                                 <button form="deleteForm" class="primary-btn pull-right">
                                     <c:out value="${delete}"/></button>
                             </form>
-                            <form id="deleteForm" method="post" action="<c:url value="/main/delete-role"/>">
+                            <form id="deleteForm" method="post" action="<c:url value="/main/delete/role"/>">
                                 <input type="hidden" name="key" value="${updateRole.id}">
                             </form>
                         </div>
@@ -67,9 +67,9 @@
 
 
 <script type="text/javascript" charset="UTF-8">
-    <%@include file="../../js/update-role.js" %>
+    <%@include file="../../../js/update-role.js" %>
 </script>
 
 
 
-<%@include file="footer.jsp" %>
+<%@include file="../footer.jsp" %>

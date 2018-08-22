@@ -253,7 +253,7 @@ function changeFormAction() {
         && isBalanceCorrect && isRoleCorrect;
     if (result) {
         var form = document.getElementById('createForm');
-        form.action = "<c:url value="/main/create-user"/>";
+        form.action = "<c:url value="/main/create/user"/>";
         form.submit();
     } else {
         alert("<c:out value="${createData}"/>");

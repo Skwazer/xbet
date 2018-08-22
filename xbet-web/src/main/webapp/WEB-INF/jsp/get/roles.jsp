@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="header.jsp" %>
+<%@include file="../header.jsp" %>
 
 <fmt:bundle basename="i18n">
     <fmt:message key="admin.error" var="adminError"/>
@@ -36,7 +36,7 @@
                                         <h3 class="title"><c:out value="${rolesTitle}"/></h3>
                                     </c:otherwise>
                                 </c:choose>
-                                <button class="primary-btn pull-right"><a href="<c:url value="/main/create-role"/>">
+                                <button class="primary-btn pull-right"><a href="<c:url value="/main/create/role"/>">
                                     <c:out value="${create}"/></a></button>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                                         <td>
                                             <c:if test="${role.id ne 1}">
                                                 <form class="clearfix" method="POST"
-                                                      action="<c:url value="/main/update-role"/>">
+                                                      action="<c:url value="/main/update/role"/>">
                                                     <input type="hidden" name="key" value="${role.id}">
                                                     <button class="main-btn pull-right"><c:out value="${change}"/></button>
                                                 </form>
@@ -85,4 +85,4 @@
 <!-- /section -->
 
 
-<%@include file="footer.jsp" %>
+<%@include file="../footer.jsp" %>

@@ -60,7 +60,7 @@ public class RoleService {
             if (!list.isEmpty()) {
                 logger.info("roles list has been retrieved");
                 request.setAttribute(Constants.ROLES, list);
-                request.getRequestDispatcher(Constants.PATH + Constants.ROLES + Constants.JSP)
+                request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.ROLES + Constants.JSP)
                         .forward(request, response);
             } else {
                 logger.warn("Roles list is empty");
@@ -94,7 +94,7 @@ public class RoleService {
                 logger.info("role has been created");
 
                 request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.CREATE_ROLE_MESSAGE);
-                response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.ROLES);
+                response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
 
             } catch (DAOException e) {
                 logger.error("RoleService cannot create a role", e);
@@ -175,7 +175,7 @@ public class RoleService {
                 logger.info("role has been updated");
                 request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_ROLE_MESSAGE);
             }
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.ROLES);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
 
         } catch (Exception e) {
             logger.error("An exception occurred during update role operation", e);
@@ -206,7 +206,7 @@ public class RoleService {
                 logger.info("role has been deleted");
                 request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_ROLE_MESSAGE);
             }
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.ROLES);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
 
         } catch (DAOException e) {
             logger.error("An exception occurred during delete role operation", e);

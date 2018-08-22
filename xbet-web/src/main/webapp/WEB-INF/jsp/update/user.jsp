@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%@include file="header.jsp" %>
+<%@include file="../header.jsp" %>
 
 <fmt:bundle basename="i18n">
-    <fmt:message key="admin.error" var="adminError"/>
     <fmt:message key="create.data" var="createData"/>
+    <fmt:message key="admin.error" var="adminError"/>
     <fmt:message key="enter.login" var="enterLogin"/>
     <fmt:message key="enter.password" var="enterPassword"/>
     <fmt:message key="enter.firstname" var="enterFirstname"/>
@@ -45,6 +45,8 @@
     <fmt:message key="role.negative" var="roleNegative"/>
     <fmt:message key="role.required" var="roleRequired"/>
     <fmt:message key="role.excess" var="roleExcess"/>
+    <fmt:message key="update" var="update"/>
+    <fmt:message key="delete" var="delete"/>
 
 </fmt:bundle>
 
@@ -61,48 +63,67 @@
                             <div class="section-title">
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
-                            <form id="createForm" class="clearfix" method="post" action="#">
+                            <form id="createForm" class="clearfix" method="post"
+                                  action="<c:url value="/main/change/user"/> ">
                                 <div class="form-group">
+                                    <label for="id"><c:out value="ID"/></label>
+                                    <input id="id" class="input" name="id"
+                                          value="<c:out value="${updateUser.id}"/>" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="login"><c:out value="${enterLogin}"/></label>
                                     <input id="login" class="input" name="login" onchange="checkLogin()"
-                                           placeholder="<c:out value="${enterLogin}"/>">
+                                          value="<c:out value="${updateUser.login}"/>">
                                     <div id="loginDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="password" class="input" type="password" name="password"
+                                    <label for="password"><c:out value="${enterPassword}"/></label>
+                                    <input id="password" class="input" name="password"
                                            onchange="checkPassword()"
-                                           placeholder="<c:out value="${enterPassword}"/>">
+                                           value="<c:out value="${updateUser.password}"/>">
                                     <div id="passwordDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="firstName"><c:out value="${enterFirstname}"/></label>
                                     <input id="firstName" class="input" name="firstName"
                                            onchange="firstNameCheck()"
-                                           placeholder="<c:out value="${enterFirstname}"/>">
+                                           value="<c:out value="${updateUser.firstName}"/>">
                                     <div id="firstNameDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="lastName"><c:out value="${enterLastname}"/></label>
                                     <input id="lastName" class="input" name="lastName"
                                            onchange="lastNameCheck()"
-                                           placeholder="<c:out value="${enterLastname}"/>">
+                                           value="<c:out value="${updateUser.lastName}"/>">
                                     <div id="lastNameDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="email"><c:out value="${enterEmail}"/></label>
                                     <input id="email" class="input" name="email" onchange="emailCheck()"
-                                           placeholder="<c:out value="${enterEmail}"/>">
+                                           value="<c:out value="${updateUser.email}"/>">
                                     <div id="emailDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="balance" class="input" type="number" name="balance" onchange="balanceCheck()"
-                                           placeholder="<c:out value="${enterBalance}"/>">
+                                    <label for="balance"><c:out value="${enterBalance}"/></label>
+                                    <input id="balance" class="input" type="number" name="balance"  step="0.001"
+                                           onchange="balanceCheck()"
+                                           value="<c:out value="${updateUser.balance}"/>">
                                     <div id="balanceDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="role"><c:out value="${enterRole}"/></label>
                                     <input id="role" class="input" type="number" name="role" onchange="roleCheck()"
-                                           placeholder="<c:out value="${enterRole}"/>">
+                                           value="<c:out value="${updateUser.role}"/>"
+                                           <c:if test="${updateUser.id eq 1}">readonly</c:if>>
                                     <div id="roleDiv" style="display:none;"></div>
                                 </div>
+                                <button class="primary-btn pull-left"><c:out value="${update}"/></button>
+                                <button form="deleteForm" class="primary-btn pull-right">
+                                    <c:out value="${delete}"/></button>
                             </form>
-                            <button id="createButton" class="primary-btn pull-left"
-                                    onclick="changeFormAction()"><c:out value="${create}"/></button>
+                            <form id="deleteForm" method="post" action="<c:url value="/main/delete/user"/>">
+                                <input type="hidden" name="key" value="${updateUser.id}">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -118,8 +139,12 @@
 </div>
 <!-- /section -->
 
+
+
 <script type="text/javascript" charset="UTF-8">
-    <%@include file="../../js/create-user.js" %>
+    <%@include file="../../../js/update-user.js" %>
 </script>
 
-<%@include file="footer.jsp" %>
+
+
+<%@include file="../footer.jsp" %>

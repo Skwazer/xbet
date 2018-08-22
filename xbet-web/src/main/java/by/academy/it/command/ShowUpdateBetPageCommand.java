@@ -1,6 +1,6 @@
 package by.academy.it.command;
 
-import by.academy.it.service.UserService;
+import by.academy.it.service.BetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, finds the user by id and put it into the session.
+ * Implements {@link by.academy.it.command.Command}, finds the bet by id and put it into the session.
  *
  */
-public class ShowUpdateUserPageCommand implements Command {
+public class ShowUpdateBetPageCommand implements Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShowUpdateUserPageCommand.class);
-    private UserService userService = UserService.getInstance();
+    private static final Logger logger = LoggerFactory.getLogger(ShowUpdateBetPageCommand.class);
+    private BetService betService = BetService.getInstance();
 
     /**
-     * Delegates operation to {@link by.academy.it.service.UserService}.
+     * Delegates operation to {@link by.academy.it.service.BetService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -28,8 +28,8 @@ public class ShowUpdateUserPageCommand implements Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("retrieving a user to update");
-        userService.showUpdateUserPage(request, response);
+        logger.info("show update bet page operation");
+        betService.showUpdateBetPage(request, response);
     }
 
 }

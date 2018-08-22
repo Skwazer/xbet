@@ -256,7 +256,7 @@ public class UserService {
                 logger.warn("You cannot delete yourself");
                 session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_YOURSELF_MESSAGE);
             }
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.USERS);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
         } catch (Exception e) {
             logger.error("UserService cannot delete a user", e);
@@ -308,7 +308,7 @@ public class UserService {
                     request.setAttribute("users", list);
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
-                    request.getRequestDispatcher(Constants.PATH + Constants.USERS + Constants.JSP)
+                    request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.USERS + Constants.JSP)
                             .forward(request, response);
                 } else {
                     logger.warn("Users list is empty");
@@ -376,8 +376,8 @@ public class UserService {
                 userDao.create(user);
 
                 logger.info("user has been created");
-                request.getSession().setAttribute("userMessage", Constants.CREATE_USER_MESSAGE);
-                response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.USERS);
+                request.getSession().setAttribute(Constants.USER_MESSAGE, Constants.CREATE_USER_MESSAGE);
+                response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
             } catch (Exception e) {
                 logger.error("An exception occurred during create user operation", e);
@@ -395,7 +395,7 @@ public class UserService {
 
 
     /**
-     * Retrieves a user by id through {@link by.academy.it.dao.UserDao}.
+     * Retrieves a user by id through {@link by.academy.it.dao.UserDao} and sends a redirect to 'update user' page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
@@ -474,7 +474,7 @@ public class UserService {
 
             logger.info("user has been updated");
             session.setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.USERS);
+            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
         } catch (Exception e) {
             logger.error("An exception occurred during update user operation", e);

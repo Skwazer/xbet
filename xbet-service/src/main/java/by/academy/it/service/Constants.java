@@ -62,7 +62,7 @@ class Constants {
     static final String BALANCE = "balance";
     static final String ROLE = "role";
     static final String CREATE_USER_ERROR = "create.user.error";
-    static final String UPDATE_USER = "update-user";
+    static final String UPDATE_USER = "update/user";
     static final String SHOW_UPDATE_USER_ERROR = "show.update.user.error";
     static final String SHOW_UPDATE_USER_PARAMETER_ERROR = "show.update.user.parameter.error";
     static final String ID = "id";
@@ -83,7 +83,7 @@ class Constants {
     static final String CREATE_ROLE_MESSAGE = "create.role.message";
     static final String UPDATED_USER = "updateUser";
     static final String UPDATED_ROLE = "updateRole";
-    static final String UPDATE_ROLE = "update-role";
+    static final String UPDATE_ROLE = "update/role";
     static final String ROLE_MESSAGE = "roleMessage";
     static final String ROLE_NOT_FOUND = "role.not.found";
     static final String SHOW_UPDATE_ROLE_ERROR = "show.update.role.error";
@@ -94,5 +94,22 @@ class Constants {
     static final String DELETE_FORBIDDEN = "delete.forbidden";
     static final String DELETE_ROLE_MESSAGE = "delete.role.message";
     static final String DELETE_ROLE_ERROR = "delete.role.error";
+    static final String ALL_BETS = "allBets";
+    static final String GET = "get/";
+    static final String UPDATE = "update/";
+    static final String USER_ID = "userId";
+    static final String BET_RESULT = "betResult";
+    static final String MONEY = "money";
+    static final String STATUS = "status";
+    static final String CREATE_DATA_ERROR = "create.data.error";
+    static final String BETS_MESSAGE = "betsMessage";
+    static final String CREATE_BET_MESSAGE = "create.bet.message";
+    static final String CREATE_BET_ERROR = "create.bet.error";
+    static final String UPDATED_BET = "updateBet";
+    static final String SHOW_UPDATE_BET_ERROR = "show.update.bet.error";
+    static final String SHOW_UPDATE_BET_PARAMETER_ERROR = "show.update.bet.parameter.error";
+    static final String UPDATE_BET_MESSAGE = "update.bet.message";
+    static final String UPDATE_BET_ERROR = "update.bet.error";
+    static final String DELETE_BET_MESSAGE = "delete.bet.message";
 
 }

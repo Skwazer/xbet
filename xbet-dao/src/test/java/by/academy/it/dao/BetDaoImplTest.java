@@ -33,11 +33,4 @@ public class BetDaoImplTest {
         assertFalse(betDao.findByMatchId(9).isEmpty());
     }
 
-    @Test
-    public void delete() throws Exception {
-        Bet bet = new Bet();
-        bet.setMatch_id(1);
-        betDao.delete(bet);
-    }
-
 }
