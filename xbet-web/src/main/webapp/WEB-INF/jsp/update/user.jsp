@@ -66,7 +66,7 @@
                             <form id="createForm" class="clearfix" method="post"
                                   action="<c:url value="/main/change/user"/> ">
                                 <div class="form-group">
-                                    <label for="id"><c:out value="ID"/></label>
+                                    <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
                                           value="<c:out value="${updateUser.id}"/>" readonly>
                                 </div>

@@ -65,6 +65,13 @@ public class CommandFactory {
         commands.put(Constants.GET_UPDATE_BET, new ForwardRequestCommand(Constants.UPDATE_BET));
         commands.put(Constants.POST_CHANGE_BET, new UpdateBetCommand());
         commands.put(Constants.POST_DELETE_BET, new DeleteBetCommand());
+        commands.put(Constants.GET_GET_MATCHES, new ShowMatchesCommand());
+        commands.put(Constants.GET_CREATE_MATCH, new ForwardRequestCommand(Constants.CREATE_MATCH));
+        commands.put(Constants.POST_CREATE_MATCH, new CreateMatchCommand());
+        commands.put(Constants.POST_UPDATE_MATCH, new ShowUpdateMatchPageCommand());
+        commands.put(Constants.GET_UPDATE_MATCH, new ForwardRequestCommand(Constants.UPDATE_MATCH));
+        commands.put(Constants.POST_CHANGE_MATCH, new UpdateMatchCommand());
+        commands.put(Constants.POST_DELETE_MATCH, new DeleteMatchCommand());
 
     }
 

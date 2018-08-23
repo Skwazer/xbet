@@ -62,5 +62,14 @@ public class Constants {
     static final String UPDATE_BET = "update/bet";
     static final String POST_CHANGE_BET = "POST/change/bet";
     static final String POST_DELETE_BET = "POST/delete/bet";
+    static final String GET_GET_MATCHES = "GET/get/matches";
+    static final String GET_CREATE_MATCH = "GET/create/match";
+    static final String CREATE_MATCH = "create/match";
+    static final String POST_CREATE_MATCH = "POST/create/match";
+    static final String POST_UPDATE_MATCH = "POST/update/match";
+    static final String GET_UPDATE_MATCH = "GET/update/match";
+    static final String UPDATE_MATCH = "update/match";
+    static final String POST_CHANGE_MATCH = "POST/change/match";
+    static final String POST_DELETE_MATCH = "POST/delete/match";
 
 }

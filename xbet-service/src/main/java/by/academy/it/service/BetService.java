@@ -358,7 +358,7 @@ public class BetService {
             response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
 
         } catch (DAOException e) {
-            logger.error("An exception occurred during delete role operation", e);
+            logger.error("An exception occurred during delete bet operation", e);
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);

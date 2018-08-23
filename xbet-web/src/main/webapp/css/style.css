@@ -563,7 +563,7 @@ color: #f8694a !important;
 
 .category-nav .category-list {
   display: none;
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
   max-height: calc(100vh - 100px);
 }

@@ -32,7 +32,7 @@
                             <form id="updateForm" class="clearfix" method="post"
                                   action="<c:url value="/main/change/role"/> ">
                                 <div class="form-group">
-                                    <label for="id"><c:out value="ID"/></label>
+                                    <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
                                            value="<c:out value="${updateRole.id}"/>" readonly>
                                 </div>

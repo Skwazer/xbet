@@ -45,11 +45,5 @@ public class MatchDaoImplTest {
         assertNotNull(list);
     }
 
-    @Test
-    public void delete() throws Exception {
-        Match match = new Match();
-        match.setId(15);
-        matchDao.delete(match);
-    }
 
 }

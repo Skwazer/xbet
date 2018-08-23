@@ -39,6 +39,25 @@ public interface MatchDao {
 
 
     /**
+     * Retrieves a list of all matches.
+     *
+     * @param startFrom position from which the select operation is performed.
+     * @return {@code List<Match>} - the list matches.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Match> getMatches(int startFrom) throws DAOException;
+
+
+    /**
+     * Retrieves amount of all matches.
+     *
+     * @return amount of all matches.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    int getAmountOfAllMatches() throws DAOException;
+
+
+    /**
      * Retrieves amount of unplayed matches from the database.
      *
      * @return amount of unplayed matches.
@@ -50,9 +69,18 @@ public interface MatchDao {
     /**
      * Deletes a match entry.
      *
+     * @param id the {@link by.academy.it.entity.Match} id.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    void delete(int id) throws DAOException;
+
+
+    /**
+     * Updates a match entry.
+     *
      * @param match the {@link by.academy.it.entity.Match} entity.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void delete(Match match) throws DAOException;
+    void update(Match match) throws DAOException;
 
 }

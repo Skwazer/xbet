@@ -41,14 +41,13 @@
                                         <h3 class="title"><c:out value="${usersTitle}"/></h3>
                                     </c:otherwise>
                                 </c:choose>
-
                                 <button class="primary-btn pull-right"><a href="<c:url value="/main/create/user"/>">
                                     <c:out value="${create}"/></a></button>
                             </div>
                             <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th><c:out value="ID"/></th>
+                                    <th>ID</th>
                                     <th><c:out value="${enterLogin}"/></th>
                                     <th><c:out value="${enterPassword}"/></th>
                                     <th><c:out value="${enterFirstname}"/></th>

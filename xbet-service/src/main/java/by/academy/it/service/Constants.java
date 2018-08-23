@@ -111,5 +111,25 @@ class Constants {
     static final String UPDATE_BET_MESSAGE = "update.bet.message";
     static final String UPDATE_BET_ERROR = "update.bet.error";
     static final String DELETE_BET_MESSAGE = "delete.bet.message";
+    static final String GET_MATCHES = "get/matches";
+    static final String MATCHES_ERROR = "matches.error";
+    static final String DATE = "date";
+    static final String TEAM1_ID = "team1ID";
+    static final String TEAM2_ID = "team2ID";
+    static final String V1 = "v1";
+    static final String X = "X";
+    static final String V2 = "v2";
+    static final String X1 = "X1";
+    static final String V12 = "v12";
+    static final String X2 = "X2";
+    static final String CREATE_MATCH_MESSAGE = "create.match.message";
+    static final String CREATE_MATCH_ERROR = "create.match.error";
+    static final String UPDATED_MATCH = "updateMatch";
+    static final String UPDATE_MATCH = "update/match";
+    static final String SHOW_UPDATE_MATCH_ERROR = "show.update.match.error";
+    static final String UPDATE_MATCH_MESSAGE = "update.match.message";
+    static final String UPDATE_MATCH_ERROR = "update.match.error";
+    static final String DELETE_MATCH_MESSAGE = "delete.match.message";
+    static final String DELETE_MATCH_ERROR = "delete.match.error";
 
 }

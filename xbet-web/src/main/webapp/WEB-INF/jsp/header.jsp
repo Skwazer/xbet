@@ -195,6 +195,7 @@
                         <li><a href="<c:url value="/main/get/users"/>"><c:out value="${usersTitle}"/></a></li>
                         <li><a href="<c:url value="/main/get/roles"/>"><c:out value="${rolesTitle}"/></a></li>
                         <li><a href="<c:url value="/main/get/bets"/>"><c:out value="${betsTitle}"/></a></li>
+                        <li><a href="<c:url value="/main/get/matches"/>"><c:out value="${matches}"/></a></li>
                     </ul>
                 </div>
             </c:if>
