@@ -229,7 +229,6 @@ public class MatchService{
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
-     * @throws ServletException if the request could not be handled.
      */
     public void createMatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String dateParam = request.getParameter(Constants.DATE);

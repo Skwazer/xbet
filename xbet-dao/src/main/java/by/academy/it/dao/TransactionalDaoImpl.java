@@ -43,21 +43,6 @@ public class TransactionalDaoImpl implements TransactionalDao {
 
 
     /**
-     * Retrieves connection and disables auto-commit mode.
-     *
-     * @return {@code java.sql.Connection}.
-     * @throws ConnectionPoolException if an exception occurred during get connection operation.
-     * @throws SQLException if a database access error occurs or a connection is closed.
-     */
-    private Connection startTransaction() throws ConnectionPoolException, SQLException {
-        Connection connection = pool.getConnection();
-        connection.setAutoCommit(false);
-
-        return connection;
-    }
-
-
-    /**
      * Updates user's balance and creates a bet entry in the database.
      *
      * @param login the user login.
@@ -71,7 +56,8 @@ public class TransactionalDaoImpl implements TransactionalDao {
         PreparedStatement updateUserStatement = null;
         PreparedStatement createBetStatement = null;
         try {
-            connection = startTransaction();
+            connection = pool.getConnection();
+            connection.setAutoCommit(false);
 
             updateUserStatement = connection.prepareStatement(UPDATE_USER_BALANCE_QUERY);
             updateUserStatement.setDouble(1, balance);
@@ -116,7 +102,8 @@ public class TransactionalDaoImpl implements TransactionalDao {
         PreparedStatement updateBetStatement = null;
         PreparedStatement updateUserStatement = null;
         try {
-            connection = startTransaction();
+            connection = pool.getConnection();
+            connection.setAutoCommit(false);
 
             createResultStatement = connection.prepareStatement(CREATE_RESULT_QUERY);
             createResultStatement.setInt(1, result.getMatchId());

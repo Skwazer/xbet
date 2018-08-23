@@ -26,11 +26,5 @@ public class TeamDaoImplTest {
         assertEquals("Russia", team.getName());
     }
 
-    @Test
-    public void delete() throws Exception {
-        Team team = new Team();
-        team.setName("test_team");
-        teamDao.delete(team);
-    }
 
 }

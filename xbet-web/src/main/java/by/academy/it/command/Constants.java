@@ -71,5 +71,23 @@ public class Constants {
     static final String UPDATE_MATCH = "update/match";
     static final String POST_CHANGE_MATCH = "POST/change/match";
     static final String POST_DELETE_MATCH = "POST/delete/match";
+    static final String GET_GET_RESULTS = "GET/get/results";
+    static final String GET_CREATE_RESULT = "GET/create/result";
+    static final String CREATE_RESULT = "create/result";
+    static final String POST_CREATE_RESULT = "POST/create/result";
+    static final String POST_UPDATE_RESULT = "POST/update/result";
+    static final String GET_UPDATE_RESULT = "GET/update/result";
+    static final String UPDATE_RESULT = "update/result";
+    static final String POST_CHANGE_RESULT = "POST/change/result";
+    static final String POST_DELETE_RESULT = "POST/delete/result";
+    static final String GET_GET_TEAMS = "GET/get/teams";
+    static final String GET_CREATE_TEAM = "GET/create/team";
+    static final String CREATE_TEAM = "create/team";
+    static final String POST_CREATE_TEAM = "POST/create/team";
+    static final String POST_UPDATE_TEAM = "POST/update/team";
+    static final String GET_UPDATE_TEAM = "GET/update/team";
+    static final String UPDATE_TEAM = "update/team";
+    static final String POST_CHANGE_TEAM = "POST/change/team";
+    static final String POST_DELETE_TEAM = "POST/delete/team";
 
 }

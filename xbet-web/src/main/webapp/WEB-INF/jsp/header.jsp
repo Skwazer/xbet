@@ -23,6 +23,9 @@
     <fmt:message key="management" var="management"/>
     <fmt:message key="roles" var="rolesTitle"/>
     <fmt:message key="bets" var="betsTitle"/>
+    <fmt:message key="results" var="resultsTitle"/>
+    <fmt:message key="teams" var="teamsTitle"/>
+    <fmt:message key="menu" var="menu"/>
 
 </fmt:bundle>
 
@@ -196,13 +199,15 @@
                         <li><a href="<c:url value="/main/get/roles"/>"><c:out value="${rolesTitle}"/></a></li>
                         <li><a href="<c:url value="/main/get/bets"/>"><c:out value="${betsTitle}"/></a></li>
                         <li><a href="<c:url value="/main/get/matches"/>"><c:out value="${matches}"/></a></li>
+                        <li><a href="<c:url value="/main/get/results"/>"><c:out value="${resultsTitle}"/></a></li>
+                        <li><a href="<c:url value="/main/get/teams"/>"><c:out value="${teamsTitle}"/></a></li>
                     </ul>
                 </div>
             </c:if>
             <!-- /management nav -->
             <!-- menu nav -->
             <div class="menu-nav">
-                <span class="menu-header">Menu <i class="fa fa-bars"></i></span>
+                <span class="menu-header"><c:out value="${menu}"/> <i class="fa fa-bars"></i></span>
                 <ul class="menu-list">
                     <li><a href="<c:url value="/main/home"/>"><c:out value="${home}"/></a></li>
                     <li><a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></li>

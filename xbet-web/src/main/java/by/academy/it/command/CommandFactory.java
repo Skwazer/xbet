@@ -72,6 +72,20 @@ public class CommandFactory {
         commands.put(Constants.GET_UPDATE_MATCH, new ForwardRequestCommand(Constants.UPDATE_MATCH));
         commands.put(Constants.POST_CHANGE_MATCH, new UpdateMatchCommand());
         commands.put(Constants.POST_DELETE_MATCH, new DeleteMatchCommand());
+        commands.put(Constants.GET_GET_RESULTS, new ShowResultsCommand());
+        commands.put(Constants.GET_CREATE_RESULT, new ForwardRequestCommand(Constants.CREATE_RESULT));
+        commands.put(Constants.POST_CREATE_RESULT, new CreateResultCommand());
+        commands.put(Constants.POST_UPDATE_RESULT, new ShowUpdateResultPageCommand());
+        commands.put(Constants.GET_UPDATE_RESULT, new ForwardRequestCommand(Constants.UPDATE_RESULT));
+        commands.put(Constants.POST_CHANGE_RESULT, new UpdateResultCommand());
+        commands.put(Constants.POST_DELETE_RESULT, new DeleteResultCommand());
+        commands.put(Constants.GET_GET_TEAMS, new ShowTeamsCommand());
+        commands.put(Constants.GET_CREATE_TEAM, new ForwardRequestCommand(Constants.CREATE_TEAM));
+        commands.put(Constants.POST_CREATE_TEAM, new CreateTeamCommand());
+        commands.put(Constants.POST_UPDATE_TEAM, new ShowUpdateTeamPageCommand());
+        commands.put(Constants.GET_UPDATE_TEAM, new ForwardRequestCommand(Constants.UPDATE_TEAM));
+        commands.put(Constants.POST_CHANGE_TEAM, new UpdateTeamCommand());
+        commands.put(Constants.POST_DELETE_TEAM, new DeleteTeamCommand());
 
     }
 

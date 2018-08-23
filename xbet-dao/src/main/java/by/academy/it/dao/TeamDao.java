@@ -2,6 +2,8 @@ package by.academy.it.dao;
 
 import by.academy.it.entity.Team;
 
+import java.util.List;
+
 /**
  * Defines {@code TeamDao} methods.
  */
@@ -18,6 +20,25 @@ public interface TeamDao {
 
 
     /**
+     * Retrieves a list of all team entries.
+     *
+     * @param startFrom position from which the select operation is performed.
+     * @return {@code List<Team>} - the list of all teams.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Team> getTeams(int startFrom) throws DAOException;
+
+
+    /**
+     * Retrieves amount of all teams.
+     *
+     * @return amount of all teams.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    int getAmountOfAllTeams() throws DAOException;
+
+
+    /**
      * Retrieves a team entry by id.
      *
      * @param id the id of a team.
@@ -28,11 +49,20 @@ public interface TeamDao {
 
 
     /**
-     * Deletes a team entry.
+     * Updates a team entry.
      *
      * @param team the {@link by.academy.it.entity.Team} entity.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    void delete(Team team) throws DAOException;
+    void update(Team team) throws DAOException;
+
+
+    /**
+     * Deletes a team entry.
+     *
+     * @param id the {@link by.academy.it.entity.Team} id.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    void delete(int id) throws DAOException;
 
 }
