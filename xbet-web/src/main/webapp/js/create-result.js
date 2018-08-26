@@ -1,6 +1,4 @@
 var isMatchIDCorrect = false;
-var isTeam1IDCorrect = false;
-var isTeam2IDCorrect = false;
 var isTeam1GoalsCorrect = false;
 var isTeam2GoalsCorrect = false;
 
@@ -26,56 +24,6 @@ function matchIDMessage(result) {
     } else if (result === 'INCORRECT') {
         $('#matchIDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
         $('#matchIDDiv').css("display", "block")
-    }
-}
-
-function checkTeam1ID() {
-    var team1ID = $("#team1ID").val();
-    if (team1ID === "") {
-        $('#team1IDDiv').css("display", "none");
-        alert("<c:out value="${team1Required}"/>");
-        isTeam1IDCorrect = false;
-    } else if (team1ID < 1 || team1ID > 50) {
-        isTeam1IDCorrect = false;
-        team1IDMessage("INCORRECT");
-    } else {
-        isTeam1IDCorrect = true;
-        team1IDMessage("SUCCESS");
-    }
-}
-
-function team1IDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#team1IDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#team1IDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#team1IDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#team1IDDiv').css("display", "block")
-    }
-}
-
-function checkTeam2ID() {
-    var team2ID = $("#team2ID").val();
-    if (team2ID === "") {
-        $('#team2IDDiv').css("display", "none");
-        alert("<c:out value="${team2Required}"/>");
-        isTeam2IDCorrect = false;
-    } else if (team2ID < 1 || team2ID > 50) {
-        isTeam2IDCorrect = false;
-        team2IDMessage("INCORRECT");
-    } else {
-        isTeam2IDCorrect = true;
-        team2IDMessage("SUCCESS");
-    }
-}
-
-function team2IDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#team2IDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#team2IDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#team2IDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#team2IDDiv').css("display", "block")
     }
 }
 
@@ -130,7 +78,7 @@ function team2GoalsMessage(result) {
 }
 
 function changeFormAction() {
-    var result = isMatchIDCorrect && isTeam1IDCorrect && isTeam2IDCorrect && isTeam1GoalsCorrect && isTeam2GoalsCorrect;
+    var result = isMatchIDCorrect && isTeam1GoalsCorrect && isTeam2GoalsCorrect;
     if (result) {
         var form = document.getElementById('createForm');
         form.action = "<c:url value="/main/create/result"/>";

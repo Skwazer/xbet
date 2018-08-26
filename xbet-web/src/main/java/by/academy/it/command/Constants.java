@@ -89,5 +89,6 @@ public class Constants {
     static final String UPDATE_TEAM = "update/team";
     static final String POST_CHANGE_TEAM = "POST/change/team";
     static final String POST_DELETE_TEAM = "POST/delete/team";
+    static final String GET_RESULTS = "GET/results";
 
 }

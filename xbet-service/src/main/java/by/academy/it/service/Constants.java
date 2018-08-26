@@ -164,4 +164,6 @@ class Constants {
     static final String UPDATE_TEAM_ERROR = "update.team.error";
     static final String DELETE_TEAM_MESSAGE = "delete.team.message";
     static final String DELETE_TEAM_ERROR = "delete.team.error";
+    static final String RESULTS = "results";
+
 }

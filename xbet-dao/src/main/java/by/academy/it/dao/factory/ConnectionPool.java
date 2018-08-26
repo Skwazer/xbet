@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -101,13 +104,6 @@ public class ConnectionPool {
     public static ConnectionPool getInstance() {
         if (connectionPool == null) {
             connectionPool = new ConnectionPool();
-            //TODO: delete init() invocation.
-            try {
-                connectionPool.init();
-            } catch (ConnectionPoolException e) {
-                e.printStackTrace();
-            }
-
             logger.info("The connection pool instance has been created");
         }
         return connectionPool;
@@ -121,7 +117,7 @@ public class ConnectionPool {
      * @throws by.academy.it.dao.factory.ConnectionPoolException if an exception occurred during the operation.
      */
     public Connection getConnection() throws ConnectionPoolException {
-        Connection connection = null;
+        Connection connection;
         try {
             connection = availableConnections.take();
             usedConnections.add(connection);
@@ -442,7 +438,6 @@ public class ConnectionPool {
         public void clearWarnings() throws SQLException {
             connection.clearWarnings();
         }
-
     }
 
 }

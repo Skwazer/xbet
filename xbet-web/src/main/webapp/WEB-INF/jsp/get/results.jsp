@@ -10,8 +10,6 @@
     <fmt:message key="change" var="change"/>
     <fmt:message key="match.id" var="matchIdTitle"/>
     <fmt:message key="result" var="resultTitle"/>
-    <fmt:message key="team1.id" var="team1IdTitle"/>
-    <fmt:message key="team2.id" var="team2IdTitle"/>
     <fmt:message key="team1.goals" var="team1GoalsTitle"/>
     <fmt:message key="team2.goals" var="team2GoalsTitle"/>
 
@@ -25,7 +23,7 @@
         <c:choose>
             <c:when test="${user.role eq 1}">
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-6 col-md-offset-3">
                         <div class="billing-details">
                             <div class="section-title">
                                 <c:choose>
@@ -51,11 +49,9 @@
                                     <tr>
                                         <th>ID</th>
                                         <th><c:out value="${matchIdTitle}"/></th>
-                                        <th><c:out value="${resultTitle}"/></th>
-                                        <th><c:out value="${team1IdTitle}"/></th>
                                         <th><c:out value="${team1GoalsTitle}"/></th>
-                                        <th><c:out value="${team2IdTitle}"/></th>
                                         <th><c:out value="${team2GoalsTitle}"/></th>
+                                        <th><c:out value="${resultTitle}"/></th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -64,11 +60,9 @@
                                         <tr>
                                             <td><c:out value="${result.id}"/></td>
                                             <td><c:out value="${result.matchId}"/></td>
-                                            <td><c:out value="${result.result}"/></td>
-                                            <td><c:out value="${result.team1_id}"/></td>
                                             <td><c:out value="${result.team1_goals}"/></td>
-                                            <td><c:out value="${result.team2_id}"/></td>
                                             <td><c:out value="${result.team2_goals}"/></td>
+                                            <td><c:out value="${result.result}"/></td>
                                             <td>
                                                 <form class="clearfix" method="POST" action="<c:url value="/main/update/result"/>">
                                                     <input type="hidden" name="key" value="${result.id}">

@@ -86,6 +86,7 @@ public class CommandFactory {
         commands.put(Constants.GET_UPDATE_TEAM, new ForwardRequestCommand(Constants.UPDATE_TEAM));
         commands.put(Constants.POST_CHANGE_TEAM, new UpdateTeamCommand());
         commands.put(Constants.POST_DELETE_TEAM, new DeleteTeamCommand());
+        commands.put(Constants.GET_RESULTS, new ShowLastResultsCommand());
 
     }
 

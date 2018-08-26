@@ -96,25 +96,14 @@ CREATE TABLE IF NOT EXISTS `xbet`.`results` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `matches_id` INT(11) NOT NULL,
   `result` VARCHAR(1) NOT NULL,
-  `team1_id` INT(11) NOT NULL,
-  `team2_id` INT(11) NOT NULL,
   `team1_goals` INT(11) NOT NULL,
   `team2_goals` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `matches_id_UNIQUE` (`matches_id` ASC),
   INDEX `matches_id_idx` (`matches_id` ASC),
   CONSTRAINT `matches_id`
     FOREIGN KEY (`matches_id`)
     REFERENCES `xbet`.`matches` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `team1_id`
-  FOREIGN KEY (`team1_id`)
-  REFERENCES `xbet`.`teams` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `team2_id`
-  FOREIGN KEY (`team2_id`)
-  REFERENCES `xbet`.`teams` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

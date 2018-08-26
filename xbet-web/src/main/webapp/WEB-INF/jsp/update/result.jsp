@@ -12,16 +12,15 @@
     <fmt:message key="accepted" var="accepted"/>
     <fmt:message key="match.id" var="matchIdTitle"/>
     <fmt:message key="result" var="resultTitle"/>
-    <fmt:message key="team1.id" var="team1IdTitle"/>
-    <fmt:message key="team2.id" var="team2IdTitle"/>
     <fmt:message key="team1.goals" var="team1GoalsTitle"/>
     <fmt:message key="team2.goals" var="team2GoalsTitle"/>
-    <fmt:message key="team1.required" var="team1Required"/>
-    <fmt:message key="team2.required" var="team2Required"/>
     <fmt:message key="negative" var="negative"/>
     <fmt:message key="match.id.required" var="matchIDRequired"/>
     <fmt:message key="team1.goals.required" var="team1GoalsRequired"/>
     <fmt:message key="team2.goals.required" var="team2GoalsRequired"/>
+    <fmt:message key="match.1" var="match1"/>
+    <fmt:message key="match.X" var="matchX"/>
+    <fmt:message key="match.2" var="match2"/>
 
 </fmt:bundle>
 
@@ -52,18 +51,6 @@
                                     <div id="matchIDDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="team1ID"><c:out value="${team1IdTitle}"/></label>
-                                    <input id="team1ID" class="input" type="number" name="team1ID" min="1" max="50"
-                                           onchange="checkTeam1ID()" value="${updateResult.team1_id}">
-                                    <div id="team1IDDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="team2ID"><c:out value="${team2IdTitle}"/></label>
-                                    <input id="team2ID" class="input" type="number" name="team2ID" min="1" max="50"
-                                           onchange="checkTeam2ID()" value="${updateResult.team2_id}">
-                                    <div id="team2IDDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
                                     <label for="team1Goals"><c:out value="${team1GoalsTitle}"/></label>
                                     <input id="team1Goals" class="input" type="number" name="team1Goals" min="1" max="6"
                                            onchange="checkTeam1Goals()" value="${updateResult.team1_goals}">
@@ -78,9 +65,9 @@
                                 <div class="form-group">
                                     <label for="result"><c:out value="${updateResult.result}"/></label>
                                     <select id="result" name="result" class="form-control" form="createForm">
-                                        <option value="1">1</option>
-                                        <option value="X" selected>X</option>
-                                        <option value="2">2</option>
+                                        <option value="1"><c:out value="${match1}"/></option>
+                                        <option value="X" selected><c:out value="${matchX}"/></option>
+                                        <option value="2"><c:out value="${match2}"/></option>
                                     </select>
                                 </div>
                                 <button class="primary-btn pull-left"><c:out value="${update}"/></button>

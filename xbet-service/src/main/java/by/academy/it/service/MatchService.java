@@ -2,7 +2,6 @@ package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.MatchDao;
-import by.academy.it.dao.TeamDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Match;
 import org.slf4j.Logger;
@@ -17,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class works with {@link by.academy.it.dao.MatchDao} and {@link by.academy.it.dao.TeamDao}.
+ * This class works with {@link by.academy.it.dao.MatchDao}.
  *
  */
 public class MatchService{
@@ -25,7 +24,6 @@ public class MatchService{
     private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
     private static MatchService instance;
     private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
-    private TeamDao teamDao = DaoFactory.getInstance().getTeamDao();
 
     /**
      * Prohibits creating an instance of class outside the class.
@@ -55,34 +53,21 @@ public class MatchService{
      * @return the {@link by.academy.it.entity.Match} entity.
      * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
-    public Match getMatchById(int id) throws ServiceException {
+    Match getMatchById(int id) throws ServiceException {
         Match match;
         try {
             match = matchDao.findById(id);
             if (match != null) {
-                setTeams(match);
+                ModelService.getInstance().setTeams(match);
             } else {
                 logger.error("MatchService match is null");
                 throw new ServiceException("MatchService match is null");
             }
         } catch (DAOException e) {
             logger.error("MatchService cannot get a match by id", e);
-            throw new ServiceException("MatchService cannot get a matchby id", e);
+            throw new ServiceException("MatchService cannot get a match by id", e);
         }
         return match;
-    }
-
-
-    /**
-     * Finds teams by {@code team1_id} and {@code team2_id} fields
-     * and sets them to {@code team1} and {@code team2} fields.
-     *
-     * @param match the {@link by.academy.it.entity.Match} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    void setTeams(Match match) throws DAOException {
-        match.setTeam1(teamDao.findById(match.getTeam1_id()));
-        match.setTeam2(teamDao.findById(match.getTeam2_id()));
     }
 
 
@@ -133,10 +118,14 @@ public class MatchService{
         int startFrom = Utils.calculateSelectStartPosition(page, request, response);
         if (startFrom >= 0) {
             try {
-                List<Match> list = getUnplayedMatches(startFrom);
+                List<Match> list = matchDao.getUnplayedMatches(startFrom);
                 double pages = Math.ceil(matchDao.getAmountOfUnplayedMatches() / 10d);
                 if (!list.isEmpty()) {
                     logger.info("Matches have been found");
+
+                    for (Match match : list) {
+                        ModelService.getInstance().setTeams(match);
+                    }
                     request.setAttribute(Constants.MATCHES_LIST, list);
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
@@ -144,11 +133,11 @@ public class MatchService{
                     request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
                 } else {
                     logger.warn("Matches have not been found");
-                    request.setAttribute(Constants.MATCHES_MESSAGE, Constants.MATCHES_LIST_EMPTY);
 
+                    request.setAttribute(Constants.MATCHES_MESSAGE, Constants.MATCHES_LIST_EMPTY);
                     request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
                 }
-            } catch (ServiceException | DAOException e) {
+            } catch (DAOException | ServiceException e) {
                 logger.error("An exception occurred during get unplayed matches operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
 
@@ -196,30 +185,6 @@ public class MatchService{
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         }
-    }
-
-
-    /**
-     * Retrieves a list of unpalyed match entities through {@link by.academy.it.dao.MatchDao}.
-     *
-     * @param startFrom a position from which the select operation is performed.
-     * @return {@code List<Match>} - the list of unplayed matches.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
-     */
-    List<Match> getUnplayedMatches(int startFrom) throws ServiceException {
-        List<Match> list;
-        try {
-            list = matchDao.getUnplayedMatches(startFrom);
-            if (!list.isEmpty()) {
-                for (Match match : list) {
-                    setTeams(match);
-                }
-            }
-        } catch (DAOException e) {
-            logger.error("MatchService cannot get a matches list", e);
-            throw new ServiceException("MatchService cannot get a matches list", e);
-        }
-        return list;
     }
 
 

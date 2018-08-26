@@ -25,8 +25,8 @@ public class TransactionalDaoImpl implements TransactionalDao {
     private static final String CREATE_BET_QUERY = "INSERT INTO xbet.bets " +
             "(user_id, match_id, bet_result, bet, money, status) VALUES ( ?, ?, ?, ?, ?, ?)";
     private static final String CREATE_RESULT_QUERY = "INSERT INTO xbet.results " +
-            "(matches_id, result, team1_id, team2_id, team1_goals, team2_goals) " +
-            "VALUES ( ?, ?, ?, ?, ?, ?)";
+            "(matches_id, result, team1_goals, team2_goals) " +
+            "VALUES ( ?, ?, ?, ?)";
     private static final String UPDATE_BET_STATUS_QUERY = "UPDATE xbet.bets SET status=? WHERE id=?";
     private static final String UPDATE_USER_BALANCE_BY_ID_QUERY =
             "UPDATE xbet.users SET balance = balance + ? WHERE id = ?";
@@ -108,10 +108,8 @@ public class TransactionalDaoImpl implements TransactionalDao {
             createResultStatement = connection.prepareStatement(CREATE_RESULT_QUERY);
             createResultStatement.setInt(1, result.getMatchId());
             createResultStatement.setString(2, result.getResult());
-            createResultStatement.setInt(3, result.getTeam1_id());
-            createResultStatement.setInt(4, result.getTeam2_id());
-            createResultStatement.setInt(5, result.getTeam1_goals());
-            createResultStatement.setInt( 6, result.getTeam2_goals());
+            createResultStatement.setInt(3, result.getTeam1_goals());
+            createResultStatement.setInt( 4, result.getTeam2_goals());
             createResultStatement.executeUpdate();
             logger.debug("result has been created - " + result);
 

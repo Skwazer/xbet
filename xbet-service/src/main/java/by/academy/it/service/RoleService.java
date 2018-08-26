@@ -21,25 +21,40 @@ public class RoleService {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
     private static RoleService instance;
-    private RoleDao roleDao = DaoFactory.getInstance().getRoleDao();
+    private RoleDao roleDao;
 
 
     /**
      * Prohibits creating an instance of class outside the class.
      */
-    private RoleService() {
+    private RoleService(RoleDao roleDao) {
+        this.roleDao = roleDao;
     }
 
 
     /**
-     * Creates {@code UserService} instance if it is not created and returns it.
+     * Creates {@code RoleService} instance if it is not created and returns it.
      *
-     * @return {@code UserService} instance.
+     * @return {@code RoleService} instance.
      */
     public static RoleService getInstance() {
         if (instance == null) {
-            instance = new RoleService();
+            instance = new RoleService(DaoFactory.getInstance().getRoleDao());
             logger.info("RoleService instance has been created");
+        }
+        return instance;
+    }
+
+    /**
+     * Creates {@code RoleService} instance with a specified roleDao.
+     *
+     * @param roleDao data access object.
+     * @return {@code RoleService} instance.
+     */
+    public static RoleService getInstance(RoleDao roleDao) {
+        if (instance == null) {
+            instance = new RoleService(roleDao);
+            logger.info("RoleService instance with roleDao parameter has been created");
         }
         return instance;
     }

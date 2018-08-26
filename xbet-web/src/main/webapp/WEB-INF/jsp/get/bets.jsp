@@ -6,9 +6,8 @@
 
 <fmt:bundle basename="i18n">
     <fmt:message key="matches.log.in" var="matchesLogIn"/>
-    <fmt:message key="match.date" var="matchDate"/>
-    <fmt:message key="match.team1" var="matchTeam1"/>
-    <fmt:message key="match.team2" var="matchTeam2"/>
+    <fmt:message key="enter.user.id" var="userIDTitle"/>
+    <fmt:message key="enter.match.id" var="matchIDTitle"/>
     <fmt:message key="coefficient" var="coefficient"/>
     <fmt:message key="bet" var="betTitle"/>
     <fmt:message key="bets.empty" var="betsEmpty"/>
@@ -52,9 +51,8 @@
                                         <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th><c:out value="${matchDate}"/></th>
-                                            <th><c:out value="${matchTeam1}"/></th>
-                                            <th><c:out value="${matchTeam2}"/></th>
+                                            <th><c:out value="${userIDTitle}"/></th>
+                                            <th><c:out value="${matchIDTitle}"/></th>
                                             <th><c:out value="${betResult}"/></th>
                                             <th><c:out value="${coefficient}"/></th>
                                             <th><c:out value="${betTitle}"/></th>
@@ -66,9 +64,8 @@
                                         <c:forEach items="${allBets}" var="bet">
                                             <tr>
                                                 <td><c:out value="${bet.id}"/></td>
-                                                <td><c:out value="${bet.match.date}"/></td>
-                                                <td><c:out value="${bet.match.team1.name}"/></td>
-                                                <td><c:out value="${bet.match.team2.name}"/></td>
+                                                <td><c:out value="${bet.user_id}"/></td>
+                                                <td><c:out value="${bet.match_id}"/></td>
                                                 <td><c:out value="${bet.betResult}"/></td>
                                                 <td><c:out value="${bet.bet}"/></td>
                                                 <td><c:out value="${bet.money}"/></td>

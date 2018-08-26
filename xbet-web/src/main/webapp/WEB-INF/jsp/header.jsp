@@ -211,6 +211,7 @@
                 <ul class="menu-list">
                     <li><a href="<c:url value="/main/home"/>"><c:out value="${home}"/></a></li>
                     <li><a href="<c:url value="/main/matches"/>"><c:out value="${matches}"/></a></li>
+                    <li><a href="<c:url value="/main/results"/>"><c:out value="${resultsTitle}"/></a></li>
                 </ul>
             </div>
             <!-- /menu nav -->

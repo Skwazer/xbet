@@ -1,12 +1,10 @@
 package by.academy.it.service;
 
 import by.academy.it.dao.BetDao;
-import by.academy.it.dao.MatchDao;
 import by.academy.it.dao.TransactionalDao;
 import by.academy.it.dao.UserDao;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
-import by.academy.it.entity.Match;
 import by.academy.it.entity.Result;
 import by.academy.it.entity.User;
 import org.slf4j.Logger;
@@ -29,7 +27,6 @@ public class FinishMatchService {
     private static FinishMatchService instance;
 
     private BetDao betDao = DaoFactory.getInstance().getBetDao();
-    private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
     private TransactionalDao transactionalDao = DaoFactory.getInstance().getTransactionalDao();
     private UserDao userDao = DaoFactory.getInstance().getUserDao();
 
@@ -68,14 +65,11 @@ public class FinishMatchService {
         if (Utils.isValidString(matchIdParam)) {
             try {
                 int matchId = Integer.parseInt(matchIdParam);
-                Match match = matchDao.findById(matchId);
 
                 Result result = new Result();
                 result.setMatchId(matchId);
                 ResultEntry resultEntry = new ResultEntry();
                 result.setResult(resultEntry.resultSymbol);
-                result.setTeam1_id(match.getTeam1_id());
-                result.setTeam2_id(match.getTeam2_id());
                 result.setTeam1_goals(resultEntry.team1goals);
                 result.setTeam2_goals(resultEntry.team2goals);
 
@@ -103,7 +97,7 @@ public class FinishMatchService {
                     sessionUser.setBalance(user.getBalance());
                     logger.info("user balance in the session has been updated");
                 }
-                response.sendRedirect(Utils.getReferrerURI(request));
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.RESULTS);
 
             } catch (Exception e) {
                 logger.error("An exception occurred during finish match operation", e);
@@ -145,4 +139,5 @@ public class FinishMatchService {
             }
         }
     }
+
 }
