@@ -23,8 +23,8 @@ public class UserDaoImpl implements UserDao {
             "(login, password, first_name, last_name, email, balance, role_id)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_BALANCE_QUERY = "UPDATE xbet.users SET balance = ? WHERE login = ?";
-    private static final String UPDATE_USER_QUERY = "UPDATE xbet.users SET login = ?, password = ?," +
-            " first_name = ?, last_name = ?, email = ?, balance = ?, role_id = ? WHERE id = ?";
+    private static final String UPDATE_USER_QUERY = "UPDATE xbet.users SET login = ?, " +
+            "first_name = ?, last_name = ?, email = ?, balance = ?, role_id = ? WHERE id = ?";
     private static final String GET_BY_LOGIN_QUERY = "SELECT * FROM xbet.users WHERE login = ?";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.users WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.users WHERE id = ?";
@@ -53,7 +53,7 @@ public class UserDaoImpl implements UserDao {
              PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
         {
             statement.setString(1, user.getLogin());
-            statement.setString(2, user.getPassword());
+            statement.setString(2, String.valueOf(user.getPassword()));
             statement.setString(3, user.getFirstName());
             statement.setString(4, user.getLastName());
             statement.setString(5, user.getEmail());
@@ -78,13 +78,12 @@ public class UserDaoImpl implements UserDao {
              PreparedStatement statement = connection.prepareStatement(UPDATE_USER_QUERY))
         {
             statement.setString(1, user.getLogin());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getFirstName());
-            statement.setString(4, user.getLastName());
-            statement.setString(5, user.getEmail());
-            statement.setDouble(6, user.getBalance());
-            statement.setInt(7, user.getRole());
-            statement.setInt(8, user.getId());
+            statement.setString(2, user.getFirstName());
+            statement.setString(3, user.getLastName());
+            statement.setString(4, user.getEmail());
+            statement.setDouble(5, user.getBalance());
+            statement.setInt(6, user.getRole());
+            statement.setInt(7, user.getId());
             statement.executeUpdate();
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao cannot updateStatus a user in DAO", e);
@@ -135,7 +134,7 @@ public class UserDaoImpl implements UserDao {
                 user = new User();
                 user.setId(set.getInt(Constants.ID));
                 user.setLogin(set.getString(Constants.LOGIN));
-                user.setPassword(set.getString(Constants.PASSWORD));
+                user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
                 user.setFirstName(set.getString(Constants.FIRST_NAME));
                 user.setLastName(set.getString(Constants.LAST_NAME));
                 user.setEmail(set.getString(Constants.EMAIL));
@@ -176,7 +175,7 @@ public class UserDaoImpl implements UserDao {
                 user = new User();
                 user.setId(set.getInt(Constants.ID));
                 user.setLogin(set.getString(Constants.LOGIN));
-                user.setPassword(set.getString(Constants.PASSWORD));
+                user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
                 user.setFirstName(set.getString(Constants.FIRST_NAME));
                 user.setLastName(set.getString(Constants.LAST_NAME));
                 user.setEmail(set.getString(Constants.EMAIL));
@@ -237,7 +236,7 @@ public class UserDaoImpl implements UserDao {
                 user = new User();
                 user.setId(set.getInt(Constants.ID));
                 user.setLogin(set.getString(Constants.LOGIN));
-                user.setPassword(set.getString(Constants.PASSWORD));
+                user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
                 user.setFirstName(set.getString(Constants.FIRST_NAME));
                 user.setLastName(set.getString(Constants.LAST_NAME));
                 user.setEmail(set.getString(Constants.EMAIL));
@@ -272,8 +271,8 @@ public class UserDaoImpl implements UserDao {
             set.next();
             amount = set.getInt(1);
         } catch (SQLException | ConnectionPoolException e) {
-            logger.error("MatchDao get amount of matches operation is failed", e);
-            throw new DAOException("MatchDao get amount of matches operation is failed", e);
+            logger.error("UserDao get amount of users operation is failed", e);
+            throw new DAOException("UserDao get amount of users operation is failed", e);
         }
         return amount;
     }

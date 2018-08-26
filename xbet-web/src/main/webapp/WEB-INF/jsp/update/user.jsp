@@ -8,7 +8,6 @@
     <fmt:message key="create.data" var="createData"/>
     <fmt:message key="admin.error" var="adminError"/>
     <fmt:message key="enter.login" var="enterLogin"/>
-    <fmt:message key="enter.password" var="enterPassword"/>
     <fmt:message key="enter.firstname" var="enterFirstname"/>
     <fmt:message key="enter.lastname" var="enterLastname"/>
     <fmt:message key="enter.email" var="enterEmail"/>
@@ -22,10 +21,6 @@
     <fmt:message key="login.whitespace" var="loginWhitespace"/>
     <fmt:message key="login.error" var="loginError"/>
     <fmt:message key="login.regexp" var="loginRegexp"/>
-    <fmt:message key="password.required" var="passwordRequired"/>
-    <fmt:message key="password.accepted" var="passwordAccepted"/>
-    <fmt:message key="password.whitespace" var="passwordWhitespace"/>
-    <fmt:message key="password.regexp" var="passwordRegexp"/>
     <fmt:message key="firstname.required" var="firstNameRequired"/>
     <fmt:message key="firstname.whitespace" var="firstNameWhitespace"/>
     <fmt:message key="firstname.regexp" var="firstNameRegexp"/>
@@ -75,13 +70,6 @@
                                     <input id="login" class="input" name="login" onchange="checkLogin()"
                                           value="<c:out value="${updateUser.login}"/>">
                                     <div id="loginDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="password"><c:out value="${enterPassword}"/></label>
-                                    <input id="password" class="input" name="password"
-                                           onchange="checkPassword()"
-                                           value="<c:out value="${updateUser.password}"/>">
-                                    <div id="passwordDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="firstName"><c:out value="${enterFirstname}"/></label>

@@ -7,7 +7,6 @@
 <fmt:bundle basename="i18n">
     <fmt:message key="admin.error" var="adminError"/>
     <fmt:message key="enter.login" var="enterLogin"/>
-    <fmt:message key="enter.password" var="enterPassword"/>
     <fmt:message key="enter.firstname" var="enterFirstname"/>
     <fmt:message key="enter.lastname" var="enterLastname"/>
     <fmt:message key="enter.email" var="enterEmail"/>
@@ -49,7 +48,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th><c:out value="${enterLogin}"/></th>
-                                    <th><c:out value="${enterPassword}"/></th>
                                     <th><c:out value="${enterFirstname}"/></th>
                                     <th><c:out value="${enterLastname}"/></th>
                                     <th><c:out value="${enterEmail}"/></th>
@@ -63,7 +61,6 @@
                                     <tr>
                                         <td><c:out value="${user.id}"/></td>
                                         <td><c:out value="${user.login}"/></td>
-                                        <td><c:out value="${user.password}"/></td>
                                         <td><c:out value="${user.firstName}"/></td>
                                         <td><c:out value="${user.lastName}"/></td>
                                         <td><c:out value="${user.email}"/></td>

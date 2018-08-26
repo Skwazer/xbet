@@ -135,10 +135,10 @@ public class UserService {
      * @return {@code true} if a user exists or {@code false} otherwise.
      * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
-    boolean isPasswordCorrectForLogin(String login, String password) throws ServiceException {
+    private boolean isPasswordCorrectForLogin(String login, String password) throws ServiceException {
         try {
             User user = userDao.findByLogin(login);
-            if (user != null && password.equals(user.getPassword())) {
+            if (user != null && password.equals(String.valueOf(user.getPassword()))) {
                 return true;
             }
         } catch (DAOException e) {
@@ -213,7 +213,7 @@ public class UserService {
      * @return the {@link by.academy.it.entity.User} entity.
      * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
-    User updateUserBalance(String login, double amount) throws ServiceException {
+    private User updateUserBalance(String login, double amount) throws ServiceException {
         User user;
         try {
             user = userDao.findByLogin(login);
@@ -274,7 +274,7 @@ public class UserService {
      * @return the {@link by.academy.it.entity.User} entity.
      * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
      */
-    User findUserByLogin(String login) throws ServiceException {
+    private User findUserByLogin(String login) throws ServiceException {
         User user;
         try {
             user = userDao.findByLogin(login);
@@ -304,7 +304,9 @@ public class UserService {
                 list = userDao.getUsers(startFrom);
                 if (!list.isEmpty()) {
                     logger.info("users list has been retrieved");
+                    list.forEach(user -> user.setPassword(null));
                     double pages = Math.ceil(userDao.getAmountOfUsers() / 10d);
+
                     request.setAttribute("users", list);
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
@@ -323,25 +325,6 @@ public class UserService {
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         }
-    }
-
-
-    /**
-     * Retrieves a user by id through {@link by.academy.it.dao.UserDao}.
-     *
-     * @param id the user's id.
-     * @return the {@link by.academy.it.entity.User} entity.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
-     */
-    private User findUserById(int id) throws ServiceException {
-        User user;
-        try {
-            user = userDao.findById(id);
-        } catch (DAOException e) {
-            logger.error("UserService cannot find a user", e);
-            throw new ServiceException("UserService cannot find a user", e);
-        }
-        return user;
     }
 
 
@@ -367,7 +350,7 @@ public class UserService {
             try {
                 User user = new User();
                 user.setLogin(login);
-                user.setPassword(password);
+                user.setPassword(password.toCharArray());
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);
@@ -406,8 +389,9 @@ public class UserService {
         if (Utils.isValidString(key)) {
             try {
                 int id = Integer.parseInt(key);
-                User user = findUserById(id);
+                User user = userDao.findById(id);
                 if (user != null) {
+                    user.setPassword(null);
                     request.getSession().setAttribute(Constants.UPDATED_USER, user);
                     logger.info("user has been retrieved");
 
@@ -444,7 +428,6 @@ public class UserService {
     public void updateUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idParam = request.getParameter(Constants.ID);
         String login = request.getParameter(Constants.LOGIN);
-        String password = request.getParameter(Constants.PASSWORD);
         String firstName = request.getParameter(Constants.FIRST_NAME);
         String lastName = request.getParameter(Constants.LAST_NAME);
         String email = request.getParameter(Constants.EMAIL);
@@ -458,7 +441,6 @@ public class UserService {
             User user = new User();
             user.setId(id);
             user.setLogin(login);
-            user.setPassword(password);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);
@@ -670,7 +652,7 @@ public class UserService {
                 && Utils.isValidString(lastName) && Utils.isValidString(email)) {
             User user = new User();
             user.setLogin(login);
-            user.setPassword(password);
+            user.setPassword(password.toCharArray());
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);

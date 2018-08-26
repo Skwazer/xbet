@@ -1,5 +1,6 @@
 package by.academy.it.filter;
 
+import by.academy.it.command.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import java.io.IOException;
 public class EncodingFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(EncodingFilter.class);
-    private static final String UTF_8 = "UTF-8";
 
     /**
      * Sets the character encoding in the request and response.
@@ -26,8 +26,8 @@ public class EncodingFilter implements Filter {
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        request.setCharacterEncoding(UTF_8);
-        response.setCharacterEncoding(UTF_8);
+        request.setCharacterEncoding(Constants.UTF_8);
+        response.setCharacterEncoding(Constants.UTF_8);
         logger.info("filter has set a character encoding to UTF-8");
 
         chain.doFilter(request, response);

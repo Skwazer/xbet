@@ -5,6 +5,7 @@ package by.academy.it.command;
  */
 public class Constants {
 
+    public static final String UTF_8 = "UTF-8";
     static final String ERROR_MESSAGE = "errorMessage";
     public static final String MAIN_ERROR = "/main/error";
     static final String NO_COMMAND = "no.command";

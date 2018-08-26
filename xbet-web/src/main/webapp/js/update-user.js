@@ -26,34 +26,6 @@ function loginMessage(result) {
     }
 }
 
-function checkPassword() {
-    var password = $("#password").val();
-    var regExp = new RegExp("^[A-Z](?=.*[a-z])(?=.*[0-9])(?=.{7,})");
-    if (password === "") {
-        $('#passwordDiv').css("display", "none");
-        alert("<c:out value="${passwordRequired}"/>");
-    } else if (password.trim() === "") {
-        passwordMessage("INCORRECT");
-    } else if (!regExp.test(password)) {
-        passwordMessage("REGEXP");
-    } else {
-        passwordMessage("SUCCESS");
-    }
-}
-
-function passwordMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#passwordDiv').html("<p style='color: #4cae4c'><c:out value="${passwordAccepted}"/></p>");
-        $('#passwordDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#passwordDiv').html("<p style='color: red'><c:out value="${passwordWhitespace}"/></p>");
-        $('#passwordDiv').css("display", "block")
-    } else if (result === 'REGEXP') {
-        $('#passwordDiv').html("<p style='color: red'><c:out value="${passwordRegexp}"/></p>");
-        $('#passwordDiv').css("display", "block")
-    }
-}
-
 function firstNameCheck() {
     var regExp = new RegExp("<c:out value="${regexp}"/>");
     var firstName = $("#firstName").val();

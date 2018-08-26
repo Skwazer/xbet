@@ -1,6 +1,7 @@
 package by.academy.it.entity;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Representation of database table 'users'.
@@ -11,7 +12,7 @@ public class User implements Serializable {
 
     private Integer id;
     private String login;
-    private String password;
+    private char[] password;
     private String firstName;
     private String lastName;
     private String email;
@@ -54,7 +55,7 @@ public class User implements Serializable {
      * The {@code password} field getter.
      * @return a value of the {@code password} field.
      */
-    public String getPassword() {
+    public char[] getPassword() {
         return password;
     }
 
@@ -62,7 +63,7 @@ public class User implements Serializable {
      * The {@code password} field setter.
      * @param password value to set.
      */
-    public void setPassword(String password) {
+    public void setPassword(char[] password) {
         this.password = password;
     }
 
@@ -155,7 +156,7 @@ public class User implements Serializable {
 
         if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (!Arrays.equals(password, user.password)) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
@@ -167,7 +168,7 @@ public class User implements Serializable {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(password);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
@@ -181,7 +182,7 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
+                ", password=" + Arrays.toString(password) +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
@@ -189,4 +190,5 @@ public class User implements Serializable {
                 ", role=" + role +
                 '}';
     }
+
 }
