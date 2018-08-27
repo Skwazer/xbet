@@ -2,6 +2,7 @@ package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.MatchDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Match;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class MatchService{
 
     private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
     private static MatchService instance;
-    private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
+    private MatchDao matchDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getMatchDao();
 
     /**
      * Prohibits creating an instance of class outside the class.

@@ -3,6 +3,7 @@ package by.academy.it.service;
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.MatchDao;
 import by.academy.it.dao.TeamDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import by.academy.it.entity.Match;
@@ -20,8 +21,8 @@ public class ModelService {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelService.class);
     private static ModelService instance;
-    private TeamDao teamDao = DaoFactory.getInstance().getTeamDao();
-    private MatchDao matchDao = DaoFactory.getInstance().getMatchDao();
+    private TeamDao teamDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getTeamDao();
+    private MatchDao matchDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getMatchDao();
 
 
     /**

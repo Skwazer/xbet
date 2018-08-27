@@ -3,6 +3,7 @@ package by.academy.it.service;
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.TransactionalDao;
 import by.academy.it.dao.UserDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import by.academy.it.entity.User;
@@ -27,8 +28,9 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private static UserService instance;
-    private UserDao userDao = DaoFactory.getInstance().getUserDao();
-    private TransactionalDao transactionalDao = DaoFactory.getInstance().getTransactionalDao();
+    private UserDao userDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getUserDao();
+    private TransactionalDao transactionalDao =
+            DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getTransactionalDao();
 
     /**
      * Prohibits creating an instance of class outside the class.

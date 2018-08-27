@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class DaoFactory {
 
     private static DaoFactory instance;
-    private static final ConnectionPool connectionPool = ConnectionPool.getInstance();
+    private ConnectionPool connectionPool;
     private static final Logger logger = LoggerFactory.getLogger(DaoFactory.class);
 
     private BetDao betDao;
@@ -26,7 +26,8 @@ public class DaoFactory {
     /**
      * Prohibits creating an instance of class outside the class.
      */
-    private DaoFactory() {
+    private DaoFactory(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
 
@@ -35,9 +36,9 @@ public class DaoFactory {
      *
      * @return {@code DaoFactory} instance.
      */
-    public static DaoFactory getInstance() {
+    public static DaoFactory getInstance(ConnectionPool connectionPool) {
         if (instance == null) {
-            instance = new DaoFactory();
+            instance = new DaoFactory(connectionPool);
             logger.info("DaoFactory instance has been created");
         }
         return instance;

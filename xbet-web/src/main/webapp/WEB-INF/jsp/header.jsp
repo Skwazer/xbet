@@ -144,8 +144,7 @@
                                     <div class="header-btns-icon">
                                         <i class="fa fa-user-o"></i>
                                     </div>
-                                    <strong class="text-uppercase"><c:out value="${account} "/><i
-                                            class="fa fa-caret-down"></i></strong>
+                                    <strong id="header-title" class="text-uppercase"><c:out value="${account} "/></strong>
                                 </div>
                             </c:when>
                             <c:otherwise>
@@ -153,7 +152,7 @@
                                     <div class="header-btns-icon">
                                         <i class="fa fa-user-o"></i>
                                     </div>
-                                    <strong class="text-uppercase hover"><c:out value="${account} "/><i
+                                    <strong class="text-uppercase hover"><c:out value="${myBets} "/><i
                                             class="fa fa-caret-down"></i></strong>
                                 </div>
                             </c:otherwise>

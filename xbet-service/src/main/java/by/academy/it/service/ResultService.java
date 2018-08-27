@@ -2,6 +2,7 @@ package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.ResultDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Result;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class ResultService {
 
     private static final Logger logger = LoggerFactory.getLogger(ResultService.class);
     private static ResultService instance;
-    private ResultDao resultDao = DaoFactory.getInstance().getResultDao();
+    private ResultDao resultDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getResultDao();
 
     /**
      * Prohibits creating an instance of class outside the class.

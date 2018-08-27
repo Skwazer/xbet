@@ -34,4 +34,11 @@ public class Constants {
     static final String EMAIL = "email";
     static final String BALANCE = "balance";
     static final String ROLE_ID = "role_id";
+    public static final String DATABASE = "database";
+    public static final String DB_URL = "URL";
+    public static final String DB_USERNAME = "USERNAME";
+    public static final String DB_PASSWORD = "PASSWORD";
+    public static final String DRIVER = "DRIVER";
+    public static final String MAX_CONNECTIONS = "MAX.CONNECTIONS";
+
 }

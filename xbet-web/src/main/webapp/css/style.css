@@ -435,6 +435,10 @@ textarea.input {
   color: #F8694A;
 }
 
+#header-title {
+  padding-right: 20px;
+}
+
 /*----------------------------*\
 	Cart header
 \*----------------------------*/
@@ -1281,6 +1285,10 @@ color: #f8694a !important;
 .store-pages {
   display: inline-block;
   margin-left: 15px;
+}
+
+#explanations strong{
+  margin-left: 20px;
 }
 
 .store-pages li {

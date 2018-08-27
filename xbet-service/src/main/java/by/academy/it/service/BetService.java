@@ -2,6 +2,7 @@ package by.academy.it.service;
 
 import by.academy.it.dao.BetDao;
 import by.academy.it.dao.DAOException;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import by.academy.it.entity.User;
@@ -22,7 +23,7 @@ public class BetService {
 
     private static final Logger logger = LoggerFactory.getLogger(BetService.class);
     private static BetService instance;
-    private BetDao betDao = DaoFactory.getInstance().getBetDao();
+    private BetDao betDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getBetDao();
 
     /**
      * Prohibits creating an instance of class outside the class.

@@ -1,5 +1,20 @@
 package by.academy.it.service;
 
+/*import by.academy.it.dao.RoleDao;
+import by.academy.it.entity.Role;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.util.Collections;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;*/
+
 public class RoleServiceTest {
 
     /*private static RoleService roleService;

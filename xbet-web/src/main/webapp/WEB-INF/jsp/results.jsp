@@ -10,7 +10,9 @@
     <fmt:message key="match.team1" var="team1Title"/>
     <fmt:message key="match.team2" var="team2Title"/>
     <fmt:message key="match.score" var="matchScore"/>
-
+    <fmt:message key="match.1" var="match1"/>
+    <fmt:message key="match.X" var="matchX"/>
+    <fmt:message key="match.2" var="match2"/>
 
 </fmt:bundle>
 
@@ -25,7 +27,6 @@
                     <div class="section-title">
                         <h3 class="title"><c:out value="${resultsTitle}"/></h3>
                     </div>
-                    <div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -48,7 +49,13 @@
                             </c:forEach>
                             </tbody>
                         </table>
-                    </div>
+                </div>
+                <div class="small text-center">
+                    <p id="explanations">
+                        <strong>1</strong> - <c:out value="${match1}"/>
+                        <strong>X</strong> - <c:out value="${matchX}"/>
+                        <strong>2</strong> - <c:out value="${match2}"/>
+                    </p>
                 </div>
                 <!-- pagination -->
                 <div class="text-center">

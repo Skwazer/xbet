@@ -2,6 +2,7 @@ package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.TeamDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Team;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class TeamService {
 
     private static final Logger logger = LoggerFactory.getLogger(TeamService.class);
     private static TeamService instance;
-    private TeamDao teamDao = DaoFactory.getInstance().getTeamDao();
+    private TeamDao teamDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getTeamDao();
 
 
     /**

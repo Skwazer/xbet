@@ -3,6 +3,7 @@ package by.academy.it.service;
 import by.academy.it.dao.BetDao;
 import by.academy.it.dao.TransactionalDao;
 import by.academy.it.dao.UserDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Bet;
 import by.academy.it.entity.Result;
@@ -26,9 +27,9 @@ public class FinishMatchService {
     private static final Logger logger = LoggerFactory.getLogger(FinishMatchService.class);
     private static FinishMatchService instance;
 
-    private BetDao betDao = DaoFactory.getInstance().getBetDao();
-    private TransactionalDao transactionalDao = DaoFactory.getInstance().getTransactionalDao();
-    private UserDao userDao = DaoFactory.getInstance().getUserDao();
+    private BetDao betDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getBetDao();
+    private TransactionalDao transactionalDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getTransactionalDao();
+    private UserDao userDao = DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getUserDao();
 
 
     /**

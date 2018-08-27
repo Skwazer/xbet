@@ -78,15 +78,6 @@ public interface BetDao {
 
 
     /**
-     * Updates a bet entry.
-     *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    void updateStatus(Bet bet) throws DAOException;
-
-
-    /**
      * Retrieves a list of all bets.
      *
      * @param startFrom position from which the select operation is performed.

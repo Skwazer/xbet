@@ -271,27 +271,6 @@ public class BetDaoImpl implements BetDao {
 
 
     /**
-     * Updates a bet entry in the database.
-     *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    @Override
-    public void updateStatus(Bet bet) throws DAOException {
-        try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_BET_STATUS_QUERY))
-        {
-            statement.setString(1, bet.getStatus());
-            statement.setInt(2, bet.getId());
-            statement.executeUpdate();
-        } catch (SQLException | ConnectionPoolException e) {
-            logger.error("BetDao cannot create a bet in DAO", e);
-            throw new DAOException("BetDao cannot create a bet", e);
-        }
-    }
-
-
-    /**
      * Retrieves a list of all bets from the database.
      *
      * @param startFrom position from which the select operation is performed.

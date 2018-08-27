@@ -2,6 +2,7 @@ package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.RoleDao;
+import by.academy.it.dao.factory.ConnectionPoolImpl;
 import by.academy.it.dao.factory.DaoFactory;
 import by.academy.it.entity.Role;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class RoleService {
      */
     public static RoleService getInstance() {
         if (instance == null) {
-            instance = new RoleService(DaoFactory.getInstance().getRoleDao());
+            instance = new RoleService(DaoFactory.getInstance(ConnectionPoolImpl.getInstance()).getRoleDao());
             logger.info("RoleService instance has been created");
         }
         return instance;
