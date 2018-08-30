@@ -127,6 +127,7 @@ public class UserDaoImpl implements UserDao {
         User user = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_LOGIN_QUERY);
             statement.setString(1, login);
             set = statement.executeQuery();
@@ -168,6 +169,7 @@ public class UserDaoImpl implements UserDao {
         User user = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_ID_QUERY);
             statement.setInt(1, id);
             set = statement.executeQuery();
@@ -228,6 +230,7 @@ public class UserDaoImpl implements UserDao {
         List<User> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_USERS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
@@ -263,16 +266,25 @@ public class UserDaoImpl implements UserDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public int getAmountOfUsers() throws DAOException {
-        int amount;
-        try (Connection connection = pool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet set = statement.executeQuery(GET_AMOUNT_USERS_QUERY))
-        {
-            set.next();
-            amount = set.getInt(1);
+        int amount = 0;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_AMOUNT_USERS_QUERY);
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao get amount of users operation is failed", e);
             throw new DAOException("UserDao get amount of users operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return amount;
     }

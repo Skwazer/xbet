@@ -34,7 +34,6 @@ public class BetDaoImpl implements BetDao {
     private static final String GET_BY_MATCH_ID_QUERY =
             "SELECT * FROM xbet.bets WHERE match_id = ?  AND status = 'active'";
     private static final String DELETE_QUERY = "DELETE FROM xbet.bets WHERE id = ?";
-    private static final String UPDATE_BET_STATUS_QUERY = "UPDATE xbet.bets SET status=? WHERE id=?";
 
 
     /**
@@ -85,6 +84,7 @@ public class BetDaoImpl implements BetDao {
         Bet bet = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_ID_QUERY);
             statement.setInt(1, id);
             set = statement.executeQuery();
@@ -125,6 +125,7 @@ public class BetDaoImpl implements BetDao {
         List<Bet> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_USER_ID_QUERY);
             statement.setInt(1, userId);
             statement.setInt(2, startFrom);
@@ -161,17 +162,19 @@ public class BetDaoImpl implements BetDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public int getAmountOfUserBets(int userId) throws DAOException {
-        int amount;
+        int amount = 0;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_AMOUNT_BY_USER_ID_QUERY);
             statement.setInt(1, userId);
             set = statement.executeQuery();
-            set.next();
-            amount = set.getInt(1);
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao get amount of user bets operation is failed", e);
             throw new DAOException("BetDao get amount of user bets operation is failed", e);
@@ -243,6 +246,7 @@ public class BetDaoImpl implements BetDao {
         List<Bet> list = new ArrayList<>();
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_MATCH_ID_QUERY);
             statement.setInt(1, matchId);
             set = statement.executeQuery();
@@ -284,6 +288,7 @@ public class BetDaoImpl implements BetDao {
         List<Bet> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_ALL_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
@@ -318,16 +323,25 @@ public class BetDaoImpl implements BetDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public int getAmountOfAllBets() throws DAOException {
-        int amount;
-        try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(GET_AMOUNT_OF_ALL_BETS_QUERY);
-             ResultSet set = statement.executeQuery())
-        {
-            set.next();
-            amount = set.getInt(1);
+        int amount = 0;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.prepareStatement(GET_AMOUNT_OF_ALL_BETS_QUERY);
+            set = statement.executeQuery();
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao get amount of all bets operation is failed", e);
             throw new DAOException("BetDao get amount of all bets operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return amount;
     }

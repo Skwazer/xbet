@@ -479,8 +479,8 @@ public class UserService {
     public void changeLocale(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String lang = request.getParameter(Constants.LANG);
         Locale locale;
-        if ("ru".equals(lang)) {
-            locale = new Locale("ru", "RU");
+        if (Constants.RU.equals(lang)) {
+            locale = new Locale(Constants.RU, Constants.RUS);
         } else {
             locale = Locale.US;
         }

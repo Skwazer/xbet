@@ -76,6 +76,7 @@ public class ResultDaoImpl implements ResultDao {
         Result result = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_ID_QUERY);
             statement.setInt(1, id);
             set = statement.executeQuery();
@@ -113,6 +114,7 @@ public class ResultDaoImpl implements ResultDao {
         List<Result> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_RESULTS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
@@ -152,6 +154,7 @@ public class ResultDaoImpl implements ResultDao {
         List<Result> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_LAST_RESULTS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
@@ -184,16 +187,25 @@ public class ResultDaoImpl implements ResultDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public int getAmountOfAllResults() throws DAOException {
-        int amount;
-        try (Connection connection = pool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet set = statement.executeQuery(GET_AMOUNT_OF_ALL_RESULTS_QUERY))
-        {
-            set.next();
-            amount = set.getInt(1);
+        int amount = 0;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_AMOUNT_OF_ALL_RESULTS_QUERY);
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao get amount of results operation is failed", e);
             throw new DAOException("ResultDao get amount of results operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return amount;
     }

@@ -86,6 +86,7 @@ public class MatchDaoImpl implements MatchDao {
         Match match = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_ID_QUERY);
             statement.setInt(1, id);
             set = statement.executeQuery();
@@ -128,6 +129,7 @@ public class MatchDaoImpl implements MatchDao {
         List<Match> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_UNPLAYED_MATCHES_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
@@ -165,16 +167,25 @@ public class MatchDaoImpl implements MatchDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public int getAmountOfUnplayedMatches() throws DAOException {
-        int amount;
-        try (Connection connection = pool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet set = statement.executeQuery(GET_AMOUNT_OF_UNPLAYED_MATCHES_QUERY))
-        {
-            set.next();
-            amount = set.getInt(1);
+        int amount = 0;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_AMOUNT_OF_UNPLAYED_MATCHES_QUERY);
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao get amount of matches operation is failed", e);
             throw new DAOException("MatchDao get amount of matches operation is failed", e);
+        }  finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return amount;
     }
@@ -194,6 +205,7 @@ public class MatchDaoImpl implements MatchDao {
         List<Match> list = new ArrayList<>(10);
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_MATCHES_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
@@ -230,16 +242,25 @@ public class MatchDaoImpl implements MatchDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public int getAmountOfAllMatches() throws DAOException {
-        int amount;
-        try (Connection connection = pool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet set = statement.executeQuery(GET_AMOUNT_OF_ALL_MATCHES_QUERY))
-        {
-            set.next();
-            amount = set.getInt(1);
+        int amount = 0;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_AMOUNT_OF_ALL_MATCHES_QUERY);
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("MatchDao get amount of matches operation is failed", e);
             throw new DAOException("MatchDao get amount of matches operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return amount;
     }

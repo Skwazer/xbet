@@ -165,5 +165,6 @@ class Constants {
     static final String DELETE_TEAM_MESSAGE = "delete.team.message";
     static final String DELETE_TEAM_ERROR = "delete.team.error";
     static final String RESULTS = "results";
-
+    static final String RU = "ru";
+    static final String RUS = "RU";
 }

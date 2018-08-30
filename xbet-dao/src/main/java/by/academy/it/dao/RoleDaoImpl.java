@@ -69,6 +69,7 @@ public class RoleDaoImpl implements RoleDao {
         Role role = null;
         try {
             connection = pool.getConnection();
+            connection.setReadOnly(true);
             statement = connection.prepareStatement(GET_BY_ID_QUERY);
             statement.setInt(1, id);
             set = statement.executeQuery();
@@ -97,10 +98,14 @@ public class RoleDaoImpl implements RoleDao {
      */
     public List<Role> getRoles() throws DAOException {
         List<Role> list = new ArrayList<>();
-        try (Connection connection = pool.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet set = statement.executeQuery(GET_ROLES_QUERY))
-        {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_ROLES_QUERY);
             Role role;
             while (set.next()) {
                 role = new Role();
@@ -111,6 +116,10 @@ public class RoleDaoImpl implements RoleDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao get roles operation is failed", e);
             throw new DAOException("RoleDao get roles operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
         }
         return list;
     }
