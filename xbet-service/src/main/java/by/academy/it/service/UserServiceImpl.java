@@ -472,15 +472,6 @@ class UserServiceImpl implements UserService {
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
         logger.info("locale has been changed - " + locale);
 
-        //TODO: delete code below
-        try {
-            User user = findUserByLogin("admin");
-            user.setPassword(null);
-            request.getSession().setAttribute("user", user);
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-
         response.sendRedirect(Utils.getReferrerURI(request));
     }
 
