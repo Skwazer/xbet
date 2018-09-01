@@ -34,6 +34,7 @@ public class TeamDaoImpl implements TeamDao {
      */
     public TeamDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("TeamDao has been created");
     }
 
 

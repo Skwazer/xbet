@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, updates user's data.
+ * Extends {@link by.academy.it.command.Command}, updates user's data.
  */
-public class UpdateUserCommand implements Command {
+public class UpdateUserCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateUserCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      * Delegates updateBalance operation to {@link by.academy.it.service.UserService}.

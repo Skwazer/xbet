@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, terminates users session. Deletes user's data from the session.
+ * Extends {@link by.academy.it.command.Command}, terminates users session. Deletes user's data from the session.
  *
  */
-public class LogoutCommand implements Command {
+public class LogoutCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(LogoutCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      * Delegates logout operation to {@link by.academy.it.service.UserService}.

@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, deletes a match.
+ * Extends {@link by.academy.it.command.Command}, deletes a match.
  *
  */
-public class DeleteMatchCommand implements Command {
+public class DeleteMatchCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteMatchCommand.class);
-    private MatchService matchService = MatchService.getInstance();
+    private MatchService matchService = serviceFactory.getMatchService();
 
     /**
      * Delegates delete match operation to {@link by.academy.it.service.MatchService}.

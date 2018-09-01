@@ -8,7 +8,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -18,27 +17,37 @@ import java.util.concurrent.Executor;
  */
 public class ConnectionPoolImpl implements ConnectionPool {
 
-    private static ConnectionPoolImpl connectionPool;
     private final static Logger logger = LoggerFactory.getLogger(ConnectionPoolImpl.class);
 
-    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(Constants.DATABASE);
-    private static final String URL = BUNDLE.getString(Constants.DB_URL);
-    private static final String USERNAME = BUNDLE.getString(Constants.DB_USERNAME);
-    private static final String PASSWORD = BUNDLE.getString(Constants.DB_PASSWORD);
-    private static final String DRIVER = BUNDLE.getString(Constants.DRIVER);
-    private static final String MAX_CONNECTIONS = BUNDLE.getString(Constants.MAX_CONNECTIONS);
+    private String url;
+    private String username;
+    private String password;
+
     private int maxConnections;
     private BlockingQueue<Connection> availableConnections;
     private BlockingQueue<Connection> usedConnections;
 
     /**
-     * Prohibits creating an instance of class outside the class.
+     * Creates an instance of the connection pool using properties from database.properties file.
      */
-    private ConnectionPoolImpl(){
+    public ConnectionPoolImpl(){
         try {
-            maxConnections = Integer.parseInt(MAX_CONNECTIONS);
-        } catch (NumberFormatException e) {
-            logger.error("Cannot set connection pool size", e);
+            Properties properties = new Properties();
+            properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
+            url = properties.getProperty(Constants.DB_URL);
+            username = properties.getProperty(Constants.DB_USERNAME);
+            password = properties.getProperty(Constants.DB_PASSWORD);
+            String driver = properties.getProperty(Constants.DRIVER);
+            String maxConnections = properties.getProperty(Constants.MAX_CONNECTIONS);
+            this.maxConnections = Integer.parseInt(maxConnections);
+
+            Class.forName(driver);
+            availableConnections = new ArrayBlockingQueue<>(this.maxConnections);
+            usedConnections = new ArrayBlockingQueue<>(this.maxConnections);
+
+            logger.info("The connection pool has been created");
+        } catch (Exception e) {
+            logger.error("Cannot create the connection pool", e);
             maxConnections = 40;
         }
     }
@@ -52,11 +61,8 @@ public class ConnectionPoolImpl implements ConnectionPool {
     @Override
     public void init() throws ConnectionPoolException {
         try {
-            Class.forName(DRIVER);
-            availableConnections = new ArrayBlockingQueue<>(maxConnections);
-            usedConnections = new ArrayBlockingQueue<>(maxConnections);
             for (int i = 0; i < maxConnections; i++) {
-                Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                Connection connection = DriverManager.getConnection(url, username, password);
                 PooledConnection pooledConnection = new PooledConnection(connection);
 
                 availableConnections.add(pooledConnection);
@@ -83,33 +89,17 @@ public class ConnectionPoolImpl implements ConnectionPool {
         connectionsToDelete.addAll(usedConnections);
         usedConnections.clear();
         try {
-            if (connectionPool != null) {
-                for (Connection con : connectionsToDelete) {
-                    if (!con.getAutoCommit()) {
-                        con.commit();
-                    }
-                    ((PooledConnection) con).reallyClose();
+            for (Connection con : connectionsToDelete) {
+                if (!con.getAutoCommit()) {
+                    con.commit();
                 }
+                ((PooledConnection) con).reallyClose();
             }
             logger.info("The connection pool has been closed");
         } catch (SQLException e) {
             logger.error("The connection pool hasn't been closed", e);
             throw new ConnectionPoolException("The connection pool hasn't been closed", e);
         }
-    }
-
-
-    /**
-     * Returns an instance of the {@code ConnectionPool}.
-     *
-     * @return {@code ConnectionPool} instance.
-     */
-    public static ConnectionPoolImpl getInstance() {
-        if (connectionPool == null) {
-            connectionPool = new ConnectionPoolImpl();
-            logger.info("The connection pool instance has been created");
-        }
-        return connectionPool;
     }
 
 

@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, finds the bet by id and put it into the session.
+ * Extends {@link by.academy.it.command.Command}, finds the bet by id and put it into the session.
  *
  */
-public class ShowUpdateBetPageCommand implements Command {
+public class ShowUpdateBetPageCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateBetPageCommand.class);
-    private BetService betService = BetService.getInstance();
+    private BetService betService = serviceFactory.getBetService();
 
     /**
      * Delegates operation to {@link by.academy.it.service.BetService}.

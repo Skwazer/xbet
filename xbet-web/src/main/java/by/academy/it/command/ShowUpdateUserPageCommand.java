@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, finds the user by id and put it into the session.
+ * Extends {@link by.academy.it.command.Command}, finds the user by id and put it into the session.
  *
  */
-public class ShowUpdateUserPageCommand implements Command {
+public class ShowUpdateUserPageCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateUserPageCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      * Delegates operation to {@link by.academy.it.service.UserService}.

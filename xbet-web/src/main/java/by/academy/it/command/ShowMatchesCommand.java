@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, retrieves a list of all matches and sends it to 'matches page'.
+ * Extends {@link by.academy.it.command.Command}, retrieves a list of all matches and sends it to 'matches page'.
  *
  */
-public class ShowMatchesCommand implements Command {
+public class ShowMatchesCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowMatchesCommand.class);
-    private MatchService matchService = MatchService.getInstance();
+    private MatchService matchService = serviceFactory.getMatchService();
 
     /**
      * Delegates show matches operation to {@link by.academy.it.service.MatchService}.

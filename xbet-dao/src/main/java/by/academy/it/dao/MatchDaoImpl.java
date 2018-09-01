@@ -42,6 +42,7 @@ public class MatchDaoImpl implements MatchDao {
      */
     public MatchDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("MatchDao has been created");
     }
 
 

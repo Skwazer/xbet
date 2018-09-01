@@ -3,7 +3,9 @@ package by.academy.it.service;
 import by.academy.it.dao.DAOException;
 import by.academy.it.dao.RoleDao;
 import by.academy.it.entity.Role;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.servlet.RequestDispatcher;
@@ -14,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class RoleServiceTest {
@@ -30,216 +32,249 @@ public class RoleServiceTest {
     private static DAOException DAOExc;
 
     @BeforeAll
-    public static void setup() {
+    static void setup() {
         roleDao = mock(RoleDao.class);
         role = mock(Role.class);
-        roleService = RoleService.getInstance(roleDao);
+        roleService = new RoleServiceImpl(roleDao);
         request = mock(HttpServletRequest.class);
         dispatcher = mock(RequestDispatcher.class);
         response = mock(HttpServletResponse.class);
         session = mock(HttpSession.class);
         DAOExc = new DAOException("dao test exception");
+    }
 
-        when(request.getParameter(anyString())).thenReturn("2");
+    @BeforeEach
+    void setBehavior() {
         when(request.getSession()).thenReturn(session);
     }
 
+    @AfterEach
+    void resetMocks() {
+        reset(roleDao, role, request, response, dispatcher, session);
+    }
+
     @Test
-    public void showRoles1() throws Exception {
+    void showRoles1() throws Exception {
         List<Role> list = new ArrayList<>();
         list.add(role);
         when(roleDao.getRoles()).thenReturn(list);
         when(request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.ROLES + Constants.JSP))
                 .thenReturn(dispatcher);
+
         roleService.showRoles(request, response);
         verify(roleDao).getRoles();
         verify(request).setAttribute(Constants.ROLES, list);
         verify(request).getRequestDispatcher(Constants.PATH + Constants.GET + Constants.ROLES + Constants.JSP);
         verify(dispatcher).forward(request, response);
+
+        assertEquals(list, roleDao.getRoles());
     }
 
     @Test
-    public void showRoles2() throws Exception {
+    void showRoles2() throws Exception {
         List<Role> list = Collections.emptyList();
         when(roleDao.getRoles()).thenReturn(list);
+
         roleService.showRoles(request, response);
-        verify(roleDao, atLeastOnce()).getRoles();
-        verify(request, atLeastOnce()).getSession();
+        verify(roleDao).getRoles();
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.NO_ROLES_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
+
+        assertEquals(list, roleDao.getRoles());
     }
 
     @Test
-    public void showRoles3() throws Exception {
+    void showRoles3() throws Exception {
         when(roleDao.getRoles()).thenThrow(DAOExc);
+
         roleService.showRoles(request, response);
-        verify(roleDao, atLeastOnce()).getRoles();
-        verify(request, atLeastOnce()).getSession();
+        verify(roleDao).getRoles();
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLES_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
 
     @Test
-    public void createRole1() throws Exception {
+    void createRole1() throws Exception {
+        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+
         roleService.createRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.ROLE);
+        verify(request).getParameter(Constants.ROLE);
         verify(roleDao).create(any(Role.class));
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.CREATE_ROLE_MESSAGE);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
     }
 
     @Test
-    public void createRole2() throws Exception {
+    void createRole2() throws Exception {
         when(request.getParameter(Constants.ROLE)).thenReturn(null);
+
         roleService.createRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.ROLE);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.ROLE);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLE_DATA_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
     @Test
-    public void createRole3() throws Exception {
+    void createRole3() throws Exception {
         when(request.getParameter(Constants.ROLE)).thenReturn("test");
         doThrow(DAOExc).when(roleDao).create(any(Role.class));
+
         roleService.createRole(request, response);
-        verify(roleDao, atLeastOnce()).create(any(Role.class));
-        verify(request, atLeastOnce()).getSession();
+        verify(roleDao).create(any(Role.class));
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLE_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
 
     @Test
-    public void showUpdateRolePage1() throws Exception {
+    void showUpdateRolePage1() throws Exception {
+        when(request.getParameter(Constants.KEY)).thenReturn("2");
         when(roleDao.findById(2)).thenReturn(role);
+
         roleService.showUpdateRolePage(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
+        verify(request).getParameter(Constants.KEY);
         verify(roleDao).findById(2);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getSession();
         verify(session).setAttribute(Constants.UPDATED_ROLE, role);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_ROLE);
     }
 
     @Test
-    public void showUpdateRolePage2() throws Exception {
+    void showUpdateRolePage2() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn(null);
+
         roleService.showUpdateRolePage(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.KEY);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_ROLE_PARAMETER_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
     @Test
-    public void showUpdateRolePage3() throws Exception {
+    void showUpdateRolePage3() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
         when(roleDao.findById(2)).thenReturn(null);
+
         roleService.showUpdateRolePage(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
-        verify(roleDao, atLeastOnce()).findById(2);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.KEY);
+        verify(roleDao).findById(2);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLE_NOT_FOUND);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
     @Test
-    public void showUpdateRolePage4() throws Exception {
+    void showUpdateRolePage4() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
         when(roleDao.findById(2)).thenThrow(DAOExc);
+
         roleService.showUpdateRolePage(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
-        verify(roleDao, atLeastOnce()).findById(2);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.KEY);
+        verify(roleDao).findById(2);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_ROLE_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
 
     @Test
-    public void updateRole1() throws Exception {
+    void updateRole1() throws Exception {
+        when(request.getParameter(Constants.ID)).thenReturn("2");
+        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+
         roleService.updateRole(request, response);
         verify(request).getParameter(Constants.ID);
-        verify(request, atLeastOnce()).getParameter(Constants.ROLE);
+        verify(request).getParameter(Constants.ROLE);
         verify(roleDao).update(any(Role.class));
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_ROLE_MESSAGE);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
     }
 
     @Test
-    public void updateRole2() throws Exception {
+    void updateRole2() throws Exception {
         when(request.getParameter(Constants.ID)).thenReturn("1");
+        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+
         roleService.updateRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.ID);
-        verify(request, atLeastOnce()).getParameter(Constants.ROLE);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.ID);
+        verify(request).getParameter(Constants.ROLE);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_FORBIDDEN);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
     }
 
     @Test
-    public void updateRole3() throws Exception {
+    void updateRole3() throws Exception {
         when(request.getParameter(Constants.ID)).thenReturn("2");
+        when(request.getParameter(Constants.ROLE)).thenReturn("test");
         doThrow(DAOExc).when(roleDao).update(any(Role.class));
+
         roleService.updateRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.ID);
-        verify(request, atLeastOnce()).getParameter(Constants.ROLE);
-        verify(roleDao, atLeastOnce()).update(any(Role.class));
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.ID);
+        verify(request).getParameter(Constants.ROLE);
+        verify(roleDao).update(any(Role.class));
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_ROLE_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
 
     @Test
-    public void deleteRole1() throws Exception {
+    void deleteRole1() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
+
         roleService.deleteRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
+        verify(request).getParameter(Constants.KEY);
         verify(roleDao).delete(2);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_ROLE_MESSAGE);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
     }
 
 
     @Test
-    public void deleteRole2() throws Exception {
+    void deleteRole2() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("1");
+
         roleService.deleteRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.KEY);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_FORBIDDEN);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
     }
 
     @Test
-    public void deleteRole3() throws Exception {
+    void deleteRole3() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
         doThrow(DAOExc).when(roleDao).delete(2);
+
         roleService.deleteRole(request, response);
-        verify(request, atLeastOnce()).getParameter(Constants.KEY);
-        verify(roleDao, atLeastOnce()).delete(2);
-        verify(request, atLeastOnce()).getSession();
+        verify(request).getParameter(Constants.KEY);
+        verify(roleDao).delete(2);
+        verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
-        verify(response, atLeastOnce())
+        verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 

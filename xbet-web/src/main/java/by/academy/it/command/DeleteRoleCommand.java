@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, deletes a role.
+ * Extends {@link by.academy.it.command.Command}, deletes a role.
  *
  */
-public class DeleteRoleCommand implements Command {
+public class DeleteRoleCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteRoleCommand.class);
-    private RoleService roleService = RoleService.getInstance();
+    private RoleService roleService = serviceFactory.getRoleService();
 
     /**
      * Delegates delete role operation to {@link by.academy.it.service.RoleService}.

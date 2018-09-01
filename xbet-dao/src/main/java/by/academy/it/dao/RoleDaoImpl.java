@@ -33,6 +33,7 @@ public class RoleDaoImpl implements RoleDao {
      */
     public RoleDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("RoleDao has been created");
     }
 
 

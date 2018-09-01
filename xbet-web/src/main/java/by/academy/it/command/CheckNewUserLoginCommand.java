@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, validates user login during registration through ajax.
+ * Extends {@link by.academy.it.command.Command}, validates user login during registration through ajax.
  */
-public class CheckNewUserLoginCommand implements Command {
+public class CheckNewUserLoginCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckNewUserLoginCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      * Delegates login check to {@link by.academy.it.service.UserService}.

@@ -39,6 +39,7 @@ public class UserDaoImpl implements UserDao {
      */
     public UserDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("UserDao has been created");
     }
 
 

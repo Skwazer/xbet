@@ -18,7 +18,7 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
-    private static final CommandFactory FACTORY = CommandFactory.getInstance();
+    private static final CommandFactory FACTORY = new CommandFactory();
 
 
     /**

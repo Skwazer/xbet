@@ -59,6 +59,7 @@
                                         <th title="<c:out value="${match1X}"/>">1X</th>
                                         <th title="<c:out value="${match12}"/>">12</th>
                                         <th title="<c:out value="${match2X}"/>">2X</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>

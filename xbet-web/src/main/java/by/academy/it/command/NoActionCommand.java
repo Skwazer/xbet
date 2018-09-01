@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, used when the application doesn't have a command for received URL.
+ * Extends {@link by.academy.it.command.Command}, used when the application doesn't have a command for received URL.
  *
  */
-public class NoActionCommand implements Command {
+public class NoActionCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(NoActionCommand.class);
 

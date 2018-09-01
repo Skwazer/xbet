@@ -37,6 +37,7 @@ public class ResultDaoImpl implements ResultDao {
      */
     public ResultDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("ResultDao has been created");
     }
 
 

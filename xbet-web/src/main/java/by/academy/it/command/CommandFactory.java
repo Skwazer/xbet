@@ -14,15 +14,12 @@ import java.util.Map;
 public class CommandFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandFactory.class);
-    private static CommandFactory instance = null;
-    private static Map<String, Command> commands;
+    private static Map<String, Command> commands = new HashMap<>(70);
 
     /**
-     * Prohibits creating an instance of class outside the class. Initializes the commands/URI map.
+     * Constructs an instance of CommandFactory.
      */
-    private CommandFactory() {
-
-        commands = new HashMap<>();
+    public CommandFactory() {
 
         commands.put(Constants.GET_LOCALE, new ChangeLocaleCommand());
         commands.put(Constants.GET_HOME, new ForwardRequestCommand(Constants.HOME));
@@ -89,20 +86,6 @@ public class CommandFactory {
         commands.put(Constants.GET_RESULTS, new ShowLastResultsCommand());
 
     }
-
-
-    /**
-     * Creates {@code CommandFactory} instance if it is not created and returns it.
-     *
-     * @return {@code CommandFactory} instance.
-     */
-    public static CommandFactory getInstance() {
-        if (instance == null) {
-            instance = new CommandFactory();
-        }
-        return instance;
-    }
-
 
     /**
      * Returns an appropriate command by the requested path.

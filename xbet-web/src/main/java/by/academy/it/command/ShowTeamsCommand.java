@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, shows a list of teams.
+ * Extends {@link by.academy.it.command.Command}, shows a list of teams.
  *
  */
-public class ShowTeamsCommand implements Command {
+public class ShowTeamsCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowTeamsCommand.class);
-    private TeamService teamService = TeamService.getInstance();
+    private TeamService teamService = serviceFactory.getTeamService();
 
     /**
      * Delegates show teams operation to {@link by.academy.it.service.TeamService}.

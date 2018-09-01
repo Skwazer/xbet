@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, shows a list of users.
+ * Extends {@link by.academy.it.command.Command}, shows a list of users.
  *
  */
-public class ShowUsersCommand implements Command {
+public class ShowUsersCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUsersCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      * Delegates show users operation to {@link by.academy.it.service.UserService}.

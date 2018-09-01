@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, creates a role.
+ * Extends {@link by.academy.it.command.Command}, creates a role.
  *
  */
-public class CreateRoleCommand implements Command {
+public class CreateRoleCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateRoleCommand.class);
-    private RoleService roleService = RoleService.getInstance();
+    private RoleService roleService = serviceFactory.getRoleService();
 
     /**
      * Delegates create role operation to {@link by.academy.it.service.RoleService}.

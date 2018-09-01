@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, creates a result.
+ * Extends {@link by.academy.it.command.Command}, creates a result.
  *
  */
-public class CreateResultCommand implements Command {
+public class CreateResultCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateResultCommand.class);
-    private ResultService resultService = ResultService.getInstance();
+    private ResultService resultService = serviceFactory.getResultService();
 
     /**
      * Delegates create result operation to {@link by.academy.it.service.ResultService}.

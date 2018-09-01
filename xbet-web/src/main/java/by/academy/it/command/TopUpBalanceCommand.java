@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, tops up the user's balance.
+ * Extends {@link by.academy.it.command.Command}, tops up the user's balance.
  *
  */
-public class TopUpBalanceCommand implements Command {
+public class TopUpBalanceCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(TopUpBalanceCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      * Delegates top up balance to {@link by.academy.it.service.UserService}.

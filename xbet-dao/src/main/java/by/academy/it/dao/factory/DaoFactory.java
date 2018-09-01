@@ -1,49 +1,11 @@
 package by.academy.it.dao.factory;
 
 import by.academy.it.dao.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * This factory creates and returns {@code Dao} instances.
- *
+ * DaoFactory interface, defines factory methods.
  */
-public class DaoFactory {
-
-    private static DaoFactory instance;
-    private ConnectionPool connectionPool;
-    private static final Logger logger = LoggerFactory.getLogger(DaoFactory.class);
-
-    private BetDao betDao;
-    private MatchDao matchDao;
-    private ResultDao resultDao;
-    private RoleDao roleDao;
-    private TeamDao teamDao;
-    private UserDao userDao;
-    private TransactionalDao transactionalDao;
-
-
-    /**
-     * Prohibits creating an instance of class outside the class.
-     */
-    private DaoFactory(ConnectionPool connectionPool) {
-        this.connectionPool = connectionPool;
-    }
-
-
-    /**
-     * Creates {@code DaoFactory} instance if it is not created and returns it.
-     *
-     * @return {@code DaoFactory} instance.
-     */
-    public static DaoFactory getInstance(ConnectionPool connectionPool) {
-        if (instance == null) {
-            instance = new DaoFactory(connectionPool);
-            logger.info("DaoFactory instance has been created");
-        }
-        return instance;
-    }
-
+public interface DaoFactory {
 
     /**
      * Creates {@code BetDao} instance if it is not created.
@@ -51,13 +13,7 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.BetDao} instance.
      */
-    public BetDao getBetDao() {
-        if (betDao == null) {
-            betDao = new BetDaoImpl(connectionPool);
-            logger.info("DaoFactory created a BetDao");
-        }
-        return betDao;
-    }
+    BetDao getBetDao();
 
 
     /**
@@ -66,13 +22,7 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.UserDao} instance.
      */
-    public UserDao getUserDao() {
-        if (userDao == null) {
-            userDao = new UserDaoImpl(connectionPool);
-            logger.info("DaoFactory created a UserDao");
-        }
-        return userDao;
-    }
+    UserDao getUserDao();
 
 
     /**
@@ -81,13 +31,7 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.RoleDao} instance.
      */
-    public RoleDao getRoleDao() {
-        if (roleDao == null) {
-            roleDao = new RoleDaoImpl(connectionPool);
-            logger.info("DaoFactory created a RoleDao");
-        }
-        return roleDao;
-    }
+    RoleDao getRoleDao();
 
 
     /**
@@ -96,13 +40,7 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.TeamDao} instance.
      */
-    public TeamDao getTeamDao() {
-        if (teamDao == null) {
-            teamDao = new TeamDaoImpl(connectionPool);
-            logger.info("DaoFactory created a TeamDao");
-        }
-        return teamDao;
-    }
+    TeamDao getTeamDao();
 
 
     /**
@@ -111,13 +49,7 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.MatchDao} instance.
      */
-    public MatchDao getMatchDao() {
-        if (matchDao == null) {
-            matchDao = new MatchDaoImpl(connectionPool);
-            logger.info("DaoFactory created a MatchDao");
-        }
-        return matchDao;
-    }
+    MatchDao getMatchDao();
 
 
     /**
@@ -126,13 +58,7 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.ResultDao} instance.
      */
-    public ResultDao getResultDao() {
-        if (resultDao == null) {
-            resultDao = new ResultDaoImpl(connectionPool);
-            logger.info("DaoFactory created a ResultDao");
-        }
-        return resultDao;
-    }
+    ResultDao getResultDao();
 
 
     /**
@@ -141,12 +67,6 @@ public class DaoFactory {
      *
      * @return {@link by.academy.it.dao.TransactionalDao} instance.
      */
-    public TransactionalDao getTransactionalDao() {
-        if (transactionalDao == null) {
-            transactionalDao = new TransactionalDaoImpl(connectionPool);
-            logger.info("DaoFactory created a TransactionalDao");
-        }
-        return transactionalDao;
-    }
+    TransactionalDao getTransactionalDao();
 
 }

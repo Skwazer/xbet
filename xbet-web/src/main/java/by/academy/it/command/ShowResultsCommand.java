@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, shows a list of results.
+ * Extends {@link by.academy.it.command.Command}, shows a list of results.
  *
  */
-public class ShowResultsCommand implements Command {
+public class ShowResultsCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowResultsCommand.class);
-    private ResultService resultService = ResultService.getInstance();
+    private ResultService resultService = serviceFactory.getResultService();
 
     /**
      * Delegates show results operation to {@link by.academy.it.service.ResultService}.

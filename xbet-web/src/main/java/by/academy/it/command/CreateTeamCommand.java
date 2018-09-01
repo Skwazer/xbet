@@ -10,13 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, creates a team.
+ * Extends {@link by.academy.it.command.Command}, creates a team.
  *
  */
-public class CreateTeamCommand implements Command {
+public class CreateTeamCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateTeamCommand.class);
-    private TeamService teamService = TeamService.getInstance();
+    private TeamService teamService = serviceFactory.getTeamService();
 
     /**
      * Delegates create team operation to {@link by.academy.it.service.TeamService}.

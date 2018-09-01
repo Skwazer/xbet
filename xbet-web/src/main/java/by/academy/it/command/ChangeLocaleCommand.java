@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, sets the locale of the application.
+ * Extends {@link by.academy.it.command.Command}, sets the locale of the application.
  */
-public class ChangeLocaleCommand implements Command {
+public class ChangeLocaleCommand extends Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ChangeLocaleCommand.class);
-    private UserService userService = UserService.getInstance();
+    private UserService userService = serviceFactory.getUserService();
 
     /**
      *  Delegates changing the locale to {@link by.academy.it.service.UserService}.

@@ -43,6 +43,7 @@ public class BetDaoImpl implements BetDao {
      */
     public BetDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("BetDao has been created");
     }
 
 

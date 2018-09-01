@@ -39,6 +39,7 @@ public class TransactionalDaoImpl implements TransactionalDao {
      */
     public TransactionalDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
+        logger.info("TransactionalDao has been created");
     }
 
 
