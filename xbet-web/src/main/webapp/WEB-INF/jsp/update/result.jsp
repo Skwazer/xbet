@@ -80,6 +80,7 @@
                         </div>
                     </div>
                 </div>
+                <c:remove var="updateResult" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

@@ -33,7 +33,7 @@ function checkTeam1Goals() {
         $('#team1GoalsDiv').css("display", "none");
         alert("<c:out value="${team1GoalsRequired}"/>");
         isTeam1GoalsCorrect = false;
-    } else if (team1Goals < 1 || team1Goals > 6) {
+    } else if (team1Goals < 0 || team1Goals > 6) {
         isTeam1GoalsCorrect = false;
         team1GoalsMessage("INCORRECT");
     } else {
@@ -58,7 +58,7 @@ function checkTeam2Goals() {
         $('#team2GoalsDiv').css("display", "none");
         alert("<c:out value="${team2GoalsRequired}"/>");
         isTeam2GoalsCorrect = false;
-    } else if (team2Goals < 1 || team2Goals > 6) {
+    } else if (team2Goals < 0 || team2Goals > 6) {
         isTeam2GoalsCorrect = false;
         team2GoalsMessage("INCORRECT");
     } else {

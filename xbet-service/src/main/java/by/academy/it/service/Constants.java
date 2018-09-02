@@ -64,6 +64,7 @@ class Constants {
     static final String CREATE_USER_ERROR = "create.user.error";
     static final String UPDATE_USER = "update/user";
     static final String SHOW_UPDATE_USER_ERROR = "show.update.user.error";
+    static final String UPDATE_USER_ERROR = "update.user.error";
     static final String SHOW_UPDATE_USER_PARAMETER_ERROR = "show.update.user.parameter.error";
     static final String ID = "id";
     static final String USER_MESSAGE = "userMessage";
@@ -167,4 +168,12 @@ class Constants {
     static final String RESULTS = "results";
     static final String RU = "ru";
     static final String RUS = "RU";
+    static final String PARAM_ERROR = "param.error";
+    static final String PARAMS_ERROR = "params.error";
+    static final String BALANCE_NEGATIVE = "balance.negative";
+    static final String BET_VALUE_ERROR = "bet.value.error";
+    static final String MONEY_VALUE_ERROR = "money.value.error";
+    static final String COEF_VALUE_ERROR = "coef.value.error";
+    static final String GOALS_VALUE_ERROR = "goals.value.error";
+
 }

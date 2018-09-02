@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -44,7 +45,7 @@ public class RoleServiceTest {
     }
 
     @BeforeEach
-    void setBehavior() {
+    void setUp() {
         when(request.getSession()).thenReturn(session);
     }
 
@@ -97,7 +98,6 @@ public class RoleServiceTest {
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
-
     @Test
     void createRole1() throws Exception {
         when(request.getParameter(Constants.ROLE)).thenReturn("test");
@@ -113,8 +113,6 @@ public class RoleServiceTest {
 
     @Test
     void createRole2() throws Exception {
-        when(request.getParameter(Constants.ROLE)).thenReturn(null);
-
         roleService.createRole(request, response);
         verify(request).getParameter(Constants.ROLE);
         verify(request).getSession();
@@ -136,7 +134,6 @@ public class RoleServiceTest {
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
-
     @Test
     void showUpdateRolePage1() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
@@ -149,12 +146,12 @@ public class RoleServiceTest {
         verify(session).setAttribute(Constants.UPDATED_ROLE, role);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_ROLE);
+
+        assertEquals(roleDao.findById(2), role);
     }
 
     @Test
     void showUpdateRolePage2() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn(null);
-
         roleService.showUpdateRolePage(request, response);
         verify(request).getParameter(Constants.KEY);
         verify(request).getSession();
@@ -166,7 +163,6 @@ public class RoleServiceTest {
     @Test
     void showUpdateRolePage3() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
-        when(roleDao.findById(2)).thenReturn(null);
 
         roleService.showUpdateRolePage(request, response);
         verify(request).getParameter(Constants.KEY);
@@ -175,6 +171,8 @@ public class RoleServiceTest {
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLE_NOT_FOUND);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
+
+        assertNull(roleDao.findById(2));
     }
 
     @Test
@@ -190,7 +188,6 @@ public class RoleServiceTest {
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
-
 
     @Test
     void updateRole1() throws Exception {
@@ -222,6 +219,17 @@ public class RoleServiceTest {
     }
 
     @Test
+    void updateRole4() throws Exception {
+        roleService.updateRole(request, response);
+        verify(request).getParameter(Constants.ID);
+        verify(request).getParameter(Constants.ROLE);
+        verify(request).getSession();
+        verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
+        verify(response)
+                .sendRedirect(request.getContextPath() + Constants.ERROR);
+    }
+
+    @Test
     void updateRole3() throws Exception {
         when(request.getParameter(Constants.ID)).thenReturn("2");
         when(request.getParameter(Constants.ROLE)).thenReturn("test");
@@ -237,7 +245,6 @@ public class RoleServiceTest {
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }
 
-
     @Test
     void deleteRole1() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn("2");
@@ -250,7 +257,6 @@ public class RoleServiceTest {
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
     }
-
 
     @Test
     void deleteRole2() throws Exception {
@@ -274,6 +280,16 @@ public class RoleServiceTest {
         verify(roleDao).delete(2);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
+        verify(response)
+                .sendRedirect(request.getContextPath() + Constants.ERROR);
+    }
+
+    @Test
+    void deleteRole4() throws Exception {
+        roleService.deleteRole(request, response);
+        verify(request).getParameter(Constants.KEY);
+        verify(request).getSession();
+        verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
     }

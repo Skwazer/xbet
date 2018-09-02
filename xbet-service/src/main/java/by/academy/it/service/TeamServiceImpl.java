@@ -115,17 +115,24 @@ class TeamServiceImpl implements TeamService {
      */
     public void showUpdateTeamPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idParam = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(idParam);
-            Team team = teamDao.findById(id);
+        if (Utils.isValidString(idParam)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                Team team = teamDao.findById(id);
 
-            logger.info("team has been retrieved");
-            request.getSession().setAttribute(Constants.UPDATED_TEAM, team);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_TEAM);
+                logger.info("team has been retrieved");
+                request.getSession().setAttribute(Constants.UPDATED_TEAM, team);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_TEAM);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during show update team page operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_TEAM_ERROR);
+            } catch (Exception e) {
+                logger.error("An exception occurred during show update team page operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_TEAM_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Show update team page operation parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_BET_PARAMETER_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -142,20 +149,27 @@ class TeamServiceImpl implements TeamService {
     public void updateTeam(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idParam = request.getParameter(Constants.ID);
         String name = request.getParameter(Constants.NAME);
-        try {
-            int id = Integer.parseInt(idParam);
-            Team team = new Team();
-            team.setId(id);
-            team.setName(name);
-            teamDao.update(team);
+        if (Utils.isValidString(idParam) && Utils.isValidString(name)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                Team team = new Team();
+                team.setId(id);
+                team.setName(name);
+                teamDao.update(team);
 
-            logger.info("team has been updated");
-            request.getSession().setAttribute(Constants.TEAMS_MESSAGE, Constants.UPDATE_TEAM_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
+                logger.info("team has been updated");
+                request.getSession().setAttribute(Constants.TEAMS_MESSAGE, Constants.UPDATE_TEAM_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during update team operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_TEAM_ERROR);
+            } catch (Exception e) {
+                logger.error("An exception occurred during update team operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_TEAM_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.error("Update team parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -171,17 +185,24 @@ class TeamServiceImpl implements TeamService {
      */
     public void deleteTeam(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
-            teamDao.delete(id);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                teamDao.delete(id);
 
-            logger.info("team has been deleted");
-            request.getSession().setAttribute(Constants.TEAMS_MESSAGE, Constants.DELETE_TEAM_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
+                logger.info("team has been deleted");
+                request.getSession().setAttribute(Constants.TEAMS_MESSAGE, Constants.DELETE_TEAM_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
 
-        } catch (DAOException e) {
-            logger.error("An exception occurred during delete team operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_TEAM_ERROR);
+            } catch (DAOException e) {
+                logger.error("An exception occurred during delete team operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_TEAM_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Delete team parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }

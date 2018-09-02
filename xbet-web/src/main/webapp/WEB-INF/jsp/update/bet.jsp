@@ -96,6 +96,7 @@
                             <form id="deleteForm" method="post" action="<c:url value="/main/delete/bet"/>">
                                 <input type="hidden" name="key" value="${updateBet.id}">
                             </form>
+                            <c:remove var="updateBet" scope="session"/>
                         </div>
                     </div>
                 </div>

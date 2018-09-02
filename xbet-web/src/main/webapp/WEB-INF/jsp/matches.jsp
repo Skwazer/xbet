@@ -47,7 +47,7 @@
                                     <tr>
                                         <c:if test="${not empty user}">
                                             <c:if test="${user.role eq 1}">
-                                                <td></td>
+                                                <th></th>
                                             </c:if>
                                         </c:if>
                                         <th><c:out value="${matchDate}"/></th>

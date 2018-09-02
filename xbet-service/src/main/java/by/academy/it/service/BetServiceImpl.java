@@ -53,7 +53,20 @@ class BetServiceImpl implements BetService {
                 int matchId = Integer.parseInt(matchIdParam);
                 double bet = Double.parseDouble(betParam);
                 double money = Double.parseDouble(moneyParam);
+                if (!checkBetValue(bet)) {
+                    logger.warn("Bet value is not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BET_VALUE_ERROR);
 
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                if (money < 0) {
+                    logger.warn("Money value is not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MONEY_VALUE_ERROR);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
                 Bet bet1 = new Bet();
                 bet1.setUser_id(userId);
                 bet1.setMatch_id(matchId);
@@ -130,30 +143,51 @@ class BetServiceImpl implements BetService {
         String betParam = request.getParameter(Constants.BET);
         String moneyParam = request.getParameter(Constants.MONEY);
         String status = request.getParameter(Constants.STATUS);
-        try {
-            int id = Integer.parseInt(idParam);
-            int userId = Integer.parseInt(userIdParam);
-            int matchId = Integer.parseInt(matchIdParam);
-            double bet = Double.parseDouble(betParam);
-            double money = Double.parseDouble(moneyParam);
+        if (Utils.isValidString(userIdParam) && Utils.isValidString(matchIdParam) && Utils.isValidString(betResult)
+                && Utils.isValidString(betParam) && Utils.isValidString(moneyParam) && Utils.isValidString(status)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                int userId = Integer.parseInt(userIdParam);
+                int matchId = Integer.parseInt(matchIdParam);
+                double bet = Double.parseDouble(betParam);
+                double money = Double.parseDouble(moneyParam);
+                if (!checkBetValue(bet)) {
+                    logger.warn("Bet value is not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BET_VALUE_ERROR);
 
-            Bet bet1 = new Bet();
-            bet1.setId(id);
-            bet1.setUser_id(userId);
-            bet1.setMatch_id(matchId);
-            bet1.setBetResult(betResult);
-            bet1.setBet(bet);
-            bet1.setMoney(money);
-            bet1.setStatus(status);
-            betDao.update(bet1);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                if (money < 0) {
+                    logger.warn("Money value is not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MONEY_VALUE_ERROR);
 
-            logger.info("bet has been updated");
-            request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.UPDATE_BET_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                Bet bet1 = new Bet();
+                bet1.setId(id);
+                bet1.setUser_id(userId);
+                bet1.setMatch_id(matchId);
+                bet1.setBetResult(betResult);
+                bet1.setBet(bet);
+                bet1.setMoney(money);
+                bet1.setStatus(status);
+                betDao.update(bet1);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during update bet operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_BET_ERROR);
+                logger.info("bet has been updated");
+                request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.UPDATE_BET_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during update bet operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_BET_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.error("Update bet parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -168,32 +202,33 @@ class BetServiceImpl implements BetService {
      * @throws ServletException if the request could not be handled.
      * @throws IOException if an input or output error is detected.
      */
-    public void showUserBets(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void showUserBets(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String pageParam = request.getParameter(Constants.PAGE);
         int page = Utils.checkPageParameter(pageParam);
         int startFrom = Utils.calculateSelectStartPosition(page, request, response);
         if (startFrom >= 0) {
             User user = (User) request.getSession().getAttribute(Constants.USER);
-            if (user != null) {
-                try {
-                    List<Bet> list = betDao.findByUserId(user.getId(), startFrom);
+            try {
+                List<Bet> list = betDao.findByUserId(user.getId(), startFrom);
+                if (!list.isEmpty()) {
                     ServiceFactoryImpl.getModelService().setBetMatches(list);
                     double pages = Math.ceil(betDao.getAmountOfUserBets(user.getId()) / 10d);
 
-                    request.setAttribute(Constants.BETS, list);
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
                     logger.info("bets list is retrieved");
-
-                } catch (Exception e) {
-                    logger.error("An exception occurred during get bets list operation", e);
-                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
-
-                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                    return;
                 }
+                request.setAttribute(Constants.BETS, list);
+                request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).
+                        forward(request, response);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during get bets list operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-            request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).forward(request, response);
         }
     }
 
@@ -211,44 +246,26 @@ class BetServiceImpl implements BetService {
         int page = Utils.checkPageParameter(pageParam);
         int startFrom = Utils.calculateSelectStartPosition(page, request, response);
         if (startFrom >= 0) {
-                try {
-                    List<Bet> list = getAllBets(startFrom);
+            try {
+                List<Bet> list = betDao.findAll(startFrom);
+                if (!list.isEmpty()) {
                     double pages = Math.ceil(betDao.getAmountOfAllBets() / 10d);
-                    request.setAttribute(Constants.ALL_BETS, list);
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
 
                     logger.info("all bets list is retrieved");
-                    request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.BETS + Constants.JSP)
-                            .forward(request, response);
-
-                } catch (Exception e) {
-                    logger.error("An exception occurred during get all bets list operation", e);
-                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
-
-                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
+                request.setAttribute(Constants.ALL_BETS, list);
+                request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.BETS + Constants.JSP)
+                        .forward(request, response);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during get all bets list operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
         }
-    }
-
-
-    /**
-     * Retrieves a list of all bets through {@link by.academy.it.dao.BetDao}.
-     *
-     * @param startFrom a position from which the select operation is performed.
-     * @return {@code List<Bet>} - a list of {@link by.academy.it.entity.Bet} entities.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
-     */
-    private List<Bet> getAllBets(int startFrom) throws ServiceException {
-        List<Bet> list;
-        try {
-            list = betDao.findAll(startFrom);
-
-        } catch (DAOException e) {
-            logger.error("BetService cannot get all bets list", e);
-            throw new ServiceException("BetService cannot get all bets list", e);
-        }
-        return list;
     }
 
 
@@ -261,20 +278,38 @@ class BetServiceImpl implements BetService {
      */
     public void deleteBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
-            betDao.delete(id);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                betDao.delete(id);
 
-            logger.info("bet has been deleted");
-            request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.DELETE_BET_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
+                logger.info("bet has been deleted");
+                request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.DELETE_BET_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
 
-        } catch (DAOException e) {
-            logger.error("An exception occurred during delete bet operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
+            } catch (DAOException e) {
+                logger.error("An exception occurred during delete bet operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Delete bet parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
+    }
+
+
+    /**
+     * Checks if the value of the bet is within the acceptable range.
+     *
+     * @param value the bet value.
+     * @return true if the value greater than zero and less or equals five, false otherwise.
+     */
+    private boolean checkBetValue(double value) {
+        return value > 0 && value <= 5;
     }
 
 }

@@ -117,6 +117,7 @@
                         </div>
                     </div>
                 </div>
+                <c:remove var="updateMatch" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

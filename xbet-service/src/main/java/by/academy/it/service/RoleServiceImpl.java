@@ -146,25 +146,32 @@ class RoleServiceImpl implements RoleService {
     public void updateRole(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idParam = request.getParameter(Constants.ID);
         String roleParam = request.getParameter(Constants.ROLE);
-        try {
-            int id = Integer.parseInt(idParam);
-            if (id == 1) {
-                logger.warn("Attempt to update admin role");
-                request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_FORBIDDEN);
-            } else {
-                Role role = new Role();
-                role.setId(id);
-                role.setRole(roleParam);
-                roleDao.update(role);
+        if (Utils.isValidString(idParam) && Utils.isValidString(roleParam)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                if (id == 1) {
+                    logger.warn("Attempt to update admin role");
+                    request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_FORBIDDEN);
+                } else {
+                    Role role = new Role();
+                    role.setId(id);
+                    role.setRole(roleParam);
+                    roleDao.update(role);
 
-                logger.info("role has been updated");
-                request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_ROLE_MESSAGE);
+                    logger.info("role has been updated");
+                    request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_ROLE_MESSAGE);
+                }
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during update role operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_ROLE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
-
-        } catch (Exception e) {
-            logger.error("An exception occurred during update role operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_ROLE_ERROR);
+        } else {
+            logger.error("Update role parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -180,22 +187,29 @@ class RoleServiceImpl implements RoleService {
      */
     public void deleteRole(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
 
-            if (id == 1) {
-                logger.warn("Attempt to delete admin role");
-                request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_FORBIDDEN);
-            } else {
-                roleDao.delete(id);
-                logger.info("role has been deleted");
-                request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_ROLE_MESSAGE);
+                if (id == 1) {
+                    logger.warn("Attempt to delete admin role");
+                    request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_FORBIDDEN);
+                } else {
+                    roleDao.delete(id);
+                    logger.info("role has been deleted");
+                    request.getSession().setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_ROLE_MESSAGE);
+                }
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
+
+            } catch (DAOException e) {
+                logger.error("An exception occurred during delete role operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.ROLES);
-
-        } catch (DAOException e) {
-            logger.error("An exception occurred during delete role operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
+        } else {
+            logger.warn("Delete role parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }

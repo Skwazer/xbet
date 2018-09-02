@@ -115,6 +115,7 @@
                         </div>
                     </div>
                 </div>
+                <c:remove var="updateUser" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

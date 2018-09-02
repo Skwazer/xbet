@@ -126,25 +126,39 @@ class ResultServiceImpl implements ResultService {
         String team2GoalsParam = request.getParameter(Constants.TEAM2_GOALS);
         String result = request.getParameter(Constants.RESULT);
 
-        try {
-            int matchId = Integer.parseInt(matchIdParam);
-            int team1_goals = Integer.parseInt(team1GoalsParam);
-            int team2_goals = Integer.parseInt(team2GoalsParam);
+        if (Utils.isValidString(matchIdParam) && Utils.isValidString(team1GoalsParam)
+                && Utils.isValidString(team2GoalsParam) && Utils.isValidString(result)) {
+            try {
+                int matchId = Integer.parseInt(matchIdParam);
+                int team1_goals = Integer.parseInt(team1GoalsParam);
+                int team2_goals = Integer.parseInt(team2GoalsParam);
+                if (!checkGoalsValue(team1_goals) || !checkGoalsValue(team2_goals)) {
+                    logger.warn("Goals value is not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.GOALS_VALUE_ERROR);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
 
-            Result res = new Result();
-            res.setMatchId(matchId);
-            res.setTeam1_goals(team1_goals);
-            res.setTeam2_goals(team2_goals);
-            res.setResult(result);
-            resultDao.create(res);
+                Result res = new Result();
+                res.setMatchId(matchId);
+                res.setTeam1_goals(team1_goals);
+                res.setTeam2_goals(team2_goals);
+                res.setResult(result);
+                resultDao.create(res);
 
-            logger.info("result has been created");
-            request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.CREATE_RESULT_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
+                logger.info("result has been created");
+                request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.CREATE_RESULT_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during create result operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_RESULT_ERROR);
+            } catch (Exception e) {
+                logger.error("An exception occurred during create result operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_RESULT_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Create result parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -160,17 +174,24 @@ class ResultServiceImpl implements ResultService {
      */
     public void showUpdateResultPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
-            Result result = resultDao.findById(id);
-            logger.info("result has been retrieved");
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                Result result = resultDao.findById(id);
+                logger.info("result has been retrieved");
 
-            request.getSession().setAttribute(Constants.UPDATED_RESULT, result);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_RESULT);
+                request.getSession().setAttribute(Constants.UPDATED_RESULT, result);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_RESULT);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during show update result page operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_RESULT_ERROR);
+            } catch (Exception e) {
+                logger.error("An exception occurred during show update result page operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_RESULT_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Show update result page operation parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -191,27 +212,41 @@ class ResultServiceImpl implements ResultService {
         String team2GoalsParam = request.getParameter(Constants.TEAM2_GOALS);
         String result = request.getParameter(Constants.RESULT);
 
-        try {
-            int id = Integer.parseInt(idParam);
-            int matchId = Integer.parseInt(matchIdParam);
-            int team1_goals = Integer.parseInt(team1GoalsParam);
-            int team2_goals = Integer.parseInt(team2GoalsParam);
+        if (Utils.isValidString(matchIdParam) && Utils.isValidString(team1GoalsParam)
+                && Utils.isValidString(team2GoalsParam) && Utils.isValidString(result)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                int matchId = Integer.parseInt(matchIdParam);
+                int team1_goals = Integer.parseInt(team1GoalsParam);
+                int team2_goals = Integer.parseInt(team2GoalsParam);
+                if (!checkGoalsValue(team1_goals) || !checkGoalsValue(team2_goals)) {
+                    logger.warn("Goals value is not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.GOALS_VALUE_ERROR);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
 
-            Result res = new Result();
-            res.setId(id);
-            res.setMatchId(matchId);
-            res.setTeam1_goals(team1_goals);
-            res.setTeam2_goals(team2_goals);
-            res.setResult(result);
-            resultDao.update(res);
+                Result res = new Result();
+                res.setId(id);
+                res.setMatchId(matchId);
+                res.setTeam1_goals(team1_goals);
+                res.setTeam2_goals(team2_goals);
+                res.setResult(result);
+                resultDao.update(res);
 
-            logger.info("result has been updated");
-            request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.UPDATE_RESULT_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
+                logger.info("result has been updated");
+                request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.UPDATE_RESULT_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during update result operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_RESULT_ERROR);
+            } catch (Exception e) {
+                logger.error("An exception occurred during update result operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_RESULT_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Update result parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -227,20 +262,38 @@ class ResultServiceImpl implements ResultService {
      */
     public void deleteResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
-            resultDao.delete(id);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                resultDao.delete(id);
 
-            logger.info("result has been deleted");
-            request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.DELETE_RESULT_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
+                logger.info("result has been deleted");
+                request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.DELETE_RESULT_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
 
-        } catch (DAOException e) {
-            logger.error("An exception occurred during delete result operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_RESULT_ERROR);
+            } catch (DAOException e) {
+                logger.error("An exception occurred during delete result operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_RESULT_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Delete result parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
+    }
+
+
+    /**
+     * Checks if the value of the goals is within the acceptable range.
+     *
+     * @param value the goals value.
+     * @return true if the value greater than zero and less or equals five, false otherwise.
+     */
+    private boolean checkGoalsValue(double value) {
+        return value >= 0 && value <= 6;
     }
 
 }

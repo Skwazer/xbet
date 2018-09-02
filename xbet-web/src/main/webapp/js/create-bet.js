@@ -127,7 +127,7 @@ function checkStatus() {
 
 function statusMessage(result) {
     if (result === 'SUCCESS') {
-        $('#statusDiv').html("<p style='color: #4cae4c'><c:out value="${emailAccepted}"/></p>");
+        $('#statusDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
         $('#statusDiv').css("display", "block")
     } else if (result === 'INCORRECT') {
         $('#statusDiv').html("<p style='color: red'><c:out value="${whitespace}"/></p>");

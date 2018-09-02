@@ -203,7 +203,15 @@ class MatchServiceImpl implements MatchService {
             double victory1orDraw = Double.parseDouble(X1);
             double victory1or2 = Double.parseDouble(v12);
             double victory2orDraw = Double.parseDouble(X2);
+            if (!checkCoefficientValue(victory1) || !checkCoefficientValue(draw) || !checkCoefficientValue(victory2) ||
+                    !checkCoefficientValue(victory1orDraw) || !checkCoefficientValue(victory1or2)
+                    || !checkCoefficientValue(victory2orDraw)) {
+                logger.warn("Coefficient value is not correct");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.COEF_VALUE_ERROR);
 
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                return;
+            }
             Match match = new Match();
             match.setDate(date);
             match.setTeam1_id(team1_id);
@@ -238,17 +246,24 @@ class MatchServiceImpl implements MatchService {
      */
     public void showUpdateMatchPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
-            Match match = matchDao.findById(id);
-            logger.info("match has been retrieved");
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                Match match = matchDao.findById(id);
+                logger.info("match has been retrieved");
 
-            request.getSession().setAttribute(Constants.UPDATED_MATCH, match);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_MATCH);
+                request.getSession().setAttribute(Constants.UPDATED_MATCH, match);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_MATCH);
 
-        } catch (Exception e) {
-            logger.error("An exception occurred during show update match page operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_MATCH_ERROR);
+            } catch (Exception e) {
+                logger.error("An exception occurred during show update match page operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_MATCH_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Show update match page operation parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -286,7 +301,15 @@ class MatchServiceImpl implements MatchService {
             double victory1orDraw = Double.parseDouble(X1);
             double victory1or2 = Double.parseDouble(v12);
             double victory2orDraw = Double.parseDouble(X2);
+            if (!checkCoefficientValue(victory1) || !checkCoefficientValue(draw) || !checkCoefficientValue(victory2) ||
+                    !checkCoefficientValue(victory1orDraw) || !checkCoefficientValue(victory1or2)
+                    || !checkCoefficientValue(victory2orDraw)) {
+                logger.warn("Coefficient value is not correct");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.COEF_VALUE_ERROR);
 
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                return;
+            }
             Match match = new Match();
             match.setId(id);
             match.setDate(date);
@@ -322,20 +345,38 @@ class MatchServiceImpl implements MatchService {
      */
     public void deleteMatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
-            matchDao.delete(id);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
+                matchDao.delete(id);
 
-            logger.info("match has been deleted");
-            request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.DELETE_MATCH_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
+                logger.info("match has been deleted");
+                request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.DELETE_MATCH_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
 
-        } catch (DAOException e) {
-            logger.error("An exception occurred during delete match operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_MATCH_ERROR);
+            } catch (DAOException e) {
+                logger.error("An exception occurred during delete match operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_MATCH_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Delete match parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
+    }
+
+
+    /**
+     * Checks if the value of the coefficient is within the acceptable range.
+     *
+     * @param value the coefficient value.
+     * @return true if the value greater than one and less or equals four, false otherwise.
+     */
+    private boolean checkCoefficientValue(double value) {
+        return value >= 1 && value <= 4;
     }
 
 }

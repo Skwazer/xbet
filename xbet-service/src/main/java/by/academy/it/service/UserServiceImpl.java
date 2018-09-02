@@ -16,7 +16,6 @@ import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 /**
  * This class works with {@link by.academy.it.dao.UserDao} and {@link by.academy.it.dao.TransactionalDao} class.
@@ -91,7 +90,8 @@ class UserServiceImpl implements UserService {
      * @throws ServletException if the request could not be handled.
      * @throws IOException if an input or output error is detected.
      */
-    public void checkNewUserLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void checkNewUserLogin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String login = request.getParameter(Constants.KEY);
         if (Utils.isValidString(login)) {
             try {
@@ -230,24 +230,31 @@ class UserServiceImpl implements UserService {
      */
     public void deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        try {
-            int id = Integer.parseInt(key);
+        if (Utils.isValidString(key)) {
+            try {
+                int id = Integer.parseInt(key);
 
-            HttpSession session = request.getSession();
-            User sessionUser = (User) session.getAttribute(Constants.USER);
-            if (sessionUser.getId() != id) {
-                userDao.delete(id);
-                logger.info("user has been deleted");
-                session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_USER_MESSAGE);
-            } else {
-                logger.warn("You cannot delete yourself");
-                session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_YOURSELF_MESSAGE);
+                HttpSession session = request.getSession();
+                User sessionUser = (User) session.getAttribute(Constants.USER);
+                if (sessionUser.getId() != id) {
+                    userDao.delete(id);
+                    logger.info("user has been deleted");
+                    session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_USER_MESSAGE);
+                } else {
+                    logger.warn("You cannot delete yourself");
+                    session.setAttribute(Constants.USER_MESSAGE, Constants.DELETE_YOURSELF_MESSAGE);
+                }
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
+
+            } catch (Exception e) {
+                logger.error("UserService cannot delete a user", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_USER_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
-
-        } catch (Exception e) {
-            logger.error("UserService cannot delete a user", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_USER_ERROR);
+        } else {
+            logger.warn("User id parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -294,7 +301,7 @@ class UserServiceImpl implements UserService {
                     list.forEach(user -> user.setPassword(null));
                     double pages = Math.ceil(userDao.getAmountOfUsers() / 10d);
 
-                    request.setAttribute("users", list);
+                    request.setAttribute(Constants.USERS, list);
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
                     request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.USERS + Constants.JSP)
@@ -420,34 +427,48 @@ class UserServiceImpl implements UserService {
         String email = request.getParameter(Constants.EMAIL);
         String balanceParam = request.getParameter(Constants.BALANCE);
         String roleParam = request.getParameter(Constants.ROLE);
-        try {
-            int id = Integer.parseInt(idParam);
-            double balance = Double.parseDouble(balanceParam);
-            int role = Integer.parseInt(roleParam);
+        if (Utils.isValidString(idParam) && Utils.isValidString(lastName) && Utils.isValidString(firstName)
+                && Utils.isValidString(lastName) && Utils.isValidString(email)
+                && Utils.isValidString(balanceParam) && Utils.isValidString(roleParam)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                int role = Integer.parseInt(roleParam);
+                double balance = Double.parseDouble(balanceParam);
+                if (balance < 0) {
+                    logger.warn("Balance cannot be negative");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BALANCE_NEGATIVE);
 
-            User user = new User();
-            user.setId(id);
-            user.setLogin(login);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setBalance(balance);
-            user.setRole(role);
-            userDao.update(user);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                User user = new User();
+                user.setId(id);
+                user.setLogin(login);
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setEmail(email);
+                user.setBalance(balance);
+                user.setRole(role);
+                userDao.update(user);
 
-            HttpSession session = request.getSession();
-            User sessionUser = (User) session.getAttribute(Constants.USER);
-            if (Objects.equals(user.getId(), sessionUser.getId())) {
-                session.setAttribute(Constants.USER, user);
+                HttpSession session = request.getSession();
+                User sessionUser = (User) session.getAttribute(Constants.USER);
+                if (user.getId().equals(sessionUser.getId())) {
+                    session.setAttribute(Constants.USER, user);
+                }
+                logger.info("user has been updated");
+                session.setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
+
+            } catch (Exception e) {
+                logger.error("An exception occurred during update user operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_USER_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-
-            logger.info("user has been updated");
-            session.setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
-
-        } catch (Exception e) {
-            logger.error("An exception occurred during update user operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_USER_ERROR);
+        } else {
+            logger.warn("Update user parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -484,7 +505,8 @@ class UserServiceImpl implements UserService {
      * @throws IOException if an input or output error is detected.
      * @throws ServletException if the request could not be handled.
      */
-    public void checkBalance(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void checkBalance(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
         if (Utils.isValidString(key)) {
             try {
@@ -543,7 +565,8 @@ class UserServiceImpl implements UserService {
         String login = request.getParameter(Constants.LOGIN);
         String password = request.getParameter(Constants.PASSWORD);
         try {
-            if (Utils.isValidString(password) && isPasswordCorrectForLogin(login, password)) {
+            if (Utils.isValidString(login) && Utils.isValidString(password)
+                    && isPasswordCorrectForLogin(login, password)) {
                 User user = findUserByLogin(login);
                 if (user != null) {
                     user.setPassword(null);
