@@ -10,14 +10,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, retrieves a match id, a bet and amount of money
+ * Implements {@link by.academy.it.command.Command}, retrieves a match id, a bet and amount of money
  * and creates a bet entry.
  *
  */
-public class ConfirmBetCommand extends Command {
+public class ConfirmBetCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfirmBetCommand.class);
-    private UserService userService = serviceFactory.getUserService();
+    private UserService userService;
+
+    /**
+     * Constructs an instance of the {@code ConfirmBetCommand}.
+     *
+     * @param userService {@link by.academy.it.service.UserService}
+     */
+    ConfirmBetCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Delegates confirm bet operation to {@link by.academy.it.service.UserService}.

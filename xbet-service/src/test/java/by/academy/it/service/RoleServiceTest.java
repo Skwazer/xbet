@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -35,13 +33,13 @@ public class RoleServiceTest {
     @BeforeAll
     static void setup() {
         roleDao = mock(RoleDao.class);
-        role = mock(Role.class);
+        role = new Role();
         roleService = new RoleServiceImpl(roleDao);
         request = mock(HttpServletRequest.class);
         dispatcher = mock(RequestDispatcher.class);
         response = mock(HttpServletResponse.class);
         session = mock(HttpSession.class);
-        DAOExc = new DAOException("dao test exception");
+        DAOExc = new DAOException(Constants.DAO_TEST_EXC);
     }
 
     @BeforeEach
@@ -51,7 +49,7 @@ public class RoleServiceTest {
 
     @AfterEach
     void resetMocks() {
-        reset(roleDao, role, request, response, dispatcher, session);
+        reset(roleDao, request, response, dispatcher, session);
     }
 
     @Test
@@ -63,12 +61,10 @@ public class RoleServiceTest {
                 .thenReturn(dispatcher);
 
         roleService.showRoles(request, response);
-        verify(roleDao).getRoles();
+        verify(roleDao, times(1)).getRoles();
         verify(request).setAttribute(Constants.ROLES, list);
         verify(request).getRequestDispatcher(Constants.PATH + Constants.GET + Constants.ROLES + Constants.JSP);
         verify(dispatcher).forward(request, response);
-
-        assertEquals(list, roleDao.getRoles());
     }
 
     @Test
@@ -77,13 +73,11 @@ public class RoleServiceTest {
         when(roleDao.getRoles()).thenReturn(list);
 
         roleService.showRoles(request, response);
-        verify(roleDao).getRoles();
+        verify(roleDao, times(1)).getRoles();
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.NO_ROLES_ERROR);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
-
-        assertEquals(list, roleDao.getRoles());
     }
 
     @Test
@@ -91,7 +85,7 @@ public class RoleServiceTest {
         when(roleDao.getRoles()).thenThrow(DAOExc);
 
         roleService.showRoles(request, response);
-        verify(roleDao).getRoles();
+        verify(roleDao, times(1)).getRoles();
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLES_ERROR);
         verify(response)
@@ -100,11 +94,11 @@ public class RoleServiceTest {
 
     @Test
     void createRole1() throws Exception {
-        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+        when(request.getParameter(Constants.ROLE)).thenReturn(Constants.TEST);
 
         roleService.createRole(request, response);
         verify(request).getParameter(Constants.ROLE);
-        verify(roleDao).create(any(Role.class));
+        verify(roleDao, times(1)).create(any(Role.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.CREATE_ROLE_MESSAGE);
         verify(response)
@@ -123,11 +117,11 @@ public class RoleServiceTest {
 
     @Test
     void createRole3() throws Exception {
-        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+        when(request.getParameter(Constants.ROLE)).thenReturn(Constants.TEST);
         doThrow(DAOExc).when(roleDao).create(any(Role.class));
 
         roleService.createRole(request, response);
-        verify(roleDao).create(any(Role.class));
+        verify(roleDao, times(1)).create(any(Role.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLE_ERROR);
         verify(response)
@@ -136,18 +130,16 @@ public class RoleServiceTest {
 
     @Test
     void showUpdateRolePage1() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("2");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_2);
         when(roleDao.findById(2)).thenReturn(role);
 
         roleService.showUpdateRolePage(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(roleDao).findById(2);
+        verify(roleDao, times(1)).findById(2);
         verify(request).getSession();
         verify(session).setAttribute(Constants.UPDATED_ROLE, role);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_ROLE);
-
-        assertEquals(roleDao.findById(2), role);
     }
 
     @Test
@@ -162,27 +154,25 @@ public class RoleServiceTest {
 
     @Test
     void showUpdateRolePage3() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("2");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_2);
 
         roleService.showUpdateRolePage(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(roleDao).findById(2);
+        verify(roleDao, times(1)).findById(2);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.ROLE_NOT_FOUND);
         verify(response)
                 .sendRedirect(request.getContextPath() + Constants.ERROR);
-
-        assertNull(roleDao.findById(2));
     }
 
     @Test
     void showUpdateRolePage4() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("2");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_2);
         when(roleDao.findById(2)).thenThrow(DAOExc);
 
         roleService.showUpdateRolePage(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(roleDao).findById(2);
+        verify(roleDao, times(1)).findById(2);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_ROLE_ERROR);
         verify(response)
@@ -191,13 +181,13 @@ public class RoleServiceTest {
 
     @Test
     void updateRole1() throws Exception {
-        when(request.getParameter(Constants.ID)).thenReturn("2");
-        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+        when(request.getParameter(Constants.ID)).thenReturn(Constants.STRING_2);
+        when(request.getParameter(Constants.ROLE)).thenReturn(Constants.TEST);
 
         roleService.updateRole(request, response);
         verify(request).getParameter(Constants.ID);
         verify(request).getParameter(Constants.ROLE);
-        verify(roleDao).update(any(Role.class));
+        verify(roleDao, times(1)).update(any(Role.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.UPDATE_ROLE_MESSAGE);
         verify(response)
@@ -206,8 +196,8 @@ public class RoleServiceTest {
 
     @Test
     void updateRole2() throws Exception {
-        when(request.getParameter(Constants.ID)).thenReturn("1");
-        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+        when(request.getParameter(Constants.ID)).thenReturn(Constants.STRING_1);
+        when(request.getParameter(Constants.ROLE)).thenReturn(Constants.TEST);
 
         roleService.updateRole(request, response);
         verify(request).getParameter(Constants.ID);
@@ -231,14 +221,14 @@ public class RoleServiceTest {
 
     @Test
     void updateRole3() throws Exception {
-        when(request.getParameter(Constants.ID)).thenReturn("2");
-        when(request.getParameter(Constants.ROLE)).thenReturn("test");
+        when(request.getParameter(Constants.ID)).thenReturn(Constants.STRING_2);
+        when(request.getParameter(Constants.ROLE)).thenReturn(Constants.TEST);
         doThrow(DAOExc).when(roleDao).update(any(Role.class));
 
         roleService.updateRole(request, response);
         verify(request).getParameter(Constants.ID);
         verify(request).getParameter(Constants.ROLE);
-        verify(roleDao).update(any(Role.class));
+        verify(roleDao, times(1)).update(any(Role.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_ROLE_ERROR);
         verify(response)
@@ -247,11 +237,11 @@ public class RoleServiceTest {
 
     @Test
     void deleteRole1() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("2");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_2);
 
         roleService.deleteRole(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(roleDao).delete(2);
+        verify(roleDao, times(1)).delete(2);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ROLE_MESSAGE, Constants.DELETE_ROLE_MESSAGE);
         verify(response)
@@ -260,7 +250,7 @@ public class RoleServiceTest {
 
     @Test
     void deleteRole2() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("1");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_1);
 
         roleService.deleteRole(request, response);
         verify(request).getParameter(Constants.KEY);
@@ -272,12 +262,12 @@ public class RoleServiceTest {
 
     @Test
     void deleteRole3() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("2");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_2);
         doThrow(DAOExc).when(roleDao).delete(2);
 
         roleService.deleteRole(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(roleDao).delete(2);
+        verify(roleDao, times(1)).delete(2);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);
         verify(response)

@@ -175,5 +175,9 @@ class Constants {
     static final String MONEY_VALUE_ERROR = "money.value.error";
     static final String COEF_VALUE_ERROR = "coef.value.error";
     static final String GOALS_VALUE_ERROR = "goals.value.error";
+    static final String TEST = "test";
+    static final String STRING_1 = "1";
+    static final String STRING_2 = "2";
+    static final String DAO_TEST_EXC = "2";
 
 }

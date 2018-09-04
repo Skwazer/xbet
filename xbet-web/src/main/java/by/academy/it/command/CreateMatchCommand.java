@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, creates a match.
+ * Implements {@link by.academy.it.command.Command}, creates a match.
  *
  */
-public class CreateMatchCommand extends Command {
+public class CreateMatchCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateMatchCommand.class);
-    private MatchService matchService = serviceFactory.getMatchService();
+    private MatchService matchService;
+
+    /**
+     * Constructs an instance of the {@code CreateMatchCommand}.
+     *
+     * @param matchService {@link by.academy.it.service.MatchService}
+     */
+    CreateMatchCommand(MatchService matchService) {
+        this.matchService = matchService;
+    }
 
     /**
      * Delegates create match operation to {@link by.academy.it.service.MatchService}.

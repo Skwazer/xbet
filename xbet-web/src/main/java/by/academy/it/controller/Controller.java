@@ -2,7 +2,6 @@ package by.academy.it.controller;
 
 import by.academy.it.command.Command;
 import by.academy.it.command.CommandFactory;
-import by.academy.it.command.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,7 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(Controller.class);
-    private static final CommandFactory FACTORY = new CommandFactory();
+    private static final CommandFactory FACTORY = CommandFactory.getInstance();
 
 
     /**
@@ -61,9 +60,8 @@ public class Controller extends HttpServlet {
         try {
             logger.info("command for this request is " + command.getClass().getSimpleName());
             command.execute(request, response);
-        } catch (Exception e) {
+        } catch (ServletException | IOException e) {
             logger.error("Command execution is failed", e);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN_ERROR);
         }
     }
 

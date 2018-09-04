@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, deletes user entry.
+ * Implements {@link by.academy.it.command.Command}, deletes user entry.
  *
  */
-public class DeleteUserCommand extends Command {
+public class DeleteUserCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteUserCommand.class);
-    private UserService userService = serviceFactory.getUserService();
+    private UserService userService;
+
+    /**
+     * Constructs an instance of the {@code DeleteUserCommand}.
+     *
+     * @param userService {@link by.academy.it.service.UserService}
+     */
+    DeleteUserCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Delegates delete operation to {@link by.academy.it.service.UserService}.

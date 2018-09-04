@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, shows a list of roles.
+ * Implements {@link by.academy.it.command.Command}, shows a list of roles.
  *
  */
-public class ShowRolesCommand extends Command {
+public class ShowRolesCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowRolesCommand.class);
-    private RoleService roleService = serviceFactory.getRoleService();
+    private RoleService roleService;
+
+    /**
+     * Constructs an instance of the {@code ShowRolesCommand}.
+     *
+     * @param roleService {@link by.academy.it.service.RoleService}
+     */
+    ShowRolesCommand(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     /**
      * Delegates show roles operation to {@link by.academy.it.service.RoleService}.

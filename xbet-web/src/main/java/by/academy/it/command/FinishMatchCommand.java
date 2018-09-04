@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, randomly finishes the match.
+ * Implements {@link by.academy.it.command.Command}, randomly finishes the match.
  *
  */
-public class FinishMatchCommand extends Command {
+public class FinishMatchCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(FinishMatchCommand.class);
-    private FinishMatchService finishMatchService = serviceFactory.getFinishMatchService();
+    private FinishMatchService finishMatchService;
+
+    /**
+     * Constructs an instance of the {@code FinishMatchCommand}.
+     *
+     * @param finishMatchService {@link by.academy.it.service.FinishMatchService}
+     */
+    FinishMatchCommand(FinishMatchService finishMatchService) {
+        this.finishMatchService = finishMatchService;
+    }
 
     /**
      * Delegates operation to {@link by.academy.it.service.FinishMatchService}.

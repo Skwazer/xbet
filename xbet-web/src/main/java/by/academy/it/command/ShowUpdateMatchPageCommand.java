@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, retrieves a match and sends it to 'update match' page.
+ * Implements {@link by.academy.it.command.Command}, retrieves a match and sends it to 'update match' page.
  *
  */
-public class ShowUpdateMatchPageCommand extends Command {
+public class ShowUpdateMatchPageCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateMatchPageCommand.class);
-    private MatchService matchService = serviceFactory.getMatchService();
+    private MatchService matchService;
+
+    /**
+     * Constructs an instance of the {@code ShowUpdateMatchPageCommand}.
+     *
+     * @param matchService {@link by.academy.it.service.MatchService}
+     */
+    ShowUpdateMatchPageCommand(MatchService matchService) {
+        this.matchService = matchService;
+    }
 
     /**
      * Delegates show update match page operation to {@link by.academy.it.service.MatchService}.

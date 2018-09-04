@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, puts into session data about logged user.
+ * Implements {@link by.academy.it.command.Command}, puts into session data about logged user.
  *
  */
-public class LoginUserCommand extends Command {
+public class LoginUserCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginUserCommand.class);
-    private UserService userService = serviceFactory.getUserService();
+    private UserService userService;
+
+    /**
+     * Constructs an instance of the {@code LoginUserCommand}.
+     *
+     * @param userService {@link by.academy.it.service.UserService}
+     */
+    LoginUserCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Delegates operation to {@link by.academy.it.service.UserService}.

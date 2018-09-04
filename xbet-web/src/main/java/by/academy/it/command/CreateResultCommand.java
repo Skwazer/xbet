@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, creates a result.
+ * Implements {@link by.academy.it.command.Command}, creates a result.
  *
  */
-public class CreateResultCommand extends Command {
+public class CreateResultCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateResultCommand.class);
-    private ResultService resultService = serviceFactory.getResultService();
+    private ResultService resultService;
+
+    /**
+     * Constructs an instance of the {@code CreateResultCommand}.
+     *
+     * @param resultService {@link by.academy.it.service.ResultService}
+     */
+    CreateResultCommand(ResultService resultService) {
+        this.resultService = resultService;
+    }
 
     /**
      * Delegates create result operation to {@link by.academy.it.service.ResultService}.

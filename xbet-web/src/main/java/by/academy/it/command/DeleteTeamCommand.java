@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, deletes a team.
+ * Implements {@link by.academy.it.command.Command}, deletes a team.
  *
  */
-public class DeleteTeamCommand extends Command {
+public class DeleteTeamCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteTeamCommand.class);
-    private TeamService teamService = serviceFactory.getTeamService();
+    private TeamService teamService;
+
+    /**
+     * Constructs an instance of the {@code DeleteTeamCommand}.
+     *
+     * @param teamService {@link by.academy.it.service.TeamService}
+     */
+    DeleteTeamCommand(TeamService teamService) {
+        this.teamService = teamService;
+    }
 
     /**
      * Delegates delete team operation to {@link by.academy.it.service.TeamService}.

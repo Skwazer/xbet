@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, checks if the user is logged in through ajax.
+ * Implements {@link by.academy.it.command.Command}, checks if the user is logged in through ajax.
  *
  */
-public class CheckIsUserLoggedInCommand extends Command {
+public class CheckIsUserLoggedInCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckIsUserLoggedInCommand.class);
-    private UserService userService = serviceFactory.getUserService();
+    private UserService userService;
+
+    /**
+     * Constructs an instance of the {@code CheckIsUserLoggedInCommand}.
+     *
+     * @param userService {@link by.academy.it.service.UserService}
+     */
+    CheckIsUserLoggedInCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Delegates operation to {@link by.academy.it.service.UserService}.

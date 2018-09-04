@@ -9,14 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, shows jsp pages.
+ * Implements {@link by.academy.it.command.Command}, shows jsp pages.
  *
  */
-public class ForwardRequestCommand extends Command {
+public class ForwardRequestCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ForwardRequestCommand.class);
     private String page;
 
+    /**
+     * Constructs an instance of the {@code ForwardRequestCommand}.
+     *
+     * @param page a name of the jsp page.
+     */
     ForwardRequestCommand(String page) {
         this.page = page;
     }

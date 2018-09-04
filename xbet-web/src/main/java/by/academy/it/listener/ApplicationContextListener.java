@@ -1,6 +1,6 @@
 package by.academy.it.listener;
 
-import by.academy.it.command.Command;
+import by.academy.it.command.CommandFactory;
 import by.academy.it.dao.factory.*;
 import by.academy.it.service.ServiceFactory;
 import by.academy.it.service.ServiceFactoryImpl;
@@ -32,7 +32,7 @@ public class ApplicationContextListener implements ServletContextListener {
             pool.init();
             DaoFactory daoFactory = new DaoFactoryImpl(pool);
             ServiceFactory serviceFactory = new ServiceFactoryImpl(daoFactory);
-            Command.setServiceFactory(serviceFactory);
+            CommandFactory.setServiceFactory(serviceFactory);
         } catch (ConnectionPoolException e) {
             logger.error("Application hasn't been started", e);
             throw new RuntimeException("Application hasn't been started", e);

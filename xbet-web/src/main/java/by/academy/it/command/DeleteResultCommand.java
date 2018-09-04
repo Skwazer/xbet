@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, deletes a result.
+ * Implements {@link by.academy.it.command.Command}, deletes a result.
  *
  */
-public class DeleteResultCommand extends Command {
+public class DeleteResultCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteResultCommand.class);
-    private ResultService resultService = serviceFactory.getResultService();
+    private ResultService resultService;
+
+    /**
+     * Constructs an instance of the {@code DeleteResultCommand}.
+     *
+     * @param resultService {@link by.academy.it.service.ResultService}
+     */
+    DeleteResultCommand(ResultService resultService) {
+        this.resultService = resultService;
+    }
 
     /**
      * Delegates delete result operation to {@link by.academy.it.service.ResultService}.

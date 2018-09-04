@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class TeamServiceImplTest {
@@ -32,14 +31,14 @@ class TeamServiceImplTest {
 
     @BeforeAll
     static void setup() {
-        team = mock(Team.class);
+        team = new Team();
         teamDao = mock(TeamDao.class);
         teamService = new TeamServiceImpl(teamDao);
         request = mock(HttpServletRequest.class);
         dispatcher = mock(RequestDispatcher.class);
         response = mock(HttpServletResponse.class);
         session = mock(HttpSession.class);
-        DAOExc = new DAOException("dao test exception");
+        DAOExc = new DAOException(Constants.DAO_TEST_EXC);
     }
 
     @BeforeEach
@@ -49,7 +48,7 @@ class TeamServiceImplTest {
 
     @AfterEach
     void resetMocks() {
-        reset(team, teamDao, request, response, dispatcher, session);
+        reset(teamDao, request, response, dispatcher, session);
     }
 
     @Test
@@ -62,15 +61,13 @@ class TeamServiceImplTest {
 
         teamService.showTeams(request, response);
         verify(request).getParameter(Constants.PAGE);
-        verify(teamDao).getTeams(0);
-        verify(teamDao).getAmountOfAllTeams();
+        verify(teamDao, times(1)).getTeams(0);
+        verify(teamDao, times(1)).getAmountOfAllTeams();
         verify(request).setAttribute(Constants.TEAMS_LIST, list);
         verify(request).setAttribute(Constants.CURRENT_PAGE, 1);
         verify(request).setAttribute(Constants.PAGES, 0d);
         verify(request).getRequestDispatcher(Constants.PATH + Constants.GET_TEAMS + Constants.JSP);
         verify(dispatcher).forward(request, response);
-
-        assertEquals(list, teamDao.getTeams(0));
     }
 
     @Test
@@ -82,13 +79,11 @@ class TeamServiceImplTest {
 
         teamService.showTeams(request, response);
         verify(request).getParameter(Constants.PAGE);
-        verify(teamDao).getTeams(0);
-        verify(teamDao).getAmountOfAllTeams();
+        verify(teamDao, times(1)).getTeams(0);
+        verify(teamDao, times(1)).getAmountOfAllTeams();
         verify(request).setAttribute(Constants.TEAMS_MESSAGE, Constants.TEAMS_LIST_EMPTY);
         verify(request).getRequestDispatcher(Constants.PATH + Constants.GET_TEAMS + Constants.JSP);
         verify(dispatcher).forward(request, response);
-
-        assertEquals(list, teamDao.getTeams(0));
     }
 
     @Test
@@ -97,7 +92,7 @@ class TeamServiceImplTest {
 
         teamService.showTeams(request, response);
         verify(request).getParameter(Constants.PAGE);
-        verify(teamDao).getTeams(0);
+        verify(teamDao, times(1)).getTeams(0);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.TEAMS_ERROR);
         verify(response).sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -105,11 +100,11 @@ class TeamServiceImplTest {
 
     @Test
     void createTeam1() throws Exception {
-        when(request.getParameter(Constants.NAME)).thenReturn("test");
+        when(request.getParameter(Constants.NAME)).thenReturn(Constants.TEST);
 
         teamService.createTeam(request, response);
         verify(request).getParameter(Constants.NAME);
-        verify(teamDao).create(any(Team.class));
+        verify(teamDao, times(1)).create(any(Team.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.TEAMS_MESSAGE, Constants.CREATE_TEAM_MESSAGE);
         verify(response).sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
@@ -125,12 +120,12 @@ class TeamServiceImplTest {
 
     @Test
     void createTeam3() throws Exception {
-        when(request.getParameter(Constants.NAME)).thenReturn("test");
+        when(request.getParameter(Constants.NAME)).thenReturn(Constants.TEST);
         doThrow(DAOExc).when(teamDao).create(any(Team.class));
 
         teamService.createTeam(request, response);
         verify(request).getParameter(Constants.NAME);
-        verify(teamDao).create(any(Team.class));
+        verify(teamDao, times(1)).create(any(Team.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.TEAM_ERROR);
         verify(response).sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -138,17 +133,15 @@ class TeamServiceImplTest {
 
     @Test
     void showUpdateTeamPage1() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("1");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_1);
         when(teamDao.findById(1)).thenReturn(team);
 
         teamService.showUpdateTeamPage(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(teamDao).findById(1);
+        verify(teamDao, times(1)).findById(1);
         verify(request).getSession();
         verify(session).setAttribute(Constants.UPDATED_TEAM, team);
         verify(response).sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_TEAM);
-
-        assertEquals(teamDao.findById(1), team);
     }
 
     @Test
@@ -162,12 +155,12 @@ class TeamServiceImplTest {
 
     @Test
     void showUpdateTeamPage3() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("1");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_1);
         when(teamDao.findById(1)).thenThrow(DAOExc);
 
         teamService.showUpdateTeamPage(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(teamDao).findById(1);
+        verify(teamDao, times(1)).findById(1);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_TEAM_ERROR);
         verify(response).sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -175,13 +168,13 @@ class TeamServiceImplTest {
 
     @Test
     void updateTeam1() throws Exception {
-        when(request.getParameter(Constants.ID)).thenReturn("1");
-        when(request.getParameter(Constants.NAME)).thenReturn("test");
+        when(request.getParameter(Constants.ID)).thenReturn(Constants.STRING_1);
+        when(request.getParameter(Constants.NAME)).thenReturn(Constants.TEST);
 
         teamService.updateTeam(request, response);
         verify(request).getParameter(Constants.ID);
         verify(request).getParameter(Constants.NAME);
-        verify(teamDao).update(any(Team.class));
+        verify(teamDao, times(1)).update(any(Team.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.TEAMS_MESSAGE, Constants.UPDATE_TEAM_MESSAGE);
         verify(response).sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
@@ -199,14 +192,14 @@ class TeamServiceImplTest {
 
     @Test
     void updateTeam3() throws Exception {
-        when(request.getParameter(Constants.ID)).thenReturn("1");
-        when(request.getParameter(Constants.NAME)).thenReturn("test");
+        when(request.getParameter(Constants.ID)).thenReturn(Constants.STRING_1);
+        when(request.getParameter(Constants.NAME)).thenReturn(Constants.TEST);
         doThrow(DAOExc).when(teamDao).update(any(Team.class));
 
         teamService.updateTeam(request, response);
         verify(request).getParameter(Constants.ID);
         verify(request).getParameter(Constants.NAME);
-        verify(teamDao).update(any(Team.class));
+        verify(teamDao, times(1)).update(any(Team.class));
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_TEAM_ERROR);
         verify(response).sendRedirect(request.getContextPath() + Constants.ERROR);
@@ -214,11 +207,11 @@ class TeamServiceImplTest {
 
     @Test
     void deleteTeam1() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("1");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_1);
 
         teamService.deleteTeam(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(teamDao).delete(1);
+        verify(teamDao, times(1)).delete(1);
         verify(request).getSession();
         verify(session).setAttribute(Constants.TEAMS_MESSAGE, Constants.DELETE_TEAM_MESSAGE);
         verify(response).sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
@@ -235,12 +228,12 @@ class TeamServiceImplTest {
 
     @Test
     void deleteTeam3() throws Exception {
-        when(request.getParameter(Constants.KEY)).thenReturn("1");
+        when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_1);
         doThrow(DAOExc).when(teamDao).delete(1);
 
         teamService.deleteTeam(request, response);
         verify(request).getParameter(Constants.KEY);
-        verify(teamDao).delete(1);
+        verify(teamDao, times(1)).delete(1);
         verify(request).getSession();
         verify(session).setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_TEAM_ERROR);
         verify(response).sendRedirect(request.getContextPath() + Constants.ERROR);

@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, creates a bet.
+ * Implements {@link by.academy.it.command.Command}, creates a bet.
  *
  */
-public class CreateBetCommand extends Command {
+public class CreateBetCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateBetCommand.class);
-    private BetService betService = serviceFactory.getBetService();
+    private BetService betService;
+
+    /**
+     * Constructs an instance of the {@code CreateBetCommand}.
+     *
+     * @param betService {@link by.academy.it.service.BetService}
+     */
+    CreateBetCommand(BetService betService) {
+        this.betService = betService;
+    }
 
     /**
      * Delegates operation to {@link by.academy.it.service.BetService}.

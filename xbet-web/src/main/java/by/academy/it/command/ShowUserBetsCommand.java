@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, retrieves a list of the user's bets and sends it to 'bets page'.
+ * Implements {@link by.academy.it.command.Command}, retrieves a list of the user's bets and sends it to 'bets page'.
  *
  */
-public class ShowUserBetsCommand extends Command {
+public class ShowUserBetsCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUserBetsCommand.class);
-    private BetService betService = serviceFactory.getBetService();
+    private BetService betService;
+
+    /**
+     * Constructs an instance of the {@code ShowUserBetsCommand}.
+     *
+     * @param betService {@link by.academy.it.service.BetService}
+     */
+    ShowUserBetsCommand(BetService betService) {
+        this.betService = betService;
+    }
 
     /**
      * Delegates operation to {@link by.academy.it.service.BetService}.

@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, checks the user's balance through ajax.
+ * Implements {@link by.academy.it.command.Command}, checks the user's balance through ajax.
  *
  */
-public class CheckBalanceCommand extends Command {
+public class CheckBalanceCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckBalanceCommand.class);
-    private UserService userService = serviceFactory.getUserService();
+    private UserService userService;
+
+    /**
+     * Constructs an instance of the {@code CheckBalanceCommand}.
+     *
+     * @param userService {@link by.academy.it.service.UserService}
+     */
+    CheckBalanceCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Delegates user's balance check to {@link by.academy.it.service.UserService}.

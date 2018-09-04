@@ -1,5 +1,6 @@
 package by.academy.it.command;
 
+import by.academy.it.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,77 +15,88 @@ import java.util.Map;
 public class CommandFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandFactory.class);
-    private static Map<String, Command> commands = new HashMap<>(70);
+    private static CommandFactory instance;
+    private static final Map<String, Command> commands = new HashMap<>(70);
+    private static ServiceFactory serviceFactory;
 
     /**
-     * Constructs an instance of CommandFactory.
+     * Prohibits creating an instance outside the class.
      */
-    public CommandFactory() {
+    private CommandFactory() {
 
-        commands.put(Constants.GET_LOCALE, new ChangeLocaleCommand());
+        BetService betService = serviceFactory.getBetService();
+        FinishMatchService finishMatchService = serviceFactory.getFinishMatchService();
+        MatchService matchService = serviceFactory.getMatchService();
+        ResultService resultService = serviceFactory.getResultService();
+        RoleService roleService = serviceFactory.getRoleService();
+        TeamService teamService = serviceFactory.getTeamService();
+        UserService userService = serviceFactory.getUserService();
+
+        commands.put(Constants.NO_COMMAND, new NoActionCommand());
+        commands.put(Constants.GET_LOCALE, new ChangeLocaleCommand(userService));
         commands.put(Constants.GET_HOME, new ForwardRequestCommand(Constants.HOME));
         commands.put(Constants.GET_LOGIN, new ForwardRequestCommand(Constants.LOGIN));
-        commands.put(Constants.POST_LOGIN, new LoginUserCommand());
-        commands.put(Constants.POST_AUTHENTICATE, new AuthenticateLoginCommand());
+        commands.put(Constants.POST_LOGIN, new LoginUserCommand(userService));
+        commands.put(Constants.POST_AUTHENTICATE, new AuthenticateLoginCommand(userService));
         commands.put(Constants.GET_REGISTRATION, new ForwardRequestCommand(Constants.REGISTRATION));
-        commands.put(Constants.POST_REGISTRATION, new CheckNewUserLoginCommand());
-        commands.put(Constants.POST_REGISTER, new RegisterUserCommand());
+        commands.put(Constants.POST_REGISTRATION, new CheckNewUserLoginCommand(userService));
+        commands.put(Constants.POST_REGISTER, new RegisterUserCommand(userService));
         commands.put(Constants.GET_ERROR, new ForwardRequestCommand(Constants.ERROR));
-        commands.put(Constants.GET_LOGOUT, new LogoutCommand());
-        commands.put(Constants.NO_COMMAND, new NoActionCommand());
-        commands.put(Constants.GET_MATCHES, new ShowUnplayedMatchesCommand());
-        commands.put(Constants.POST_CHECK, new CheckIsUserLoggedInCommand());
-        commands.put(Constants.POST_PLACE, new ShowPlaceBetPageCommand());
+        commands.put(Constants.GET_LOGOUT, new LogoutCommand(userService));
+        commands.put(Constants.GET_MATCHES, new ShowUnplayedMatchesCommand(matchService));
+        commands.put(Constants.POST_CHECK, new CheckIsUserLoggedInCommand(userService));
+        commands.put(Constants.POST_PLACE, new ShowPlaceBetPageCommand(matchService));
         commands.put(Constants.GET_BET, new ForwardRequestCommand(Constants.BET));
-        commands.put(Constants.POST_BET, new ConfirmBetCommand());
-        commands.put(Constants.POST_BALANCE, new CheckBalanceCommand());
-        commands.put(Constants.POST_TOPUP, new TopUpBalanceCommand());
-        commands.put(Constants.GET_BETS, new ShowUserBetsCommand());
-        commands.put(Constants.POST_MATCHES, new FinishMatchCommand());
-        commands.put(Constants.GET_GET_USERS, new ShowUsersCommand());
+        commands.put(Constants.POST_BET, new ConfirmBetCommand(userService));
+        commands.put(Constants.POST_BALANCE, new CheckBalanceCommand(userService));
+        commands.put(Constants.POST_TOPUP, new TopUpBalanceCommand(userService));
+        commands.put(Constants.GET_BETS, new ShowUserBetsCommand(betService));
+        commands.put(Constants.POST_MATCHES, new FinishMatchCommand(finishMatchService));
+        commands.put(Constants.GET_GET_USERS, new ShowUsersCommand(userService));
         commands.put(Constants.GET_CREATE_USER, new ForwardRequestCommand(Constants.CREATE_USER));
-        commands.put(Constants.POST_CREATE_USER, new CreateUserCommand());
-        commands.put(Constants.POST_UPDATE_USER, new ShowUpdateUserPageCommand());
-        commands.put(Constants.POST_CHANGE_USER, new UpdateUserCommand());
-        commands.put(Constants.POST_DELETE_USER, new DeleteUserCommand());
+        commands.put(Constants.POST_CREATE_USER, new CreateUserCommand(userService));
+        commands.put(Constants.POST_UPDATE_USER, new ShowUpdateUserPageCommand(userService));
+        commands.put(Constants.POST_CHANGE_USER, new UpdateUserCommand(userService));
+        commands.put(Constants.POST_DELETE_USER, new DeleteUserCommand(userService));
         commands.put(Constants.GET_UPDATE_USER, new ForwardRequestCommand(Constants.UPDATE_USER));
-        commands.put(Constants.GET_GET_ROLES, new ShowRolesCommand());
+        commands.put(Constants.GET_GET_ROLES, new ShowRolesCommand(roleService));
         commands.put(Constants.GET_CREATE_ROLE, new ForwardRequestCommand(Constants.CREATE_ROLE));
-        commands.put(Constants.POST_CREATE_ROLE, new CreateRoleCommand());
-        commands.put(Constants.POST_UPDATE_ROLE, new ShowUpdateRolePageCommand());
+        commands.put(Constants.POST_CREATE_ROLE, new CreateRoleCommand(roleService));
+        commands.put(Constants.POST_UPDATE_ROLE, new ShowUpdateRolePageCommand(roleService));
         commands.put(Constants.GET_UPDATE_ROLE, new ForwardRequestCommand(Constants.UPDATE_ROLE));
-        commands.put(Constants.POST_CHANGE_ROLE, new UpdateRoleCommand());
-        commands.put(Constants.POST_DELETE_ROLE, new DeleteRoleCommand());
-        commands.put(Constants.GET_GET_BETS, new ShowBetsCommand());
+        commands.put(Constants.POST_CHANGE_ROLE, new UpdateRoleCommand(roleService));
+        commands.put(Constants.POST_DELETE_ROLE, new DeleteRoleCommand(roleService));
+        commands.put(Constants.GET_GET_BETS, new ShowBetsCommand(betService));
         commands.put(Constants.GET_CREATE_BET, new ForwardRequestCommand(Constants.CREATE_BET));
-        commands.put(Constants.POST_CREATE_BET, new CreateBetCommand());
-        commands.put(Constants.POST_UPDATE_BET, new ShowUpdateBetPageCommand());
+        commands.put(Constants.POST_CREATE_BET, new CreateBetCommand(betService));
+        commands.put(Constants.POST_UPDATE_BET, new ShowUpdateBetPageCommand(betService));
         commands.put(Constants.GET_UPDATE_BET, new ForwardRequestCommand(Constants.UPDATE_BET));
-        commands.put(Constants.POST_CHANGE_BET, new UpdateBetCommand());
-        commands.put(Constants.POST_DELETE_BET, new DeleteBetCommand());
-        commands.put(Constants.GET_GET_MATCHES, new ShowMatchesCommand());
+        commands.put(Constants.POST_CHANGE_BET, new UpdateBetCommand(betService));
+        commands.put(Constants.POST_DELETE_BET, new DeleteBetCommand(betService));
+        commands.put(Constants.GET_GET_MATCHES, new ShowMatchesCommand(matchService));
         commands.put(Constants.GET_CREATE_MATCH, new ForwardRequestCommand(Constants.CREATE_MATCH));
-        commands.put(Constants.POST_CREATE_MATCH, new CreateMatchCommand());
-        commands.put(Constants.POST_UPDATE_MATCH, new ShowUpdateMatchPageCommand());
+        commands.put(Constants.POST_CREATE_MATCH, new CreateMatchCommand(matchService));
+        commands.put(Constants.POST_UPDATE_MATCH, new ShowUpdateMatchPageCommand(matchService));
         commands.put(Constants.GET_UPDATE_MATCH, new ForwardRequestCommand(Constants.UPDATE_MATCH));
-        commands.put(Constants.POST_CHANGE_MATCH, new UpdateMatchCommand());
-        commands.put(Constants.POST_DELETE_MATCH, new DeleteMatchCommand());
-        commands.put(Constants.GET_GET_RESULTS, new ShowResultsCommand());
+        commands.put(Constants.POST_CHANGE_MATCH, new UpdateMatchCommand(matchService));
+        commands.put(Constants.POST_DELETE_MATCH, new DeleteMatchCommand(matchService));
+        commands.put(Constants.GET_GET_RESULTS, new ShowResultsCommand(resultService));
         commands.put(Constants.GET_CREATE_RESULT, new ForwardRequestCommand(Constants.CREATE_RESULT));
-        commands.put(Constants.POST_CREATE_RESULT, new CreateResultCommand());
-        commands.put(Constants.POST_UPDATE_RESULT, new ShowUpdateResultPageCommand());
+        commands.put(Constants.POST_CREATE_RESULT, new CreateResultCommand(resultService));
+        commands.put(Constants.POST_UPDATE_RESULT, new ShowUpdateResultPageCommand(resultService));
         commands.put(Constants.GET_UPDATE_RESULT, new ForwardRequestCommand(Constants.UPDATE_RESULT));
-        commands.put(Constants.POST_CHANGE_RESULT, new UpdateResultCommand());
-        commands.put(Constants.POST_DELETE_RESULT, new DeleteResultCommand());
-        commands.put(Constants.GET_GET_TEAMS, new ShowTeamsCommand());
+        commands.put(Constants.POST_CHANGE_RESULT, new UpdateResultCommand(resultService));
+        commands.put(Constants.POST_DELETE_RESULT, new DeleteResultCommand(resultService));
+        commands.put(Constants.GET_GET_TEAMS, new ShowTeamsCommand(teamService));
         commands.put(Constants.GET_CREATE_TEAM, new ForwardRequestCommand(Constants.CREATE_TEAM));
-        commands.put(Constants.POST_CREATE_TEAM, new CreateTeamCommand());
-        commands.put(Constants.POST_UPDATE_TEAM, new ShowUpdateTeamPageCommand());
+        commands.put(Constants.POST_CREATE_TEAM, new CreateTeamCommand(teamService));
+        commands.put(Constants.POST_UPDATE_TEAM, new ShowUpdateTeamPageCommand(teamService));
         commands.put(Constants.GET_UPDATE_TEAM, new ForwardRequestCommand(Constants.UPDATE_TEAM));
-        commands.put(Constants.POST_CHANGE_TEAM, new UpdateTeamCommand());
-        commands.put(Constants.POST_DELETE_TEAM, new DeleteTeamCommand());
-        commands.put(Constants.GET_RESULTS, new ShowLastResultsCommand());
+        commands.put(Constants.POST_CHANGE_TEAM, new UpdateTeamCommand(teamService));
+        commands.put(Constants.POST_DELETE_TEAM, new DeleteTeamCommand(teamService));
+        commands.put(Constants.GET_RESULTS, new ShowLastResultsCommand(resultService));
 
+        logger.info("Command factory has been created");
     }
 
     /**
@@ -101,6 +113,28 @@ public class CommandFactory {
             return commands.get(Constants.NO_COMMAND);
         }
         return commands.get(commandKey);
+    }
+
+    /**
+     * Sets a value of the serviceFactory field.
+     *
+     * @param factory {@link by.academy.it.service.ServiceFactory}
+     */
+    public static void setServiceFactory(ServiceFactory factory) {
+        serviceFactory = factory;
+        logger.info("ServiceFactory has been set");
+    }
+
+    /**
+     * Creates an instance of CommandFactory if it is not created and returns it.
+     *
+     * @return CommandFactory instance.
+     */
+    public static CommandFactory getInstance() {
+        if (instance == null) {
+            instance = new CommandFactory();
+        }
+        return instance;
     }
 
 }

@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, sends update role page to user.
+ * Implements {@link by.academy.it.command.Command}, sends update role page to user.
  *
  */
-public class ShowUpdateRolePageCommand extends Command {
+public class ShowUpdateRolePageCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateRolePageCommand.class);
-    private RoleService roleService = serviceFactory.getRoleService();
+    private RoleService roleService;
+
+    /**
+     * Constructs an instance of the {@code ShowUpdateRolePageCommand}.
+     *
+     * @param roleService {@link by.academy.it.service.RoleService}
+     */
+    ShowUpdateRolePageCommand(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     /**
      * Delegates update role operation to {@link by.academy.it.service.RoleService}.

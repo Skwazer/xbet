@@ -9,13 +9,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, creates a new user in the database and
+ * Implements {@link by.academy.it.command.Command}, creates a new user in the database and
  * puts user's data in the session.
  */
-public class RegisterUserCommand extends Command {
+public class RegisterUserCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(RegisterUserCommand.class);
-    private UserService userService = serviceFactory.getUserService();
+    private UserService userService;
+
+    /**
+     * Constructs an instance of the {@code RegisterUserCommand}.
+     *
+     * @param userService {@link by.academy.it.service.UserService}
+     */
+    RegisterUserCommand(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Delegates operation to {@link by.academy.it.service.UserService}.

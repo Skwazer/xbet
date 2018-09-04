@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, retrieves a team and sends it to the 'update team' page.
+ * Implements {@link by.academy.it.command.Command}, retrieves a team and sends it to the 'update team' page.
  *
  */
-public class ShowUpdateTeamPageCommand extends Command {
+public class ShowUpdateTeamPageCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateTeamPageCommand.class);
-    private TeamService teamService = serviceFactory.getTeamService();
+    private TeamService teamService;
+
+    /**
+     * Constructs an instance of the {@code ShowUpdateTeamPageCommand}.
+     *
+     * @param teamService {@link by.academy.it.service.TeamService}
+     */
+    ShowUpdateTeamPageCommand(TeamService teamService) {
+        this.teamService = teamService;
+    }
 
     /**
      * Delegates show update team page operation to {@link by.academy.it.service.TeamService}.

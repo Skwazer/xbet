@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, retrieves a list of unplayed matches and sends it to 'matches page'.
+ * Implements {@link by.academy.it.command.Command}, retrieves a list of unplayed matches and sends it to 'matches page'.
  *
  */
-public class ShowUnplayedMatchesCommand extends Command {
+public class ShowUnplayedMatchesCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUnplayedMatchesCommand.class);
-    private MatchService matchService = serviceFactory.getMatchService();
+    private MatchService matchService;
+
+    /**
+     * Constructs an instance of the {@code ShowUnplayedMatchesCommand}.
+     *
+     * @param matchService {@link by.academy.it.service.MatchService}
+     */
+    ShowUnplayedMatchesCommand(MatchService matchService) {
+        this.matchService = matchService;
+    }
 
     /**
      * Delegates show unplayed matches operation to {@link by.academy.it.service.MatchService}.

@@ -10,13 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extends {@link by.academy.it.command.Command}, retrieves a result and sends it to 'update result' page.
+ * Implements {@link by.academy.it.command.Command}, retrieves a result and sends it to 'update result' page.
  *
  */
-public class ShowUpdateResultPageCommand extends Command {
+public class ShowUpdateResultPageCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowUpdateResultPageCommand.class);
-    private ResultService resultService = serviceFactory.getResultService();
+    private ResultService resultService;
+
+    /**
+     * Constructs an instance of the {@code ShowUpdateResultPageCommand}.
+     *
+     * @param resultService {@link by.academy.it.service.ResultService}
+     */
+    ShowUpdateResultPageCommand(ResultService resultService) {
+        this.resultService = resultService;
+    }
 
     /**
      * Delegates show update result page operation to {@link by.academy.it.service.ResultService}.
