@@ -25,7 +25,7 @@ public class CommandFactory {
     private CommandFactory() {
 
         BetService betService = serviceFactory.getBetService();
-        FinishMatchService finishMatchService = serviceFactory.getFinishMatchService();
+        TransactionalService transactionalService = serviceFactory.getTransactionalService();
         MatchService matchService = serviceFactory.getMatchService();
         ResultService resultService = serviceFactory.getResultService();
         RoleService roleService = serviceFactory.getRoleService();
@@ -47,11 +47,11 @@ public class CommandFactory {
         commands.put(Constants.POST_CHECK, new CheckIsUserLoggedInCommand(userService));
         commands.put(Constants.POST_PLACE, new ShowPlaceBetPageCommand(matchService));
         commands.put(Constants.GET_BET, new ForwardRequestCommand(Constants.BET));
-        commands.put(Constants.POST_BET, new ConfirmBetCommand(userService));
+        commands.put(Constants.POST_BET, new ConfirmBetCommand(transactionalService));
         commands.put(Constants.POST_BALANCE, new CheckBalanceCommand(userService));
         commands.put(Constants.POST_TOPUP, new TopUpBalanceCommand(userService));
         commands.put(Constants.GET_BETS, new ShowUserBetsCommand(betService));
-        commands.put(Constants.POST_MATCHES, new FinishMatchCommand(finishMatchService));
+        commands.put(Constants.POST_MATCHES, new FinishMatchCommand(transactionalService));
         commands.put(Constants.GET_GET_USERS, new ShowUsersCommand(userService));
         commands.put(Constants.GET_CREATE_USER, new ForwardRequestCommand(Constants.CREATE_USER));
         commands.put(Constants.POST_CREATE_USER, new CreateUserCommand(userService));

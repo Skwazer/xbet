@@ -23,6 +23,8 @@ class ResultServiceImpl implements ResultService {
 
     /**
      * Constructs an instance of the {@code ResultService}.
+     *
+     * @param resultDao a ResultDao instance.
      */
     ResultServiceImpl(ResultDao resultDao) {
         this.resultDao = resultDao;
@@ -103,7 +105,7 @@ class ResultServiceImpl implements ResultService {
 
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
-            } catch (DAOException | ServiceException e) {
+            } catch (DAOException e) {
                 logger.error("An exception occurred during get all results operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.RESULTS_ERROR);
 
@@ -150,7 +152,12 @@ class ResultServiceImpl implements ResultService {
                 request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.CREATE_RESULT_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during create result operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_RESULT_ERROR);
 
@@ -183,7 +190,12 @@ class ResultServiceImpl implements ResultService {
                 request.getSession().setAttribute(Constants.UPDATED_RESULT, result);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_RESULT);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during show update result page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_RESULT_ERROR);
 
@@ -238,7 +250,12 @@ class ResultServiceImpl implements ResultService {
                 request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.UPDATE_RESULT_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during update result operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_RESULT_ERROR);
 
@@ -271,6 +288,11 @@ class ResultServiceImpl implements ResultService {
                 request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.DELETE_RESULT_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
 
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during delete result operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_RESULT_ERROR);

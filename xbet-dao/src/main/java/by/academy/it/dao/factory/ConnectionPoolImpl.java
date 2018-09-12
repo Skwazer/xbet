@@ -4,6 +4,7 @@ import by.academy.it.dao.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
     /**
      * Creates an instance of the connection pool using properties from database.properties file.
      */
-    public ConnectionPoolImpl(){
+    public ConnectionPoolImpl() throws ConnectionPoolException {
         try {
             Properties properties = new Properties();
             properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
@@ -44,11 +45,14 @@ public class ConnectionPoolImpl implements ConnectionPool {
             Class.forName(driver);
             availableConnections = new ArrayBlockingQueue<>(this.maxConnections);
             usedConnections = new ArrayBlockingQueue<>(this.maxConnections);
-
             logger.info("The connection pool has been created");
-        } catch (Exception e) {
-            logger.error("Cannot create the connection pool", e);
+
+        } catch (NumberFormatException e) {
+            logger.error("Cannot read the connection pool max size", e);
             maxConnections = 40;
+        } catch (ClassNotFoundException | IOException e) {
+            logger.error("The connection pool hasn't been created", e);
+            throw new ConnectionPoolException("The connection pool hasn't been created", e);
         }
     }
 
@@ -68,7 +72,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
                 availableConnections.add(pooledConnection);
             }
             logger.info("The connection pool has been initialized");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             logger.error("The connection pool hasn't been initialized", e);
             throw new ConnectionPoolException("The connection pool hasn't been initialized", e);
         }

@@ -1,6 +1,6 @@
 package by.academy.it.command;
 
-import by.academy.it.service.UserService;
+import by.academy.it.service.TransactionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,15 +17,15 @@ import java.io.IOException;
 public class ConfirmBetCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfirmBetCommand.class);
-    private UserService userService;
+    private TransactionalService transactionalService;
 
     /**
      * Constructs an instance of the {@code ConfirmBetCommand}.
      *
-     * @param userService {@link by.academy.it.service.UserService}
+     * @param transactionalService {@link by.academy.it.service.TransactionalService}
      */
-    ConfirmBetCommand(UserService userService) {
-        this.userService = userService;
+    ConfirmBetCommand(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
     }
 
     /**
@@ -39,7 +39,7 @@ public class ConfirmBetCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.info("confirm bet operation");
-        userService.confirmBet(request, response);
+        transactionalService.confirmBet(request, response);
     }
 
 }

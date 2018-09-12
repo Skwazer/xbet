@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,8 @@ class MatchServiceImpl implements MatchService {
 
     /**
      * Constructs an instance of the {@code MatchService}.
+     *
+     * @param matchDao a MatchDao instance.
      */
     MatchServiceImpl(MatchDao matchDao) {
         this.matchDao = matchDao;
@@ -37,11 +40,11 @@ class MatchServiceImpl implements MatchService {
      *
      * @param id the id of a match.
      * @return the {@link by.academy.it.entity.Match} entity.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the findById operation.
+     * @throws by.academy.it.service.ServiceException if a found match is null.
      */
-    private Match getMatchById(int id) throws ServiceException {
+    private Match getMatchById(int id) throws DAOException, ServiceException {
         Match match;
-        try {
             match = matchDao.findById(id);
             if (match != null) {
                 ServiceFactoryImpl.getModelService().setTeams(match);
@@ -49,10 +52,6 @@ class MatchServiceImpl implements MatchService {
                 logger.error("MatchService match is null");
                 throw new ServiceException("MatchService match is null");
             }
-        } catch (DAOException e) {
-            logger.error("MatchService cannot get a match by id", e);
-            throw new ServiceException("MatchService cannot get a match by id", e);
-        }
         return match;
     }
 
@@ -75,9 +74,19 @@ class MatchServiceImpl implements MatchService {
 
                 response.sendRedirect(request.getContextPath() + Constants.MAIN_BET);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during get match operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (ServiceException e) {
+                logger.error("Cannot find a match with such id", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_NOT_FOUND_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
@@ -123,7 +132,7 @@ class MatchServiceImpl implements MatchService {
                     request.setAttribute(Constants.MATCHES_MESSAGE, Constants.MATCHES_LIST_EMPTY);
                     request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
                 }
-            } catch (DAOException | ServiceException e) {
+            } catch (DAOException e) {
                 logger.error("An exception occurred during get unplayed matches operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
 
@@ -228,7 +237,17 @@ class MatchServiceImpl implements MatchService {
             request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.CREATE_MATCH_MESSAGE);
             response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            logger.error("Cannot parse a number parameter", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        } catch (ParseException e) {
+            logger.error("Cannot parse a date parameter", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DATE_PARSE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        } catch (DAOException e) {
             logger.error("An exception occurred during create match operation", e);
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_MATCH_ERROR);
 
@@ -255,7 +274,12 @@ class MatchServiceImpl implements MatchService {
                 request.getSession().setAttribute(Constants.UPDATED_MATCH, match);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_MATCH);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during show update match page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_MATCH_ERROR);
 
@@ -327,7 +351,17 @@ class MatchServiceImpl implements MatchService {
             request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.UPDATE_MATCH_MESSAGE);
             response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            logger.error("Cannot parse a number parameter", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        } catch (ParseException e) {
+            logger.error("Cannot parse a date parameter", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DATE_PARSE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        } catch (DAOException e) {
             logger.error("An exception occurred during update match operation", e);
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_MATCH_ERROR);
 
@@ -354,6 +388,11 @@ class MatchServiceImpl implements MatchService {
                 request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.DELETE_MATCH_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
 
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during delete match operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_MATCH_ERROR);

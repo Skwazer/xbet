@@ -24,6 +24,8 @@ public class DaoFactoryImpl implements DaoFactory {
 
     /**
      * Constructs an instance of DaoFactory.
+     *
+     * @param pool - connection pool.
      */
     public DaoFactoryImpl(ConnectionPool pool) {
         connectionPool = pool;

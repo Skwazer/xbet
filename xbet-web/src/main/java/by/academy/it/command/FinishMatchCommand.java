@@ -1,6 +1,6 @@
 package by.academy.it.command;
 
-import by.academy.it.service.FinishMatchService;
+import by.academy.it.service.TransactionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,19 +16,19 @@ import java.io.IOException;
 public class FinishMatchCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(FinishMatchCommand.class);
-    private FinishMatchService finishMatchService;
+    private TransactionalService transactionalService;
 
     /**
      * Constructs an instance of the {@code FinishMatchCommand}.
      *
-     * @param finishMatchService {@link by.academy.it.service.FinishMatchService}
+     * @param transactionalService {@link TransactionalService}
      */
-    FinishMatchCommand(FinishMatchService finishMatchService) {
-        this.finishMatchService = finishMatchService;
+    FinishMatchCommand(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
     }
 
     /**
-     * Delegates operation to {@link by.academy.it.service.FinishMatchService}.
+     * Delegates operation to {@link TransactionalService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -38,7 +38,7 @@ public class FinishMatchCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.info("finish match operation");
-        finishMatchService.finishMatch(request, response);
+        transactionalService.finishMatch(request, response);
     }
 
 }

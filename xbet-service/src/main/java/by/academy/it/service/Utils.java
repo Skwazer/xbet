@@ -82,6 +82,7 @@ public class Utils {
     /**
      * Calculates the position from which a select operation should start.
      *
+     * @param page current page.
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @return the position from which a select operation should start or -1 if the page is less than 1.

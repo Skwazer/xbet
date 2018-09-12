@@ -24,6 +24,8 @@ class TeamServiceImpl implements TeamService {
 
     /**
      * Constructs an instance of the {@code TeamService}.
+     *
+     * @param teamDao a TeamDao instance.
      */
     TeamServiceImpl(TeamDao teamDao) {
         this.teamDao = teamDao;
@@ -124,7 +126,12 @@ class TeamServiceImpl implements TeamService {
                 request.getSession().setAttribute(Constants.UPDATED_TEAM, team);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_TEAM);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during show update team page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_TEAM_ERROR);
 
@@ -161,7 +168,12 @@ class TeamServiceImpl implements TeamService {
                 request.getSession().setAttribute(Constants.TEAMS_MESSAGE, Constants.UPDATE_TEAM_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during update team operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_TEAM_ERROR);
 
@@ -194,6 +206,11 @@ class TeamServiceImpl implements TeamService {
                 request.getSession().setAttribute(Constants.TEAMS_MESSAGE, Constants.DELETE_TEAM_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_TEAMS);
 
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during delete team operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_TEAM_ERROR);

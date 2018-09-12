@@ -179,5 +179,9 @@ class Constants {
     static final String STRING_1 = "1";
     static final String STRING_2 = "2";
     static final String DAO_TEST_EXC = "2";
+    static final String NUMBER_PARSE_ERROR = "number.parse.error";
+    static final String MATCH_NOT_FOUND_ERROR = "match.not.found.error";
+    static final String DATE_PARSE_ERROR = "date.parse.error";
+    static final String BALANCE_NOT_ENOUGH = "balance.not.enough";
 
 }

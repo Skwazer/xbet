@@ -1,9 +1,7 @@
 package by.academy.it.service;
 
 import by.academy.it.dao.DAOException;
-import by.academy.it.dao.TransactionalDao;
 import by.academy.it.dao.UserDao;
-import by.academy.it.entity.Bet;
 import by.academy.it.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,21 +16,21 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * This class works with {@link by.academy.it.dao.UserDao} and {@link by.academy.it.dao.TransactionalDao} class.
+ * This class works with {@link by.academy.it.dao.UserDao} class.
  *
  */
 class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private UserDao userDao;
-    private TransactionalDao transactionalDao;
 
     /**
      * Constructs an instance of the {@code UserService}.
+     *
+     * @param userDao a UserDao instance.
      */
-    UserServiceImpl(UserDao userDao, TransactionalDao transactionalDao) {
+    UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
-        this.transactionalDao = transactionalDao;
         logger.info("UserService has been created");
     }
 
@@ -120,75 +118,14 @@ class UserServiceImpl implements UserService {
      * @param login the user's login.
      * @param password the user's password.
      * @return {@code true} if a user exists or {@code false} otherwise.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    private boolean isPasswordCorrectForLogin(String login, String password) throws ServiceException {
-        try {
-            User user = userDao.findByLogin(login);
-            if (user != null && password.equals(String.valueOf(user.getPassword()))) {
-                return true;
-            }
-        } catch (DAOException e) {
-            logger.error("UserService cannot check password", e);
-            throw new ServiceException("UserService cannot check password", e);
+    private boolean isPasswordCorrectForLogin(String login, String password) throws DAOException {
+        User user = userDao.findByLogin(login);
+        if (user != null && password.equals(String.valueOf(user.getPassword()))) {
+            return true;
         }
         return false;
-    }
-
-
-    /**
-     * Withdraws user's money and creates a bet entry.
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws ServletException if the request could not be handled.
-     * @throws IOException if an input or output error is detected.
-     */
-    public void confirmBet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        String matchIdParam = request.getParameter(Constants.MATCH_ID);
-        String betParam = request.getParameter(Constants.BET);
-        String amountParam = request.getParameter(Constants.AMOUNT);
-        if (Utils.isValidString(matchIdParam) && Utils.isValidString(betParam) && Utils.isValidString(amountParam)) {
-            try {
-                int matchId = Integer.parseInt(matchIdParam);
-                double amount = Double.parseDouble(amountParam);
-                String[] betParams = betParam.split("/");
-                double betValue = Double.parseDouble(betParams[1]);
-
-                HttpSession session = request.getSession();
-                User user = (User) session.getAttribute(Constants.USER);
-                double balance = user.getBalance() - amount;
-
-                Bet bet = new Bet();
-                bet.setUser_id(user.getId());
-                bet.setMatch_id(matchId);
-                bet.setBetResult(betParams[0]);
-                bet.setBet(betValue);
-                bet.setMoney(amount);
-                bet.setStatus("active");
-
-                logger.debug("start of transaction");
-                transactionalDao.placeBet(user.getLogin(), balance, bet);
-                logger.debug("transaction is finished");
-                user.setBalance(balance);
-
-                logger.info("bet has been placed");
-                request.setAttribute(Constants.CONFIRM_MESSAGE, Constants.SUCCESS);
-                request.getRequestDispatcher(Utils.getReferrerPath(request)).forward(request, response);
-
-            } catch (Exception e) {
-                logger.error("An exception occurred during create bet operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BET_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            }
-        } else {
-            logger.warn("Bet parameters are not valid");
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BET_PARAM_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
-        }
     }
 
 
@@ -198,24 +135,20 @@ class UserServiceImpl implements UserService {
      * @param login the user's login.
      * @param amount money to add or remove.
      * @return the {@link by.academy.it.entity.User} entity.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
+     * @throws by.academy.it.service.ServiceException if a user is not found.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    private User updateUserBalance(String login, double amount) throws ServiceException {
+    private User updateUserBalance(String login, double amount) throws ServiceException, DAOException {
         User user;
-        try {
-            user = userDao.findByLogin(login);
-            if (user != null) {
-                double balance = user.getBalance() + amount;
-                userDao.updateBalance(login, balance);
-                user.setBalance(balance);
-                logger.info("user's balance has been updated");
-            } else {
-                logger.error("UserService cannot updateBalance user's balance");
-                throw new ServiceException("UserService cannot updateBalance user's balance");
-            }
-        } catch (DAOException e) {
-            logger.error("UserService cannot updateBalance a user", e);
-            throw new ServiceException("UserService cannot updateBalance a user", e);
+        user = userDao.findByLogin(login);
+        if (user != null) {
+            double balance = user.getBalance() + amount;
+            userDao.updateBalance(login, balance);
+            user.setBalance(balance);
+            logger.info("user's balance has been updated");
+        } else {
+            logger.error("UserService cannot updateBalance user's balance");
+            throw new ServiceException("UserService user is not found");
         }
         return user;
     }
@@ -246,7 +179,12 @@ class UserServiceImpl implements UserService {
                 }
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("UserService cannot delete a user", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_USER_ERROR);
 
@@ -258,25 +196,6 @@ class UserServiceImpl implements UserService {
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
-    }
-
-
-    /**
-     * Retrieves a user by login through {@link by.academy.it.dao.UserDao}.
-     *
-     * @param login the user's login.
-     * @return the {@link by.academy.it.entity.User} entity.
-     * @throws by.academy.it.service.ServiceException if an exception occurred during the operation.
-     */
-    private User findUserByLogin(String login) throws ServiceException {
-        User user;
-        try {
-            user = userDao.findByLogin(login);
-        } catch (DAOException e) {
-            logger.error("UserService cannot find a user", e);
-            throw new ServiceException("UserService cannot find a user", e);
-        }
-        return user;
     }
 
 
@@ -356,7 +275,12 @@ class UserServiceImpl implements UserService {
                 request.getSession().setAttribute(Constants.USER_MESSAGE, Constants.CREATE_USER_MESSAGE);
                 response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during create user operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_USER_ERROR);
 
@@ -397,7 +321,12 @@ class UserServiceImpl implements UserService {
 
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during show update user page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_USER_ERROR);
 
@@ -460,7 +389,12 @@ class UserServiceImpl implements UserService {
                 session.setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during update user operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_USER_ERROR);
 
@@ -567,7 +501,7 @@ class UserServiceImpl implements UserService {
         try {
             if (Utils.isValidString(login) && Utils.isValidString(password)
                     && isPasswordCorrectForLogin(login, password)) {
-                User user = findUserByLogin(login);
+                User user = userDao.findByLogin(login);
                 if (user != null) {
                     user.setPassword(null);
                     request.getSession().setAttribute(Constants.USER, user);
@@ -587,7 +521,7 @@ class UserServiceImpl implements UserService {
 
                 request.getRequestDispatcher(Utils.getReferrerPath(request)).forward(request, response);
             }
-        } catch (ServiceException e) {
+        } catch (DAOException e) {
             logger.error("An exception occurred during login action", e);
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.LOGIN_EXCEPTION);
 
@@ -619,9 +553,14 @@ class UserServiceImpl implements UserService {
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
 
-            } catch (ServiceException e) {
+            } catch (DAOException e) {
                 logger.error("An exception occurred during top up balance operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TOPUP_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (ServiceException e) {
+                logger.error("Cannot find a user with such login", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USER_NOT_FOUND);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
@@ -661,14 +600,14 @@ class UserServiceImpl implements UserService {
             user.setRole(2);
             try {
                 userDao.create(user);
-                user = findUserByLogin(user.getLogin());
+                user = userDao.findByLogin(login);
                 user.setPassword(null);
                 request.getSession().setAttribute(Constants.USER, user);
                 logger.info("user has been registered");
 
                 response.sendRedirect(request.getContextPath() + Constants.HOME);
 
-            } catch (ServiceException | DAOException e) {
+            } catch (DAOException e) {
                 logger.error("An exception occurred during login validation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.LOGIN_EXCEPTION);
 

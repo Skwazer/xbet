@@ -15,12 +15,12 @@ public interface ServiceFactory {
 
 
     /**
-     * Creates {@code FinishMatchService} instance if it is not created.
-     * Passes a DAO as a constructor parameter and returns the FinishMatchService instance.
+     * Creates {@code TransactionalService} instance if it is not created.
+     * Passes a DAO as a constructor parameter and returns the TransactionalService instance.
      *
-     * @return {@link by.academy.it.service.FinishMatchService} instance.
+     * @return {@link TransactionalService} instance.
      */
-    FinishMatchService getFinishMatchService();
+    TransactionalService getTransactionalService();
 
 
     /**

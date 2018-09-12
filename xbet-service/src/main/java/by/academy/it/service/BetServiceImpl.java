@@ -24,6 +24,8 @@ class BetServiceImpl implements BetService {
 
     /**
      * Constructs an instance of the {@code BetService}.
+     *
+     * @param betDao a BetDao instance.
      */
     BetServiceImpl(BetDao betDao) {
         this.betDao = betDao;
@@ -80,7 +82,12 @@ class BetServiceImpl implements BetService {
                 request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.CREATE_BET_MESSAGE);
                 response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during create bet operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_BET_ERROR);
 
@@ -113,7 +120,12 @@ class BetServiceImpl implements BetService {
                 request.getSession().setAttribute(Constants.UPDATED_BET, bet);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE + Constants.BET);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during show update bet page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_BET_ERROR);
 
@@ -179,7 +191,12 @@ class BetServiceImpl implements BetService {
                 request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.UPDATE_BET_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
 
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
                 logger.error("An exception occurred during update bet operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_BET_ERROR);
 
@@ -223,7 +240,7 @@ class BetServiceImpl implements BetService {
                 request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).
                         forward(request, response);
 
-            } catch (Exception e) {
+            } catch (DAOException e) {
                 logger.error("An exception occurred during get bets list operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
 
@@ -259,7 +276,7 @@ class BetServiceImpl implements BetService {
                 request.getRequestDispatcher(Constants.PATH + Constants.GET + Constants.BETS + Constants.JSP)
                         .forward(request, response);
 
-            } catch (Exception e) {
+            } catch (DAOException e) {
                 logger.error("An exception occurred during get all bets list operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
 
@@ -287,6 +304,11 @@ class BetServiceImpl implements BetService {
                 request.getSession().setAttribute(Constants.BETS_MESSAGE, Constants.DELETE_BET_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.BETS);
 
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during delete bet operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DELETE_ROLE_ERROR);

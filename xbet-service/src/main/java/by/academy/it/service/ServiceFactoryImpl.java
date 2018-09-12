@@ -14,7 +14,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     private static DaoFactory daoFactory;
 
     private BetService betService;
-    private FinishMatchService finishMatchService;
+    private TransactionalService transactionalService;
     private MatchService matchService;
     private static ModelService modelService;
     private ResultService resultService;
@@ -24,6 +24,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
     /**
      * Constructs an instance of ServiceFactory.
+     *
+     * @param factory a DaoFactory instance.
      */
     public ServiceFactoryImpl(DaoFactory factory) {
         daoFactory = factory;
@@ -46,17 +48,17 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
 
     /**
-     * Creates {@code FinishMatchService} instance if it is not created.
-     * Passes a DAO as a constructor parameter and returns the FinishMatchService instance.
+     * Creates {@code TransactionalService} instance if it is not created.
+     * Passes a DAO as a constructor parameter and returns the TransactionalService instance.
      *
-     * @return {@link by.academy.it.service.FinishMatchService} instance.
+     * @return {@link TransactionalService} instance.
      */
-    public FinishMatchService getFinishMatchService() {
-        if (finishMatchService == null) {
-            finishMatchService = new FinishMatchServiceImpl
+    public TransactionalService getTransactionalService() {
+        if (transactionalService == null) {
+            transactionalService = new TransactionalServiceImpl
                     (daoFactory.getBetDao(), daoFactory.getTransactionalDao(), daoFactory.getUserDao());
         }
-        return finishMatchService;
+        return transactionalService;
     }
 
 
@@ -138,7 +140,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
      */
     public UserService getUserService() {
         if (userService == null) {
-            userService = new UserServiceImpl(daoFactory.getUserDao(), daoFactory.getTransactionalDao());
+            userService = new UserServiceImpl(daoFactory.getUserDao());
         }
         return userService;
     }

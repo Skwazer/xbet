@@ -35,17 +35,6 @@ public interface UserService {
 
 
     /**
-     * Withdraws user's money and creates a bet entry.
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws ServletException if the request could not be handled.
-     * @throws IOException if an input or output error is detected.
-     */
-    void confirmBet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
-
-
-    /**
      * Deletes a user entry through {@link by.academy.it.dao.UserDao}.
      *
      * @param request {@code HttpServletRequest} request.

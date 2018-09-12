@@ -53,16 +53,14 @@ public class Controller extends HttpServlet {
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
      * @throws IOException if an input or output error is detected.
      */
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         Command command = FACTORY.getCommand(request);
-        try {
-            logger.info("command for this request is " + command.getClass().getSimpleName());
-            command.execute(request, response);
-        } catch (ServletException | IOException e) {
-            logger.error("Command execution is failed", e);
-        }
+        logger.info("command for this request is " + command.getClass().getSimpleName());
+        command.execute(request, response);
     }
 
 }
