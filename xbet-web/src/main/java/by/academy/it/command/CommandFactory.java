@@ -67,12 +67,6 @@ public class CommandFactory {
         commands.put(Constants.POST_CHANGE_ROLE, new UpdateRoleCommand(roleService));
         commands.put(Constants.POST_DELETE_ROLE, new DeleteRoleCommand(roleService));
         commands.put(Constants.GET_GET_BETS, new ShowBetsCommand(betService));
-        commands.put(Constants.GET_CREATE_BET, new ForwardRequestCommand(Constants.CREATE_BET));
-        commands.put(Constants.POST_CREATE_BET, new CreateBetCommand(betService));
-        commands.put(Constants.POST_UPDATE_BET, new ShowUpdateBetPageCommand(betService));
-        commands.put(Constants.GET_UPDATE_BET, new ForwardRequestCommand(Constants.UPDATE_BET));
-        commands.put(Constants.POST_CHANGE_BET, new UpdateBetCommand(betService));
-        commands.put(Constants.POST_DELETE_BET, new DeleteBetCommand(betService));
         commands.put(Constants.GET_GET_MATCHES, new ShowMatchesCommand(matchService));
         commands.put(Constants.GET_CREATE_MATCH, new ForwardRequestCommand(Constants.CREATE_MATCH));
         commands.put(Constants.POST_CREATE_MATCH, new CreateMatchCommand(matchService));

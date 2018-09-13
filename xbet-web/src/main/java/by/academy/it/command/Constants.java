@@ -55,14 +55,6 @@ public class Constants {
     static final String POST_CHANGE_ROLE = "POST/change/role";
     static final String POST_DELETE_ROLE = "POST/delete/role";
     static final String GET_GET_BETS = "GET/get/bets";
-    static final String GET_CREATE_BET = "GET/create/bet";
-    static final String CREATE_BET = "create/bet";
-    static final String POST_CREATE_BET = "POST/create/bet";
-    static final String POST_UPDATE_BET = "POST/update/bet";
-    static final String GET_UPDATE_BET = "GET/update/bet";
-    static final String UPDATE_BET = "update/bet";
-    static final String POST_CHANGE_BET = "POST/change/bet";
-    static final String POST_DELETE_BET = "POST/delete/bet";
     static final String GET_GET_MATCHES = "GET/get/matches";
     static final String GET_CREATE_MATCH = "GET/create/match";
     static final String CREATE_MATCH = "create/match";

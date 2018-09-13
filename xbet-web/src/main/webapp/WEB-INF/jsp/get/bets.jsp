@@ -14,7 +14,6 @@
     <fmt:message key="status" var="status"/>
     <fmt:message key="bet.result" var="betResult"/>
     <fmt:message key="change" var="change"/>
-    <fmt:message key="create" var="create"/>
 
 </fmt:bundle>
 
@@ -25,25 +24,10 @@
         <c:choose>
             <c:when test="${user.role eq 1}">
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-6 col-md-offset-3">
                         <div class="billing-details">
                             <div class="section-title">
-                                <c:choose>
-                                    <c:when test="${not empty betsMessage}">
-                                        <h3 class="message-title">
-                                            <fmt:bundle basename="i18n">
-                                                <fmt:message key="${betsMessage}" var="message"/>
-                                            </fmt:bundle>
-                                            <c:out value="${message}!"/>
-                                            <c:remove var="betsMessage" scope="session"/>
-                                        </h3>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <h3 class="title"><c:out value="${betsTitle}"/></h3>
-                                    </c:otherwise>
-                                </c:choose>
-                                <button class="primary-btn pull-right"><a href="<c:url value="/main/create/bet"/>">
-                                    <c:out value="${create}"/></a></button>
+                                <h3 class="title"><c:out value="${betsTitle}"/></h3>
                             </div>
                             <c:choose>
                                 <c:when test="${not empty allBets}">
@@ -57,7 +41,6 @@
                                             <th><c:out value="${coefficient}"/></th>
                                             <th><c:out value="${betTitle}"/></th>
                                             <th><c:out value="${status}"/></th>
-                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -70,13 +53,6 @@
                                                 <td><c:out value="${bet.bet}"/></td>
                                                 <td><c:out value="${bet.money}"/></td>
                                                 <td><c:out value="${bet.status}"/></td>
-                                                <td>
-                                                    <form class="clearfix" method="POST"
-                                                          action="<c:url value="/main/update/bet"/>">
-                                                        <input type="hidden" name="key" value="${bet.id}">
-                                                        <button class="main-btn pull-right"><c:out value="${change}"/></button>
-                                                    </form>
-                                                </td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

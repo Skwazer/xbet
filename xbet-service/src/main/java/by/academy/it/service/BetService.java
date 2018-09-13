@@ -11,36 +11,6 @@ import java.io.IOException;
 public interface BetService {
 
     /**
-     * Creates a bet entry through {@link by.academy.it.dao.BetDao}.
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws IOException if an input or output error is detected.
-     */
-    void createBet(HttpServletRequest request, HttpServletResponse response) throws IOException;
-
-
-    /**
-     * Retrieves a bet by id through {@link by.academy.it.dao.BetDao} and sends a redirect to 'update bet' page.
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws IOException if an input or output error is detected.
-     */
-    void showUpdateBetPage(HttpServletRequest request, HttpServletResponse response) throws IOException;
-
-
-    /**
-     * Updates a bet entry through {@link by.academy.it.dao.BetDao}.
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws IOException if an input or output error is detected.
-     */
-    void updateBet(HttpServletRequest request, HttpServletResponse response) throws IOException;
-
-
-    /**
      * Retrieves a list of the user's bets and sends it to 'bets page'.
      *
      * @param request {@code HttpServletRequest} request.
@@ -62,15 +32,5 @@ public interface BetService {
      */
     void showAllBets(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException;
-
-
-    /**
-     * Deletes a bet entry through {@link by.academy.it.dao.BetDao}.
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws IOException if an input or output error is detected.
-     */
-    void deleteBet(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

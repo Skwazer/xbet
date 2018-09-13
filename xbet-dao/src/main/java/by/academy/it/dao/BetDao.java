@@ -10,25 +10,6 @@ import java.util.List;
 public interface BetDao {
 
     /**
-     * Creates a new bet entry.
-     *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    void create(Bet bet) throws DAOException;
-
-
-    /**
-     * Retrieves a bet by id.
-     *
-     * @param id the id of a bet.
-     * @return {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    public Bet getById(int id) throws DAOException ;
-
-
-    /**
      * Retrieves a list of bets by user id.
      *
      * @param userId the id of a user.
@@ -47,24 +28,6 @@ public interface BetDao {
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     int getAmountOfUserBets(int userId) throws DAOException;
-
-
-    /**
-     * Deletes a bet entry.
-     *
-     * @param id the {@link by.academy.it.entity.Bet} id.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    void delete(int id) throws DAOException;
-
-
-    /**
-     * Updates a bet entry.
-     *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    public void update(Bet bet) throws DAOException;
 
 
     /**

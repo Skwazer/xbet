@@ -22,18 +22,12 @@ public class BetDaoImpl implements BetDao {
     private static final Logger logger = LoggerFactory.getLogger(BetDaoImpl.class);
     private ConnectionPool pool;
 
-    private static final String CREATE_QUERY = "INSERT INTO xbet.bets " +
-            "(user_id, match_id, bet_result, bet, money, status) VALUES ( ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE xbet.bets SET user_id = ?, match_id = ?, bet_result = ?, " +
-            "bet = ?, money = ?, status = ? WHERE id = ?";
     private static final String GET_BY_USER_ID_QUERY = "SELECT * FROM xbet.bets WHERE user_id = ? limit ?, 10";
-    private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.bets WHERE id = ?";
     private static final String GET_ALL_QUERY = "SELECT * FROM xbet.bets limit ?, 10";
     private static final String GET_AMOUNT_BY_USER_ID_QUERY = "SELECT COUNT(*) FROM xbet.bets WHERE user_id = ?";
     private static final String GET_AMOUNT_OF_ALL_BETS_QUERY = "SELECT COUNT(*) FROM xbet.bets";
     private static final String GET_BY_MATCH_ID_QUERY =
             "SELECT * FROM xbet.bets WHERE match_id = ?  AND status = 'active'";
-    private static final String DELETE_QUERY = "DELETE FROM xbet.bets WHERE id = ?";
 
 
     /**
@@ -44,70 +38,6 @@ public class BetDaoImpl implements BetDao {
     public BetDaoImpl(ConnectionPool connectionPool) {
         pool = connectionPool;
         logger.info("BetDao has been created");
-    }
-
-
-    /**
-     * Creates a new bet entry in the database.
-     *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    public void create(Bet bet) throws DAOException {
-        try (Connection connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(CREATE_QUERY))
-        {
-            statement.setInt(1, bet.getUser_id());
-            statement.setInt(2, bet.getMatch_id());
-            statement.setString(3, bet.getBetResult());
-            statement.setDouble(4, bet.getBet());
-            statement.setDouble(5, bet.getMoney());
-            statement.setString(6, bet.getStatus());
-            statement.executeUpdate();
-        } catch (SQLException | ConnectionPoolException e) {
-            logger.error("BetDao cannot create a bet in DAO", e);
-            throw new DAOException("BetDao cannot create a bet", e);
-        }
-    }
-
-
-    /**
-     * Retrieves a bet from the database by id.
-     *
-     * @param id the id of a bet.
-     * @return {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    public Bet getById(int id) throws DAOException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        Bet bet = null;
-        try {
-            connection = pool.getConnection();
-            connection.setReadOnly(true);
-            statement = connection.prepareStatement(GET_BY_ID_QUERY);
-            statement.setInt(1, id);
-            set = statement.executeQuery();
-            if (set.next()) {
-                bet = new Bet();
-                bet.setId(set.getInt(Constants.ID));
-                bet.setUser_id(set.getInt(Constants.USER_ID));
-                bet.setMatch_id(set.getInt(Constants.MATCH_ID));
-                bet.setBetResult(set.getString(Constants.BET_RESULT));
-                bet.setBet(set.getDouble(Constants.BET));
-                bet.setMoney(set.getDouble(Constants.MONEY));
-                bet.setStatus(set.getString(Constants.STATUS));
-            }
-        } catch (SQLException | ConnectionPoolException e) {
-            logger.error("BetDao get by id operation is failed", e);
-            throw new DAOException("BetDao get by id operation is failed", e);
-        } finally {
-            Utils.closeResultSet(set);
-            Utils.closeStatement(statement);
-            Utils.closeConnection(connection);
-        }
-        return bet;
     }
 
 
@@ -185,50 +115,6 @@ public class BetDaoImpl implements BetDao {
             Utils.closeConnection(connection);
         }
         return amount;
-    }
-
-
-    /**
-     * Deletes a bet entry from the database.
-     *
-     * @param id the {@link by.academy.it.entity.Bet} id.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    public void delete(int id) throws DAOException {
-        try (Connection connection = pool.getConnection();
-            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
-        {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        } catch (SQLException  | ConnectionPoolException e) {
-            logger.error("BetDao cannot delete a bet in DAO", e);
-            throw new DAOException("BetDao cannot delete a bet", e);
-        }
-    }
-
-
-    /**
-     * Updates a bet entry in the database.
-     *
-     * @param bet the {@link by.academy.it.entity.Bet} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
-     */
-    public void update(Bet bet) throws DAOException {
-        try (Connection connection = pool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY))
-        {
-            statement.setInt(1, bet.getUser_id());
-            statement.setInt(2, bet.getMatch_id());
-            statement.setString(3, bet.getBetResult());
-            statement.setDouble(4, bet.getBet());
-            statement.setDouble(5, bet.getMoney());
-            statement.setString(6, bet.getStatus());
-            statement.setInt(7, bet.getId());
-            statement.executeUpdate();
-        } catch (SQLException | ConnectionPoolException e) {
-            logger.error("BetDao cannot update a bet", e);
-            throw new DAOException("BetDao cannot update a bet", e);
-        }
     }
 
 
