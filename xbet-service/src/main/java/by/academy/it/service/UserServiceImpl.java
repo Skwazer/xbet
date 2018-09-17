@@ -135,10 +135,9 @@ class UserServiceImpl implements UserService {
      * @param login the user's login.
      * @param amount money to add or remove.
      * @return the {@link by.academy.it.entity.User} entity.
-     * @throws by.academy.it.service.ServiceException if a user is not found.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    private User updateUserBalance(String login, double amount) throws ServiceException, DAOException {
+    private User updateUserBalance(String login, double amount) throws DAOException {
         User user;
         user = userDao.findByLogin(login);
         if (user != null) {
@@ -146,9 +145,6 @@ class UserServiceImpl implements UserService {
             userDao.updateBalance(login, balance);
             user.setBalance(balance);
             logger.info("user's balance has been updated");
-        } else {
-            logger.error("UserService cannot updateBalance user's balance");
-            throw new ServiceException("UserService user is not found");
         }
         return user;
     }
@@ -543,6 +539,13 @@ class UserServiceImpl implements UserService {
                 double amount = Double.parseDouble(param);
                 User sessionUser = (User) request.getSession().getAttribute(Constants.USER);
                 User user = updateUserBalance(sessionUser.getLogin(), amount);
+                if (user == null) {
+                    logger.error("Cannot find a user with such login");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USER_NOT_FOUND);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
                 sessionUser.setBalance(user.getBalance());
 
                 response.sendRedirect(Utils.getReferrerURI(request));
@@ -556,11 +559,6 @@ class UserServiceImpl implements UserService {
             } catch (DAOException e) {
                 logger.error("An exception occurred during top up balance operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TOPUP_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            } catch (ServiceException e) {
-                logger.error("Cannot find a user with such login", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USER_NOT_FOUND);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }

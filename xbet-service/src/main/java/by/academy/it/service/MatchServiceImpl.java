@@ -36,27 +36,6 @@ class MatchServiceImpl implements MatchService {
 
 
     /**
-     * Retrieves a match entry by id through {@link by.academy.it.dao.MatchDao}.
-     *
-     * @param id the id of a match.
-     * @return the {@link by.academy.it.entity.Match} entity.
-     * @throws by.academy.it.dao.DAOException if an exception occurred during the findById operation.
-     * @throws by.academy.it.service.ServiceException if a found match is null.
-     */
-    private Match getMatchById(int id) throws DAOException, ServiceException {
-        Match match;
-            match = matchDao.findById(id);
-            if (match != null) {
-                ServiceFactoryImpl.getModelService().setTeams(match);
-            } else {
-                logger.error("MatchService match is null");
-                throw new ServiceException("MatchService match is null");
-            }
-        return match;
-    }
-
-
-    /**
      * Retrieves a match id, finds match, puts it in the session and sends to user 'place bet' page.
      *
      * @param request {@code HttpServletRequest} request.
@@ -68,7 +47,14 @@ class MatchServiceImpl implements MatchService {
         if (Utils.isValidString(matchId)) {
             try {
                 int id = Integer.parseInt(matchId);
-                Match match = getMatchById(id);
+                Match match = matchDao.findById(id);
+                if (match == null) {
+                    logger.error("Cannot find a match with such id");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_NOT_FOUND_ERROR);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
                 logger.info("match has been retrieved - [" + match.getId() + "]");
                 request.getSession().setAttribute(Constants.MATCH, match);
 
@@ -82,11 +68,6 @@ class MatchServiceImpl implements MatchService {
             } catch (DAOException e) {
                 logger.error("An exception occurred during get match operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_EXCEPTION);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            } catch (ServiceException e) {
-                logger.error("Cannot find a match with such id", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCH_NOT_FOUND_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
