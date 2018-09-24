@@ -23,6 +23,7 @@ public class TeamDaoImpl implements TeamDao {
     private static final String UPDATE_QUERY = "UPDATE xbet.teams SET name = ? WHERE id = ?";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.teams WHERE id = ?";
     private static final String GET_TEAMS_QUERY = "SELECT * FROM xbet.teams ORDER BY id LIMIT ?, 10";
+    private static final String GET_TEAMS_IDS_QUERY = "SELECT id FROM xbet.teams ORDER BY id ASC";
     private static final String GET_AMOUNT_OF_ALL_TEAMS_QUERY = "SELECT COUNT(*) FROM xbet.teams";
     private static final String DELETE_QUERY = "DELETE FROM xbet.teams WHERE id = ?";
 
@@ -120,6 +121,37 @@ public class TeamDaoImpl implements TeamDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao get teams operation is failed", e);
             throw new DAOException("TeamDao get teams operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
+        }
+        return list;
+    }
+
+
+    /**
+     * Retrieves a list of teams' ids from the database.
+     *
+     * @return {@code List<Integer>} - the list of teams' ids.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public List<Integer> getIds() throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        List<Integer> list = new ArrayList<>();
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_TEAMS_IDS_QUERY);
+            while (set.next()) {
+                list.add(set.getInt(Constants.ID));
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("TeamDao get teams' ids operation is failed", e);
+            throw new DAOException("TeamDao get teams' ids operation is failed", e);
         } finally {
             Utils.closeResultSet(set);
             Utils.closeStatement(statement);

@@ -67,6 +67,15 @@ public interface MatchDao {
 
 
     /**
+     * Retrieves a list of matches' ids.
+     *
+     * @return {@code List<Integer>} - the list of matches' ids.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Integer> getIds() throws DAOException;
+
+
+    /**
      * Deletes a match entry.
      *
      * @param id the {@link by.academy.it.entity.Match} id.

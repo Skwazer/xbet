@@ -99,11 +99,21 @@
                                     <div id="balanceDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="role"><c:out value="${enterRole}"/></label>
-                                    <input id="role" class="input" type="number" name="role" onchange="roleCheck()"
-                                           value="<c:out value="${updateUser.role}"/>"
-                                           <c:if test="${updateUser.id eq 1}">readonly</c:if>>
-                                    <div id="roleDiv" style="display:none;"></div>
+                                    <label for="select"><c:out value="${enterRole}"/></label>
+                                    <select id="select" name="role" class="form-control" form="createForm">
+                                        <c:choose>
+                                            <c:when test="${updateUser.role eq 1}">
+                                                <option value="1"><c:out value="1"/></option>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:forEach var="roleId" items="${rolesIds}">
+                                                    <option <c:if test="${roleId eq updateUser.role}">selected</c:if>
+                                                            value="${roleId}">
+                                                        <c:out value="${roleId}"/></option>
+                                                </c:forEach>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </select>
                                 </div>
                                 <button class="primary-btn pull-left"><c:out value="${update}"/></button>
                                 <button form="deleteForm" class="primary-btn pull-right">
@@ -115,7 +125,6 @@
                         </div>
                     </div>
                 </div>
-                <c:remove var="updateUser" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

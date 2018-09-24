@@ -21,6 +21,7 @@ public class ServiceFactoryImpl implements ServiceFactory {
     private RoleService roleService;
     private TeamService teamService;
     private UserService userService;
+    private static IdService idService;
 
     /**
      * Constructs an instance of ServiceFactory.
@@ -143,6 +144,20 @@ public class ServiceFactoryImpl implements ServiceFactory {
             userService = new UserServiceImpl(daoFactory.getUserDao());
         }
         return userService;
+    }
+
+
+    /**
+     * Creates {@code IdService} instance if it is not created.
+     * Passes a DAO as a constructor parameter and returns the IdService instance.
+     *
+     * @return {@link by.academy.it.service.IdService} instance.
+     */
+    static IdService getIdService() {
+        if (idService == null) {
+            idService = new IdServiceImpl(daoFactory.getRoleDao(), daoFactory.getTeamDao(), daoFactory.getMatchDao());
+        }
+        return idService;
     }
 
 }

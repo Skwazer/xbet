@@ -297,8 +297,10 @@ class UserServiceImpl implements UserService {
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
      */
-    public void showUpdateUserPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void showUpdateUserPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
         if (Utils.isValidString(key)) {
             try {
@@ -306,32 +308,39 @@ class UserServiceImpl implements UserService {
                 User user = userDao.findById(id);
                 if (user != null) {
                     user.setPassword(null);
-                    request.getSession().setAttribute(Constants.UPDATED_USER, user);
+                    request.setAttribute(Constants.UPDATED_USER, user);
                     logger.info("user has been retrieved");
 
-                    response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_USER);
+                    List<Integer> rolesIds = ServiceFactoryImpl.getIdService().getRolesIds();
+                    if (rolesIds != null) {
+                        request.setAttribute(Constants.ROLES_IDS, rolesIds);
+                        logger.info("roles ids have been retrieved");
+                    } else {
+                        logger.warn("Roles ids have not been found");
+                        request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.ROLES_IDS_NOT_FOUND);
+                        response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                        return;
+                    }
+                    request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_USER + Constants.JSP)
+                            .forward(request, response);
 
                 } else {
                     logger.warn("User with such id has not been found");
                     request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.USER_NOT_FOUND);
-
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
             } catch (NumberFormatException e) {
                 logger.error("Cannot parse a number parameter", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during show update user page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_USER_ERROR);
-
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         } else {
             logger.warn("Show update user page operation parameter is not valid");
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_USER_PARAMETER_ERROR);
-
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }
@@ -422,6 +431,13 @@ class UserServiceImpl implements UserService {
         }
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
         logger.info("locale has been changed - " + locale);
+
+        //todo delete code below
+        try {
+            request.getSession().setAttribute(Constants.USER, userDao.findByLogin("admin"));
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
 
         response.sendRedirect(Utils.getReferrerURI(request));
     }

@@ -167,5 +167,11 @@ class Constants {
     static final String MATCH_NOT_FOUND_ERROR = "match.not.found.error";
     static final String DATE_PARSE_ERROR = "date.parse.error";
     static final String BALANCE_NOT_ENOUGH = "balance.not.enough";
+    static final String ROLES_IDS = "rolesIds";
+    static final String ROLES_IDS_NOT_FOUND = "roles.ids.not.found";
+    static final String TEAMS_IDS = "teamsIds";
+    static final String TEAMS_IDS_NOT_FOUND = "teams.ids.not.found";
+    static final String MATCHES_IDS = "matchesIds";
+    static final String MATCHES_IDS_NOT_FOUND = "matches.ids.not.found";
 
 }

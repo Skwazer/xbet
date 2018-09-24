@@ -22,6 +22,7 @@ public class RoleDaoImpl implements RoleDao {
     private static final String CREATE_QUERY = "INSERT INTO xbet.roles (role) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.roles WHERE id = ?";
     private static final String GET_ROLES_QUERY = "SELECT * FROM xbet.roles ORDER BY id";
+    private static final String GET_ROLES_IDS_QUERY = "SELECT id FROM xbet.roles ORDER BY id ASC";
     private static final String UPDATE_QUERY = "UPDATE xbet.roles SET role = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.roles WHERE id = ?";
 
@@ -94,7 +95,7 @@ public class RoleDaoImpl implements RoleDao {
     /**
      * Retrieves a list of role entries from the database.
      *
-     * @return {@link by.academy.it.entity.Role} entity.
+     * @return a list of {@link by.academy.it.entity.Role} entities.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     public List<Role> getRoles() throws DAOException {
@@ -117,6 +118,37 @@ public class RoleDaoImpl implements RoleDao {
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao get roles operation is failed", e);
             throw new DAOException("RoleDao get roles operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
+        }
+        return list;
+    }
+
+
+    /**
+     * Retrieves a list role entries' ids from the database.
+     *
+     * @return a list of {@link by.academy.it.entity.Role} ids.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public List<Integer> getIds() throws DAOException {
+        List<Integer> list = new ArrayList<>();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_ROLES_IDS_QUERY);
+            while (set.next()) {
+                list.add(set.getInt(Constants.ID));
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("RoleDao get roles ids operation is failed", e);
+            throw new DAOException("RoleDao get roles ids operation is failed", e);
         } finally {
             Utils.closeResultSet(set);
             Utils.closeStatement(statement);

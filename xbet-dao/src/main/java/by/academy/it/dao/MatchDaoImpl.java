@@ -31,6 +31,7 @@ public class MatchDaoImpl implements MatchDao {
     private static final String GET_MATCHES_QUERY = "SELECT * FROM xbet.matches LIMIT ?, 10";
     private static final String GET_AMOUNT_OF_UNPLAYED_MATCHES_QUERY = "SELECT COUNT(*) FROM xbet.matches WHERE id " +
             "NOT IN (SELECT m.id FROM  xbet.matches m JOIN xbet.results r ON m.id = r.matches_id)";
+    private static final String GET_MATCHES_IDS_QUERY = "SELECT id FROM xbet.matches ORDER BY id ASC";
     private static final String GET_AMOUNT_OF_ALL_MATCHES_QUERY = "SELECT COUNT(*) FROM xbet.matches";
     private static final String DELETE_QUERY = "DELETE FROM xbet.matches WHERE id = ?";
 
@@ -236,6 +237,7 @@ public class MatchDaoImpl implements MatchDao {
         return list;
     }
 
+
     /**
      * Retrieves amount of all matches from the database.
      *
@@ -264,6 +266,37 @@ public class MatchDaoImpl implements MatchDao {
             Utils.closeConnection(connection);
         }
         return amount;
+    }
+
+
+    /**
+     * Retrieves a list of matches' ids from the database.
+     *
+     * @return {@code List<Integer>} - the list of matches' ids.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public List<Integer> getIds() throws DAOException {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet set = null;
+        List<Integer> list = new ArrayList<>(10);
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.createStatement();
+            set = statement.executeQuery(GET_MATCHES_IDS_QUERY);
+            while (set.next()) {
+                list.add(set.getInt(Constants.ID));
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("MatchDao get matches' ids operation is failed", e);
+            throw new DAOException("MatchDao get matches' ids operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
+        }
+        return list;
     }
 
 

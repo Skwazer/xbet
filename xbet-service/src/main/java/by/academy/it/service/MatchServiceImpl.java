@@ -56,6 +56,7 @@ class MatchServiceImpl implements MatchService {
                     return;
                 }
                 logger.info("match has been retrieved - [" + match.getId() + "]");
+                ServiceFactoryImpl.getModelService().setTeams(match);
                 request.getSession().setAttribute(Constants.MATCH, match);
 
                 response.sendRedirect(request.getContextPath() + Constants.MAIN_BET);
@@ -243,33 +244,43 @@ class MatchServiceImpl implements MatchService {
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
      */
-    public void showUpdateMatchPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void showUpdateMatchPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
         if (Utils.isValidString(key)) {
             try {
                 int id = Integer.parseInt(key);
                 Match match = matchDao.findById(id);
                 logger.info("match has been retrieved");
+                request.setAttribute(Constants.UPDATED_MATCH, match);
 
-                request.getSession().setAttribute(Constants.UPDATED_MATCH, match);
-                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_MATCH);
+                List<Integer> teamsIds = ServiceFactoryImpl.getIdService().getTeamsIds();
+                if (teamsIds != null) {
+                    request.setAttribute(Constants.TEAMS_IDS, teamsIds);
+                    logger.info("teams ids have been retrieved");
+                } else {
+                    logger.warn("Teams ids have not been found");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TEAMS_IDS_NOT_FOUND);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_MATCH + Constants.JSP)
+                        .forward(request, response);
 
             } catch (NumberFormatException e) {
                 logger.error("Cannot parse a number parameter", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during show update match page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_MATCH_ERROR);
-
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         } else {
             logger.warn("Show update match page operation parameter is not valid");
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
-
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }

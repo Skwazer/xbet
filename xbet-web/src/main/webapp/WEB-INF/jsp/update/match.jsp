@@ -60,16 +60,24 @@
                                     <div id="dateDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="team1ID"><c:out value="${team1ID}"/></label>
-                                    <input id="team1ID" class="input" type="number" name="team1ID" min="1" max="50"
-                                           onchange="checkTeam1ID()" value="<c:out value="${updateMatch.team1_id}"/>">
-                                    <div id="team1IDDiv" style="display:none;"></div>
+                                    <label for="select1"><c:out value="${team1ID}"/></label>
+                                    <select id="select1" name="team1ID" class="form-control" form="createForm">
+                                        <c:forEach var="teamId" items="${teamsIds}">
+                                            <option <c:if test="${teamId eq updateMatch.team1_id}">selected</c:if>
+                                                    value="${teamId}">
+                                                <c:out value="${teamId}"/></option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="team2ID"><c:out value="${team2ID}"/></label>
-                                    <input id="team2ID" class="input" type="number" name="team2ID" min="1" max="50"
-                                           onchange="checkTeam2ID()" value="<c:out value="${updateMatch.team2_id}"/>">
-                                    <div id="team2IDDiv" style="display:none;"></div>
+                                    <label for="select2"><c:out value="${team2ID}"/></label>
+                                    <select id="select2" name="team2ID" class="form-control" form="createForm">
+                                        <c:forEach var="teamId" items="${teamsIds}">
+                                            <option <c:if test="${teamId eq updateMatch.team2_id}">selected</c:if>
+                                                    value="${teamId}">
+                                                <c:out value="${teamId}"/></option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="v1"><c:out value="${match1}"/></label>
@@ -117,7 +125,6 @@
                         </div>
                     </div>
                 </div>
-                <c:remove var="updateMatch" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

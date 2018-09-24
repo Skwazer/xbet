@@ -31,10 +31,19 @@ public interface RoleDao {
     /**
      * Retrieves a list of role entries.
      *
-     * @return {@link by.academy.it.entity.Role} entity.
+     * @return list of {@link by.academy.it.entity.Role} entities.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
     List<Role> getRoles() throws DAOException;
+
+
+    /**
+     * Retrieves a list role entries' ids.
+     *
+     * @return list of {@link by.academy.it.entity.Role} ids.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Integer> getIds() throws DAOException;
 
 
     /**

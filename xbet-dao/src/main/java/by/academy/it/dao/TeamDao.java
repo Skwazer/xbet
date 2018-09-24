@@ -30,6 +30,15 @@ public interface TeamDao {
 
 
     /**
+     * Retrieves a list of teams' ids.
+     *
+     * @return {@code List<Integer>} - the list of teams' ids.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    List<Integer> getIds() throws DAOException;
+
+
+    /**
      * Retrieves amount of all teams.
      *
      * @return amount of all teams.

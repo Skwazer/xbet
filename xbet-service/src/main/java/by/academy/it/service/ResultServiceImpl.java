@@ -178,33 +178,43 @@ class ResultServiceImpl implements ResultService {
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
      */
-    public void showUpdateResultPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void showUpdateResultPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
         if (Utils.isValidString(key)) {
             try {
                 int id = Integer.parseInt(key);
                 Result result = resultDao.findById(id);
                 logger.info("result has been retrieved");
+                request.setAttribute(Constants.UPDATED_RESULT, result);
 
-                request.getSession().setAttribute(Constants.UPDATED_RESULT, result);
-                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_RESULT);
+                List<Integer> matchesIds = ServiceFactoryImpl.getIdService().getMatchesIds();
+                if (matchesIds != null) {
+                    request.setAttribute(Constants.MATCHES_IDS, matchesIds);
+                    logger.info("matches ids have been retrieved");
+                } else {
+                    logger.warn("Matches ids have not been found");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCHES_IDS_NOT_FOUND);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_RESULT + Constants.JSP)
+                        .forward(request, response);
 
             } catch (NumberFormatException e) {
                 logger.error("Cannot parse a number parameter", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             } catch (DAOException e) {
                 logger.error("An exception occurred during show update result page operation", e);
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_RESULT_ERROR);
-
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         } else {
             logger.warn("Show update result page operation parameter is not valid");
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
-
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }

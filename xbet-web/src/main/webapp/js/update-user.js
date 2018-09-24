@@ -131,30 +131,3 @@ function balanceMessage(result) {
         $('#balanceDiv').css("display", "block")
     }
 }
-
-function roleCheck() {
-    var role = $("#role").val();
-    if (role === "") {
-        $('#roleDiv').css("display", "none");
-        alert("<c:out value="${roleRequired}"/>");
-    } else if (role <= 0) {
-        roleMessage('NEGATIVE');
-    } else if (role > 10) {
-        roleMessage('EXCESS');
-    } else {
-        roleMessage('SUCCESS');
-    }
-}
-
-function roleMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#roleDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#roleDiv').css("display", "block")
-    } else if (result === 'NEGATIVE') {
-        $('#roleDiv').html("<p style='color: red'><c:out value="${roleNegative}"/></p>");
-        $('#roleDiv').css("display", "block")
-    } else if (result === 'EXCESS') {
-        $('#roleDiv').html("<p style='color: red'><c:out value="${roleExcess}"/></p>");
-        $('#roleDiv').css("display", "block")
-    }
-}

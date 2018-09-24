@@ -45,10 +45,14 @@
                                            value="<c:out value="${updateResult.id}"/>" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="matchID"><c:out value="${matchIdTitle}"/></label>
-                                    <input id="matchID" class="input" type="number" name="matchID" min="1" max="100"
-                                           onchange="checkMatchID()" value="${updateResult.matchId}">
-                                    <div id="matchIDDiv" style="display:none;"></div>
+                                    <label for="select1"><c:out value="${matchIdTitle}"/></label>
+                                    <select id="select1" name="matchID" class="form-control" form="createForm">
+                                        <c:forEach var="matchId" items="${matchesIds}">
+                                            <option <c:if test="${matchId eq updateResult.matchId}">selected</c:if>
+                                                    value="${matchId}">
+                                                <c:out value="${matchId}"/></option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="team1Goals"><c:out value="${team1GoalsTitle}"/></label>
@@ -80,7 +84,6 @@
                         </div>
                     </div>
                 </div>
-                <c:remove var="updateResult" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

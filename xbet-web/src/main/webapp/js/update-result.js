@@ -1,25 +1,3 @@
-function checkMatchID() {
-    var matchID = $("#matchID").val();
-    if (matchID === "") {
-        $('#matchIDDiv').css("display", "none");
-        alert("<c:out value="${matchIDRequired}"/>");
-    }  else if (matchID < 1 || matchID > 100) {
-        matchIDMessage("INCORRECT");
-    } else {
-        matchIDMessage("SUCCESS");
-    }
-}
-
-function matchIDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#matchIDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#matchIDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#matchIDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#matchIDDiv').css("display", "block")
-    }
-}
-
 function checkTeam1Goals() {
     var team1Goals = $("#team1Goals").val();
     if (team1Goals === "") {

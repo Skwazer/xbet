@@ -6,50 +6,6 @@ function checkDate() {
     }
 }
 
-function checkTeam1ID() {
-    var team1ID = $("#team1ID").val();
-    if (team1ID === "") {
-        $('#team1IDDiv').css("display", "none");
-        alert("<c:out value="${team1Required}"/>");
-    } else if (team1ID < 1 || team1ID > 50) {
-        team1IDMessage("INCORRECT");
-    } else {
-        team1IDMessage("SUCCESS");
-    }
-}
-
-function team1IDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#team1IDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#team1IDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#team1IDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#team1IDDiv').css("display", "block")
-    }
-}
-
-function checkTeam2ID() {
-    var team2ID = $("#team2ID").val();
-    if (team2ID === "") {
-        $('#team2IDDiv').css("display", "none");
-        alert("<c:out value="${team2Required}"/>");
-    } else if (team2ID < 1 || team2ID > 50) {
-        team2IDMessage("INCORRECT");
-    } else {
-        team2IDMessage("SUCCESS");
-    }
-}
-
-function team2IDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#team2IDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#team2IDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#team2IDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#team2IDDiv').css("display", "block")
-    }
-}
-
 function check1() {
     var v1 = $("#v1").val();
     if (v1 === "") {

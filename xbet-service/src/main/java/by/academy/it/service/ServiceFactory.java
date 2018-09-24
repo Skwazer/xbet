@@ -66,4 +66,5 @@ public interface ServiceFactory {
      * @return {@link by.academy.it.service.UserService} instance.
      */
     UserService getUserService();
+
 }
