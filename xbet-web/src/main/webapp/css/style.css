@@ -167,6 +167,15 @@ hr {
   color: #F8694A !important;
 }
 
+.normal {
+  font-weight: normal;
+  color: #757575;
+}
+
+.no-radius {
+  border-radius: 0;
+}
+
 .input {
   width: 100%;
   height: 40px;

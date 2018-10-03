@@ -53,7 +53,7 @@ public class CommandFactory {
         commands.put(Constants.GET_BETS, new ShowUserBetsCommand(betService));
         commands.put(Constants.POST_MATCHES, new FinishMatchCommand(transactionalService));
         commands.put(Constants.GET_GET_USERS, new ShowUsersCommand(userService));
-        commands.put(Constants.GET_CREATE_USER, new ForwardRequestCommand(Constants.CREATE_USER));
+        commands.put(Constants.GET_CREATE_USER, new ShowCreateUserPage(userService));
         commands.put(Constants.POST_CREATE_USER, new CreateUserCommand(userService));
         commands.put(Constants.POST_UPDATE_USER, new ShowUpdateUserPageCommand(userService));
         commands.put(Constants.POST_CHANGE_USER, new UpdateUserCommand(userService));
@@ -68,14 +68,14 @@ public class CommandFactory {
         commands.put(Constants.POST_DELETE_ROLE, new DeleteRoleCommand(roleService));
         commands.put(Constants.GET_GET_BETS, new ShowBetsCommand(betService));
         commands.put(Constants.GET_GET_MATCHES, new ShowMatchesCommand(matchService));
-        commands.put(Constants.GET_CREATE_MATCH, new ForwardRequestCommand(Constants.CREATE_MATCH));
+        commands.put(Constants.GET_CREATE_MATCH, new ShowCreateMatchPageCommand(matchService));
         commands.put(Constants.POST_CREATE_MATCH, new CreateMatchCommand(matchService));
         commands.put(Constants.POST_UPDATE_MATCH, new ShowUpdateMatchPageCommand(matchService));
         commands.put(Constants.GET_UPDATE_MATCH, new ForwardRequestCommand(Constants.UPDATE_MATCH));
         commands.put(Constants.POST_CHANGE_MATCH, new UpdateMatchCommand(matchService));
         commands.put(Constants.POST_DELETE_MATCH, new DeleteMatchCommand(matchService));
         commands.put(Constants.GET_GET_RESULTS, new ShowResultsCommand(resultService));
-        commands.put(Constants.GET_CREATE_RESULT, new ForwardRequestCommand(Constants.CREATE_RESULT));
+        commands.put(Constants.GET_CREATE_RESULT, new ShowCreateResultPageCommand(resultService));
         commands.put(Constants.POST_CREATE_RESULT, new CreateResultCommand(resultService));
         commands.put(Constants.POST_UPDATE_RESULT, new ShowUpdateResultPageCommand(resultService));
         commands.put(Constants.GET_UPDATE_RESULT, new ForwardRequestCommand(Constants.UPDATE_RESULT));

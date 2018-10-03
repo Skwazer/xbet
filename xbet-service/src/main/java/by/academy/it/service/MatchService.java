@@ -66,6 +66,18 @@ public interface MatchService {
 
 
     /**
+     * Retrieves a list of teams' ids and sends forward to 'create match' page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
+     */
+    void showCreateMatchPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException;
+
+
+    /**
      * Updates a match entry through {@link by.academy.it.dao.MatchDao}.
      *
      * @param request {@code HttpServletRequest} request.

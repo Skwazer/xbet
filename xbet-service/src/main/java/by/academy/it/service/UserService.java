@@ -78,6 +78,18 @@ public interface UserService {
 
 
     /**
+     * Retrieves a list of roles' ids and sends forward to 'create user' page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
+     */
+    void showCreateUserPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException;
+
+
+    /**
      * Updates a user entry through {@link by.academy.it.dao.UserDao}.
      *
      * @param request {@code HttpServletRequest} request.

@@ -22,7 +22,7 @@ public class RoleDaoImpl implements RoleDao {
     private static final String CREATE_QUERY = "INSERT INTO xbet.roles (role) VALUES (?)";
     private static final String GET_BY_ID_QUERY = "SELECT * FROM xbet.roles WHERE id = ?";
     private static final String GET_ROLES_QUERY = "SELECT * FROM xbet.roles ORDER BY id";
-    private static final String GET_ROLES_IDS_QUERY = "SELECT id FROM xbet.roles ORDER BY id ASC";
+    private static final String GET_ROLES_IDS_QUERY = "SELECT id FROM xbet.roles ORDER BY id";
     private static final String UPDATE_QUERY = "UPDATE xbet.roles SET role = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM xbet.roles WHERE id = ?";
 

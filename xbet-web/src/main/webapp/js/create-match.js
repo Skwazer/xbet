@@ -1,6 +1,4 @@
 var isDateCorrect = false;
-var isTeam1IDCorrect = false;
-var isTeam2IDCorrect = false;
 var is1Correct = false;
 var isXCorrect = false;
 var is2Correct = false;
@@ -16,56 +14,6 @@ function checkDate() {
         isDateCorrect = false;
     } else {
         isDateCorrect = true;
-    }
-}
-
-function checkTeam1ID() {
-    var team1ID = $("#team1ID").val();
-    if (team1ID === "") {
-        $('#team1IDDiv').css("display", "none");
-        alert("<c:out value="${team1Required}"/>");
-        isTeam1IDCorrect = false;
-    } else if (team1ID < 1 || team1ID > 50) {
-        isTeam1IDCorrect = false;
-        team1IDMessage("INCORRECT");
-    } else {
-        isTeam1IDCorrect = true;
-        team1IDMessage("SUCCESS");
-    }
-}
-
-function team1IDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#team1IDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#team1IDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#team1IDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#team1IDDiv').css("display", "block")
-    }
-}
-
-function checkTeam2ID() {
-    var team2ID = $("#team2ID").val();
-    if (team2ID === "") {
-        $('#team2IDDiv').css("display", "none");
-        alert("<c:out value="${team2Required}"/>");
-        isTeam2IDCorrect = false;
-    } else if (team2ID < 1 || team2ID > 50) {
-        isTeam2IDCorrect = false;
-        team2IDMessage("INCORRECT");
-    } else {
-        isTeam2IDCorrect = true;
-        team2IDMessage("SUCCESS");
-    }
-}
-
-function team2IDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#team2IDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#team2IDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#team2IDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#team2IDDiv').css("display", "block")
     }
 }
 
@@ -220,8 +168,7 @@ function X2Message(result) {
 }
 
 function changeFormAction() {
-    var result = isTeam1IDCorrect && isTeam2IDCorrect && is1Correct && isXCorrect && is2Correct
-    && is1XCorrect && is12Correct && is2XCorrect && isDateCorrect;
+    var result = is1Correct && isXCorrect && is2Correct && is1XCorrect && is12Correct && is2XCorrect && isDateCorrect;
     if (result) {
         var form = document.getElementById('createForm');
         form.action = "<c:url value="/main/create/match"/>";

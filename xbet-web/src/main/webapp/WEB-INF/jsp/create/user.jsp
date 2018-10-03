@@ -96,9 +96,14 @@
                                     <div id="balanceDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="role" class="input" type="number" name="role" onchange="roleCheck()"
-                                           placeholder="<c:out value="${enterRole}"/>">
-                                    <div id="roleDiv" style="display:none;"></div>
+
+                                    <label for="select" class="normal"><c:out value="${enterRole}"/></label>
+                                    <select id="select" name="role" class="form-control no-radius" form="createForm">
+                                        <c:forEach var="roleId" items="${rolesIds}">
+                                            <option value="${roleId}"><c:out value="${roleId}"/></option>
+                                        </c:forEach>
+                                    </select>
+
                                 </div>
                             </form>
                             <button id="createButton" class="primary-btn pull-left"

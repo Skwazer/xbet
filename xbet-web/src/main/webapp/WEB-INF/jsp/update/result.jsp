@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="select1"><c:out value="${matchIdTitle}"/></label>
-                                    <select id="select1" name="matchID" class="form-control" form="createForm">
+                                    <select id="select1" name="matchID" class="form-control no-radius" form="createForm">
                                         <c:forEach var="matchId" items="${matchesIds}">
                                             <option <c:if test="${matchId eq updateResult.matchId}">selected</c:if>
                                                     value="${matchId}">
@@ -68,7 +68,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="result"><c:out value="${updateResult.result}"/></label>
-                                    <select id="result" name="result" class="form-control" form="createForm">
+                                    <select id="result" name="result" class="form-control no-radius" form="createForm">
                                         <option value="1"><c:out value="${match1}"/></option>
                                         <option value="X" selected><c:out value="${matchX}"/></option>
                                         <option value="2"><c:out value="${match2}"/></option>

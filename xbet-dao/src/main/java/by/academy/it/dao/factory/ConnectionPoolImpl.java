@@ -30,6 +30,8 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     /**
      * Creates an instance of the connection pool using properties from database.properties file.
+     *
+     * @throws by.academy.it.dao.factory.ConnectionPoolException if an error occurred during the operation.
      */
     public ConnectionPoolImpl() throws ConnectionPoolException {
         try {

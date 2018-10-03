@@ -1,31 +1,5 @@
-var isMatchIDCorrect = false;
 var isTeam1GoalsCorrect = false;
 var isTeam2GoalsCorrect = false;
-
-function checkMatchID() {
-    var matchID = $("#matchID").val();
-    if (matchID === "") {
-        $('#matchIDDiv').css("display", "none");
-        alert("<c:out value="${matchIDRequired}"/>");
-        isMatchIDCorrect = false;
-    }  else if (matchID < 1 || matchID > 100) {
-        isMatchIDCorrect = false;
-        matchIDMessage("INCORRECT");
-    } else {
-        isMatchIDCorrect = true;
-        matchIDMessage("SUCCESS");
-    }
-}
-
-function matchIDMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#matchIDDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#matchIDDiv').css("display", "block")
-    } else if (result === 'INCORRECT') {
-        $('#matchIDDiv').html("<p style='color: red'><c:out value="${negative}"/></p>");
-        $('#matchIDDiv').css("display", "block")
-    }
-}
 
 function checkTeam1Goals() {
     var team1Goals = $("#team1Goals").val();
@@ -78,7 +52,7 @@ function team2GoalsMessage(result) {
 }
 
 function changeFormAction() {
-    var result = isMatchIDCorrect && isTeam1GoalsCorrect && isTeam2GoalsCorrect;
+    var result = isTeam1GoalsCorrect && isTeam2GoalsCorrect;
     if (result) {
         var form = document.getElementById('createForm');
         form.action = "<c:url value="/main/create/result"/>";

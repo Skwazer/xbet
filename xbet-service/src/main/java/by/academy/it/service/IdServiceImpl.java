@@ -25,6 +25,7 @@ class IdServiceImpl implements IdService {
      *
      * @param roleDao a RoleDao instance.
      * @param teamDao a TeamDao instance.
+     * @param matchDao a MatchDao instance.
      */
     IdServiceImpl(RoleDao roleDao, TeamDao teamDao, MatchDao matchDao) {
         this.roleDao = roleDao;

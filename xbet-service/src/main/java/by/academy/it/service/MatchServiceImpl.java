@@ -287,6 +287,38 @@ class MatchServiceImpl implements MatchService {
 
 
     /**
+     * Retrieves a list of teams' ids and sends forward to 'create match' page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
+     */
+    public void showCreateMatchPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try {
+            List<Integer> teamsIds = ServiceFactoryImpl.getIdService().getTeamsIds();
+            if (teamsIds != null) {
+                request.setAttribute(Constants.TEAMS_IDS, teamsIds);
+                logger.info("teams ids have been retrieved");
+            } else {
+                logger.warn("Teams ids have not been found");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TEAMS_IDS_NOT_FOUND);
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                return;
+            }
+            request.getRequestDispatcher(Constants.PATH + Constants.CREATE_MATCH + Constants.JSP)
+                    .forward(request, response);
+
+        }catch (DAOException e) {
+            logger.error("An exception occurred during show update match page operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_MATCH_ERROR);
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        }
+    }
+
+
+    /**
      * Updates a match entry through {@link by.academy.it.dao.MatchDao}.
      *
      * @param request {@code HttpServletRequest} request.

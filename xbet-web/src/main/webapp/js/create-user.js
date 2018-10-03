@@ -3,7 +3,6 @@ var isPasswordCorrect = false;
 var isFirstNameCorrect = false;
 var isLastNameCorrect = false;
 var isEmailCorrect = false;
-var isRoleCorrect = false;
 
 function checkLogin() {
     var login = $("#login").val();
@@ -216,41 +215,10 @@ function balanceMessage(result) {
     }
 }
 
-function roleCheck() {
-    var role = $("#role").val();
-    if (role === "") {
-        $('#roleDiv').css("display", "none");
-        alert("<c:out value="${roleRequired}"/>");
-        isRoleCorrect = false;
-    } else if (role <= 0) {
-        isRoleCorrect = false;
-        roleMessage('NEGATIVE');
-    } else if (role > 10) {
-        isRoleCorrect = false;
-        roleMessage('EXCESS');
-    } else {
-        isRoleCorrect = true;
-        roleMessage('SUCCESS');
-    }
-}
-
-function roleMessage(result) {
-    if (result === 'SUCCESS') {
-        $('#roleDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
-        $('#roleDiv').css("display", "block")
-    } else if (result === 'NEGATIVE') {
-        $('#roleDiv').html("<p style='color: red'><c:out value="${roleNegative}"/></p>");
-        $('#roleDiv').css("display", "block")
-    } else if (result === 'EXCESS') {
-        $('#roleDiv').html("<p style='color: red'><c:out value="${roleExcess}"/></p>");
-        $('#roleDiv').css("display", "block")
-    }
-}
-
 
 function changeFormAction() {
     var result = isEmailCorrect && isLoginCorrect && isPasswordCorrect && isFirstNameCorrect && isLastNameCorrect
-        && isBalanceCorrect && isRoleCorrect;
+        && isBalanceCorrect;
     if (result) {
         var form = document.getElementById('createForm');
         form.action = "<c:url value="/main/create/user"/>";

@@ -38,9 +38,12 @@
                             </div>
                             <form id="createForm" class="clearfix" method="post" action="#">
                                 <div class="form-group">
-                                    <input id="matchID" class="input" type="number" name="matchID" min="1" max="100"
-                                           onchange="checkMatchID()" placeholder="<c:out value="${matchIdTitle}"/>">
-                                    <div id="matchIDDiv" style="display:none;"></div>
+                                    <label for="select1" class="normal"><c:out value="${matchIdTitle}"/></label>
+                                    <select id="select1" name="matchID" class="form-control no-radius" form="createForm">
+                                        <c:forEach var="matchId" items="${matchesIds}">
+                                            <option value="${matchId}"><c:out value="${matchId}"/></option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <input id="team1Goals" class="input" type="number" name="team1Goals" min="1" max="6"
@@ -53,7 +56,7 @@
                                     <div id="team2GoalsDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <select id="result" name="result" class="form-control" form="createForm">
+                                    <select id="result" name="result" class="form-control no-radius" form="createForm">
                                         <option value="1"><c:out value="${match1}"/></option>
                                         <option value="X" selected><c:out value="${matchX}"/></option>
                                         <option value="2"><c:out value="${match2}"/></option>

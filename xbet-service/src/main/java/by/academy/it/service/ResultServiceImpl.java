@@ -173,7 +173,7 @@ class ResultServiceImpl implements ResultService {
 
 
     /**
-     * Retrieves a result by id through {@link by.academy.it.dao.ResultDao} and sends a redirect to 'update result' page.
+     * Retrieves a result by id through {@link by.academy.it.dao.ResultDao} and sends forward to 'update result' page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
@@ -215,6 +215,38 @@ class ResultServiceImpl implements ResultService {
         } else {
             logger.warn("Show update result page operation parameter is not valid");
             request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAM_ERROR);
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        }
+    }
+
+
+    /**
+     * Retrieves a list of results' ids and sends forward to 'create result' page.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
+     */
+    public void showCreateResultPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try {
+            List<Integer> matchesIds = ServiceFactoryImpl.getIdService().getMatchesIds();
+            if (matchesIds != null) {
+                request.setAttribute(Constants.MATCHES_IDS, matchesIds);
+                logger.info("matches ids have been retrieved");
+            } else {
+                logger.warn("Matches ids have not been found");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCHES_IDS_NOT_FOUND);
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                return;
+            }
+            request.getRequestDispatcher(Constants.PATH + Constants.CREATE_RESULT + Constants.JSP)
+                    .forward(request, response);
+
+        } catch (DAOException e) {
+            logger.error("An exception occurred during show update result page operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.SHOW_UPDATE_RESULT_ERROR);
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
     }

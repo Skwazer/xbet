@@ -51,15 +51,20 @@
                                     <div id="dateDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="team1ID" class="input" type="number" name="team1ID" min="1" max="50"
-                                           onchange="checkTeam1ID()" placeholder="<c:out value="${team1ID}"/>">
-                                    <div id="team1IDDiv" style="display:none;"></div>
+                                    <label for="select1" class="normal"><c:out value="${team1ID}"/></label>
+                                    <select id="select1" name="team1ID" class="form-control no-radius" form="createForm">
+                                        <c:forEach var="teamId" items="${teamsIds}">
+                                            <option value="${teamId}"><c:out value="${teamId}"/></option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <input id="team2ID" class="input" type="number" name="team2ID" min="1" max="50"
-                                           onchange="checkTeam2ID()"
-                                           placeholder="<c:out value="${team2ID}"/>">
-                                    <div id="team2IDDiv" style="display:none;"></div>
+                                    <label for="select2" class="normal"><c:out value="${team2ID}"/></label>
+                                    <select id="select2" name="team2ID" class="form-control no-radius" form="createForm">
+                                        <c:forEach var="teamId" items="${teamsIds}">
+                                            <option value="${teamId}"><c:out value="${teamId}"/></option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <input id="v1" class="input" type="number" name="v1" min="1" max="4" step="0.01"

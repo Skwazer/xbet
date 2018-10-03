@@ -100,7 +100,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="select"><c:out value="${enterRole}"/></label>
-                                    <select id="select" name="role" class="form-control" form="createForm">
+                                    <select id="select" name="role" class="form-control no-radius" form="createForm">
                                         <c:choose>
                                             <c:when test="${updateUser.role eq 1}">
                                                 <option value="1"><c:out value="1"/></option>

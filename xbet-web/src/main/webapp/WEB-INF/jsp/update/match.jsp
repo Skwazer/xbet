@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="select1"><c:out value="${team1ID}"/></label>
-                                    <select id="select1" name="team1ID" class="form-control" form="createForm">
+                                    <select id="select1" name="team1ID" class="form-control no-radius" form="createForm">
                                         <c:forEach var="teamId" items="${teamsIds}">
                                             <option <c:if test="${teamId eq updateMatch.team1_id}">selected</c:if>
                                                     value="${teamId}">
@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="select2"><c:out value="${team2ID}"/></label>
-                                    <select id="select2" name="team2ID" class="form-control" form="createForm">
+                                    <select id="select2" name="team2ID" class="form-control no-radius" form="createForm">
                                         <c:forEach var="teamId" items="${teamsIds}">
                                             <option <c:if test="${teamId eq updateMatch.team2_id}">selected</c:if>
                                                     value="${teamId}">

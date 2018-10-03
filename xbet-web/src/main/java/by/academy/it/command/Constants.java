@@ -38,7 +38,6 @@ public class Constants {
     static final String POST_MATCHES = "POST/matches";
     static final String GET_GET_USERS = "GET/get/users";
     static final String GET_CREATE_USER = "GET/create/user";
-    static final String CREATE_USER = "create/user";
     static final String POST_CREATE_USER = "POST/create/user";
     static final String POST_CHANGE_USER = "POST/change/user";
     static final String POST_UPDATE_USER = "POST/update/user";
@@ -57,7 +56,6 @@ public class Constants {
     static final String GET_GET_BETS = "GET/get/bets";
     static final String GET_GET_MATCHES = "GET/get/matches";
     static final String GET_CREATE_MATCH = "GET/create/match";
-    static final String CREATE_MATCH = "create/match";
     static final String POST_CREATE_MATCH = "POST/create/match";
     static final String POST_UPDATE_MATCH = "POST/update/match";
     static final String GET_UPDATE_MATCH = "GET/update/match";
@@ -66,7 +64,6 @@ public class Constants {
     static final String POST_DELETE_MATCH = "POST/delete/match";
     static final String GET_GET_RESULTS = "GET/get/results";
     static final String GET_CREATE_RESULT = "GET/create/result";
-    static final String CREATE_RESULT = "create/result";
     static final String POST_CREATE_RESULT = "POST/create/result";
     static final String POST_UPDATE_RESULT = "POST/update/result";
     static final String GET_UPDATE_RESULT = "GET/update/result";

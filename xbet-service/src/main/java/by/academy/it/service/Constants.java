@@ -173,5 +173,8 @@ class Constants {
     static final String TEAMS_IDS_NOT_FOUND = "teams.ids.not.found";
     static final String MATCHES_IDS = "matchesIds";
     static final String MATCHES_IDS_NOT_FOUND = "matches.ids.not.found";
+    static final String CREATE_MATCH = "create/match";
+    static final String CREATE_RESULT = "create/result";
+    static final String CREATE_USER = "create/user";
 
 }

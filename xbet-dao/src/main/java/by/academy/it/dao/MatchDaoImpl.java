@@ -31,7 +31,7 @@ public class MatchDaoImpl implements MatchDao {
     private static final String GET_MATCHES_QUERY = "SELECT * FROM xbet.matches LIMIT ?, 10";
     private static final String GET_AMOUNT_OF_UNPLAYED_MATCHES_QUERY = "SELECT COUNT(*) FROM xbet.matches WHERE id " +
             "NOT IN (SELECT m.id FROM  xbet.matches m JOIN xbet.results r ON m.id = r.matches_id)";
-    private static final String GET_MATCHES_IDS_QUERY = "SELECT id FROM xbet.matches ORDER BY id ASC";
+    private static final String GET_MATCHES_IDS_QUERY = "SELECT id FROM xbet.matches ORDER BY id";
     private static final String GET_AMOUNT_OF_ALL_MATCHES_QUERY = "SELECT COUNT(*) FROM xbet.matches";
     private static final String DELETE_QUERY = "DELETE FROM xbet.matches WHERE id = ?";
 
