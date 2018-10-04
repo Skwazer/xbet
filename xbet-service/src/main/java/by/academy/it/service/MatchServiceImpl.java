@@ -89,7 +89,8 @@ class MatchServiceImpl implements MatchService {
      * @throws IOException if an input or output error is detected.
      * @throws ServletException if the request could not be handled.
      */
-    public void showUnplayedMatches(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void showUnplayedMatches(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String pageParam = request.getParameter(Constants.PAGE);
         int page = Utils.checkPageParameter(pageParam);
         int startFrom = Utils.calculateSelectStartPosition(page, request, response);
@@ -107,12 +108,14 @@ class MatchServiceImpl implements MatchService {
                     request.setAttribute(Constants.CURRENT_PAGE, page);
                     request.setAttribute(Constants.PAGES, pages);
 
-                    request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
+                    request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP)
+                            .forward(request, response);
                 } else {
                     logger.warn("Matches have not been found");
 
                     request.setAttribute(Constants.MATCHES_MESSAGE, Constants.MATCHES_LIST_EMPTY);
-                    request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP).forward(request, response);
+                    request.getRequestDispatcher(Constants.PATH + Constants.MATCHES + Constants.JSP)
+                            .forward(request, response);
                 }
             } catch (DAOException e) {
                 logger.error("An exception occurred during get unplayed matches operation", e);
@@ -132,7 +135,8 @@ class MatchServiceImpl implements MatchService {
      * @throws IOException if an input or output error is detected.
      * @throws ServletException if the request could not be handled.
      */
-    public void showMatches(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void showMatches(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String pageParam = request.getParameter(Constants.PAGE);
         int page = Utils.checkPageParameter(pageParam);
         int startFrom = Utils.calculateSelectStartPosition(page, request, response);
@@ -239,7 +243,7 @@ class MatchServiceImpl implements MatchService {
 
 
     /**
-     * Retrieves a match by id through {@link by.academy.it.dao.MatchDao} and sends a redirect to 'update match' page.
+     * Retrieves a match by id through {@link by.academy.it.dao.MatchDao} and sends forward to 'update match' page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.

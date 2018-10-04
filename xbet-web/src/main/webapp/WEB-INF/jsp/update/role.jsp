@@ -29,8 +29,7 @@
                             <div class="section-title">
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
-                            <form id="updateForm" class="clearfix" method="post"
-                                  action="<c:url value="/main/change/role"/> ">
+                            <form id="updateForm" class="clearfix" method="post" action="#">
                                 <div class="form-group">
                                     <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
@@ -42,17 +41,17 @@
                                            value="<c:out value="${updateRole.role}"/>">
                                     <div id="roleDiv" style="display:none;"></div>
                                 </div>
-                                <button class="primary-btn pull-left"><c:out value="${update}"/></button>
-                                <button form="deleteForm" class="primary-btn pull-right">
-                                    <c:out value="${delete}"/></button>
                             </form>
+                            <button class="primary-btn pull-left" onclick="changeFormAction()">
+                                <c:out value="${update}"/></button>
+                            <button form="deleteForm" class="primary-btn pull-right">
+                                <c:out value="${delete}"/></button>
                             <form id="deleteForm" method="post" action="<c:url value="/main/delete/role"/>">
                                 <input type="hidden" name="key" value="${updateRole.id}">
                             </form>
                         </div>
                     </div>
                 </div>
-                <c:remove var="updateRole" scope="session"/>
             </c:when>
             <c:otherwise>
                 <div class="text-center">

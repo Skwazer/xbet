@@ -12,6 +12,7 @@
     <fmt:message key="accepted" var="accepted"/>
     <fmt:message key="match.id" var="matchIdTitle"/>
     <fmt:message key="result" var="resultTitle"/>
+    <fmt:message key="goals.incorrect" var="goalsIncorrect"/>
     <fmt:message key="team1.goals" var="team1GoalsTitle"/>
     <fmt:message key="team2.goals" var="team2GoalsTitle"/>
     <fmt:message key="negative" var="negative"/>
@@ -37,8 +38,7 @@
                             <div class="section-title">
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
-                            <form id="createForm" class="clearfix" method="post"
-                                  action="<c:url value="/main/change/result"/> ">
+                            <form id="createForm" class="clearfix" method="post" action="#">
                                 <div class="form-group">
                                     <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
@@ -74,10 +74,11 @@
                                         <option value="2"><c:out value="${match2}"/></option>
                                     </select>
                                 </div>
-                                <button class="primary-btn pull-left"><c:out value="${update}"/></button>
-                                <button form="deleteForm" class="primary-btn pull-right">
-                                    <c:out value="${delete}"/></button>
                             </form>
+                            <button class="primary-btn pull-left" onclick="changeFormAction()">
+                                <c:out value="${update}"/></button>
+                            <button form="deleteForm" class="primary-btn pull-right">
+                                <c:out value="${delete}"/></button>
                             <form id="deleteForm" method="post" action="<c:url value="/main/delete/result"/>">
                                 <input type="hidden" name="key" value="${updateResult.id}">
                             </form>

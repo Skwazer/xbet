@@ -8,6 +8,7 @@
     <fmt:message key="create.data" var="createData"/>
     <fmt:message key="admin.error" var="adminError"/>
     <fmt:message key="enter.login" var="enterLogin"/>
+    <fmt:message key="enter.password" var="enterPassword"/>
     <fmt:message key="enter.firstname" var="enterFirstname"/>
     <fmt:message key="enter.lastname" var="enterLastname"/>
     <fmt:message key="enter.email" var="enterEmail"/>
@@ -58,8 +59,7 @@
                             <div class="section-title">
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
-                            <form id="createForm" class="clearfix" method="post"
-                                  action="<c:url value="/main/change/user"/> ">
+                            <form id="createForm" class="clearfix" method="post" action="#">
                                 <div class="form-group">
                                     <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
@@ -68,7 +68,7 @@
                                 <div class="form-group">
                                     <label for="login"><c:out value="${enterLogin}"/></label>
                                     <input id="login" class="input" name="login" onchange="checkLogin()"
-                                          value="<c:out value="${updateUser.login}"/>">
+                                          value="<c:out value="${updateUser.login}"/>" readonly>
                                     <div id="loginDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
@@ -95,7 +95,7 @@
                                     <label for="balance"><c:out value="${enterBalance}"/></label>
                                     <input id="balance" class="input" type="number" name="balance"  step="0.001"
                                            onchange="balanceCheck()"
-                                           value="<c:out value="${updateUser.balance}"/>">
+                                           value="<c:out value="${updateUser.balance}"/>" readonly>
                                     <div id="balanceDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
@@ -115,10 +115,11 @@
                                         </c:choose>
                                     </select>
                                 </div>
-                                <button class="primary-btn pull-left"><c:out value="${update}"/></button>
-                                <button form="deleteForm" class="primary-btn pull-right">
-                                    <c:out value="${delete}"/></button>
                             </form>
+                            <button class="primary-btn pull-left" onclick="changeFormAction()">
+                                <c:out value="${update}"/></button>
+                            <button form="deleteForm" class="primary-btn pull-right">
+                                <c:out value="${delete}"/></button>
                             <form id="deleteForm" method="post" action="<c:url value="/main/delete/user"/>">
                                 <input type="hidden" name="key" value="${updateUser.id}">
                             </form>

@@ -14,6 +14,7 @@
     <fmt:message key="team1.goals" var="team1GoalsTitle"/>
     <fmt:message key="team2.goals" var="team2GoalsTitle"/>
     <fmt:message key="negative" var="negative"/>
+    <fmt:message key="goals.incorrect" var="goalsIncorrect"/>
     <fmt:message key="match.id.required" var="matchIDRequired"/>
     <fmt:message key="team1.goals.required" var="team1GoalsRequired"/>
     <fmt:message key="team2.goals.required" var="team2GoalsRequired"/>
@@ -46,12 +47,12 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input id="team1Goals" class="input" type="number" name="team1Goals" min="1" max="6"
+                                    <input id="team1Goals" class="input" type="number" name="team1Goals" min="0" max="6" step="1"
                                            onchange="checkTeam1Goals()" placeholder="<c:out value="${team1GoalsTitle}"/>">
                                     <div id="team1GoalsDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="team2Goals" class="input" type="number" name="team2Goals" min="1" max="6"
+                                    <input id="team2Goals" class="input" type="number" name="team2Goals" min="0" max="6" step="1"
                                            onchange="checkTeam2Goals()" placeholder="<c:out value="${team2GoalsTitle}"/>">
                                     <div id="team2GoalsDiv" style="display:none;"></div>
                                 </div>

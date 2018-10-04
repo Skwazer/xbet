@@ -29,8 +29,7 @@
                             <div class="section-title">
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
-                            <form id="updateForm" class="clearfix" method="post"
-                                  action="<c:url value="/main/change/team"/> ">
+                            <form id="updateForm" class="clearfix" method="post" action="#">
                                 <div class="form-group">
                                     <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
@@ -42,10 +41,11 @@
                                            value="${updateTeam.name}">
                                     <div id="nameDiv" style="display:none;"></div>
                                 </div>
-                                <button class="primary-btn pull-left"><c:out value="${update}"/></button>
-                                <button form="deleteForm" class="primary-btn pull-right">
-                                    <c:out value="${delete}"/></button>
                             </form>
+                            <button class="primary-btn pull-left" onclick="changeFormAction()">
+                                <c:out value="${update}"/></button>
+                            <button form="deleteForm" class="primary-btn pull-right">
+                                <c:out value="${delete}"/></button>
                             <form id="deleteForm" method="post" action="<c:url value="/main/delete/team"/>">
                                 <input type="hidden" name="key" value="${updateTeam.id}">
                             </form>

@@ -1,12 +1,12 @@
 function checkAmount() {
     var amount = $("#input").val();
     if (amount === "") {
-        alert("<c:out value="${betAmount}"/>");
+        alert("<c:out value='${betAmount}'/>");
     } else if (amount <= 0) {
-        alert("<c:out value="${amountNegative}"/>");
+        alert("<c:out value='${amountNegative}'/>");
     } else {
         $.ajax({
-            url: "<c:url value="/main/balance"/>",
+            url: "<c:url value='/main/balance'/>",
             type: "POST",
             data: {
                 key: amount
@@ -16,15 +16,15 @@ function checkAmount() {
                 if (result !== null && result !== "") {
                     if (result === "SUCCESS") {
                         var form = document.getElementById('checkoutForm');
-                        form.action = "<c:url value="/main/bet"/>";
+                        form.action = "<c:url value='/main/bet'/>";
                         form.submit();
                     } else if (result === "NOT_ENOUGH") {
-                        alert("<c:out value="${balanceNotEnough}"/>");
+                        alert("<c:out value='${balanceNotEnough}'/>");
                     } else {
-                        alert("<c:out value="${numberError}"/>");
+                        alert("<c:out value='${numberError}'/>");
                     }
                 } else {
-                    alert("<c:out value="${balanceError}"/>");
+                    alert("<c:out value='${balanceError}'/>");
                 }
             }
         });

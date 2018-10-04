@@ -37,8 +37,10 @@ public interface RoleService {
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
      */
-    void showUpdateRolePage(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void showUpdateRolePage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException;
 
 
     /**

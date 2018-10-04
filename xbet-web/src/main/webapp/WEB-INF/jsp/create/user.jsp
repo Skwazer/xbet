@@ -91,8 +91,8 @@
                                     <div id="emailDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="balance" class="input" type="number" name="balance" onchange="balanceCheck()"
-                                           placeholder="<c:out value="${enterBalance}"/>">
+                                    <input id="balance" class="input" type="number" name="balance" min="0"
+                                           onchange="balanceCheck()" placeholder="<c:out value="${enterBalance}"/>">
                                     <div id="balanceDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">

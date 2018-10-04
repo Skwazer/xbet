@@ -33,7 +33,7 @@ class RoleServiceImpl implements RoleService {
 
 
     /**
-     * Retrieves a list of roles through {@link by.academy.it.dao.RoleDao}.
+     * Retrieves a list of roles through {@link by.academy.it.dao.RoleDao} and sends forward to roles page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
@@ -104,18 +104,21 @@ class RoleServiceImpl implements RoleService {
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
      */
-    public void showUpdateRolePage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void showUpdateRolePage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         String roleParam = request.getParameter(Constants.KEY);
         if (Utils.isValidString(roleParam)) {
             try {
                 int id = Integer.parseInt(roleParam);
                 Role role = roleDao.findById(id);
                 if (role != null) {
-                    request.getSession().setAttribute(Constants.UPDATED_ROLE, role);
+                    request.setAttribute(Constants.UPDATED_ROLE, role);
                     logger.info("role has been retrieved");
 
-                    response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_ROLE);
+                    request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_ROLE + Constants.JSP)
+                            .forward(request, response);
 
                 } else {
                     logger.warn("Role with such id has not been found");

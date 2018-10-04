@@ -11,6 +11,8 @@
     <fmt:message key="update" var="update"/>
     <fmt:message key="delete" var="delete"/>
     <fmt:message key="match.date" var="matchDate"/>
+    <fmt:message key="date.incorrect" var="dateIncorrect"/>
+    <fmt:message key="incorrect.value" var="incorrectValue"/>
     <fmt:message key="team1.id" var="team1ID"/>
     <fmt:message key="team2.id" var="team2ID"/>
     <fmt:message key="match.1" var="match1"/>
@@ -22,6 +24,7 @@
     <fmt:message key="date.required" var="dateRequired"/>
     <fmt:message key="team1.required" var="team1Required"/>
     <fmt:message key="team2.required" var="team2Required"/>
+    <fmt:message key="teams.equal" var="teamsEqual"/>
     <fmt:message key="negative" var="negative"/>
     <fmt:message key="victory1.required" var="v1Required"/>
     <fmt:message key="victory2.required" var="v2Required"/>
@@ -46,8 +49,7 @@
                             <div class="section-title">
                                 <h3 class="title"><c:out value="${createData}"/></h3>
                             </div>
-                            <form id="createForm" class="clearfix" method="post"
-                                  action="<c:url value="/main/change/match"/> ">
+                            <form id="createForm" class="clearfix" method="post" action="#">
                                 <div class="form-group">
                                     <label for="id">ID</label>
                                     <input id="id" class="input" name="id"
@@ -115,10 +117,11 @@
                                            onchange="check2X()" value="<c:out value="${updateMatch.victory2OrDraw}"/>">
                                     <div id="X2Div" style="display:none;"></div>
                                 </div>
-                                <button class="primary-btn pull-left"><c:out value="${update}"/></button>
-                                <button form="deleteForm" class="primary-btn pull-right">
-                                    <c:out value="${delete}"/></button>
                             </form>
+                            <button class="primary-btn pull-left" onclick="changeFormAction()">
+                                <c:out value="${update}"/></button>
+                            <button form="deleteForm" class="primary-btn pull-right">
+                                <c:out value="${delete}"/></button>
                             <form id="deleteForm" method="post" action="<c:url value="/main/delete/match"/>">
                                 <input type="hidden" name="key" value="${updateMatch.id}">
                             </form>

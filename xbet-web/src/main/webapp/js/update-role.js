@@ -1,14 +1,29 @@
+var isRoleCorrect = true;
+
 function roleCheck() {
     var role = $("#role").val();
-    var regExp = new RegExp("<c:out value="${roleRegexp}"/>");
+    var regExp = new RegExp("<c:out value='${roleRegexp}'/>");
     if (role === "") {
         $('#roleDiv').css("display", "none");
-        alert("<c:out value="${roleRequired}"/>");
+        alert("<c:out value='${roleRequired}'/>");
+        isRoleCorrect = false;
     } else if (!regExp.test(role)) {
-        $('#roleDiv').html("<p style='color: red'><c:out value="${regexpError}"/></p>");
+        isRoleCorrect = false;
+        $('#roleDiv').html("<p style='color: red'><c:out value='${regexpError}'/></p>");
         $('#roleDiv').css("display", "block");
     }  else {
-        $('#roleDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
+        isRoleCorrect = true;
+        $('#roleDiv').html("<p style='color: #4cae4c'><c:out value='${accepted}'/></p>");
         $('#roleDiv').css("display", "block");
+    }
+}
+
+function changeFormAction() {
+    if (isRoleCorrect) {
+        var form = document.getElementById('updateForm');
+        form.action = "<c:url value='/main/change/role'/>";
+        form.submit();
+    } else {
+        alert("<c:out value='${createData}'/>");
     }
 }

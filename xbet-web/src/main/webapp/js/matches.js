@@ -1,6 +1,6 @@
 function isUserLoggedIn(formId) {
     $.ajax({
-        url: "<c:url value="/main/check"/>",
+        url: "<c:url value='/main/check'/>",
         type: "POST",
         success: function (data, textStatus, request) {
             var result = request.getResponseHeader('result');
@@ -8,10 +8,10 @@ function isUserLoggedIn(formId) {
                 if (result === "SUCCESS") {
                     makeBet(formId);
                 } else {
-                    alert("<c:out value="${matchesLogIn}"/>");
+                    alert("<c:out value='${matchesLogIn}'/>");
                 }
             } else {
-                alert("<c:out value="${loginError}"/>");
+                alert("<c:out value='${loginError}'/>");
             }
         }
     });
@@ -19,6 +19,6 @@ function isUserLoggedIn(formId) {
 
 function makeBet(formId) {
     var form = document.getElementById(formId);
-    form.action = "<c:url value="/main/place"/>";
+    form.action = "<c:url value='/main/place'/>";
     form.submit();
 }

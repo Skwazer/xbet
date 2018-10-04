@@ -109,13 +109,15 @@ class TeamServiceImpl implements TeamService {
 
 
     /**
-     * Retrieves a team by id through {@link by.academy.it.dao.RoleDao} and sends a redirect to the 'update team' page.
+     * Retrieves a team by id through {@link by.academy.it.dao.RoleDao} and sends forward to the 'update team' page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
+     * @throws ServletException if the request could not be handled.
      */
-    public void showUpdateTeamPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void showUpdateTeamPage(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
         String idParam = request.getParameter(Constants.KEY);
         if (Utils.isValidString(idParam)) {
             try {
@@ -123,8 +125,10 @@ class TeamServiceImpl implements TeamService {
                 Team team = teamDao.findById(id);
 
                 logger.info("team has been retrieved");
-                request.getSession().setAttribute(Constants.UPDATED_TEAM, team);
-                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_TEAM);
+                request.setAttribute(Constants.UPDATED_TEAM, team);
+
+                request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_TEAM + Constants.JSP)
+                        .forward(request, response);
 
             } catch (NumberFormatException e) {
                 logger.error("Cannot parse a number parameter", e);

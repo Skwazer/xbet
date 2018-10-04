@@ -10,8 +10,11 @@
     <fmt:message key="create" var="create"/>
     <fmt:message key="accepted" var="accepted"/>
     <fmt:message key="match.date" var="matchDate"/>
+    <fmt:message key="date.incorrect" var="dateIncorrect"/>
+    <fmt:message key="incorrect.value" var="incorrectValue"/>
     <fmt:message key="team1.id" var="team1ID"/>
     <fmt:message key="team2.id" var="team2ID"/>
+    <fmt:message key="teams.equal" var="teamsEqual"/>
     <fmt:message key="match.1" var="match1"/>
     <fmt:message key="match.X" var="matchX"/>
     <fmt:message key="match.2" var="match2"/>

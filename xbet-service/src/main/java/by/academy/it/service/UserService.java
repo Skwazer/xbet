@@ -66,7 +66,7 @@ public interface UserService {
 
 
     /**
-     * Retrieves a user by id through {@link by.academy.it.dao.UserDao} and sends a redirect to 'update user' page.
+     * Retrieves a user by id through {@link by.academy.it.dao.UserDao} and sends forward to 'update user' page.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
