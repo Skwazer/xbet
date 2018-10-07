@@ -176,5 +176,8 @@ class Constants {
     static final String CREATE_MATCH = "create/match";
     static final String CREATE_RESULT = "create/result";
     static final String CREATE_USER = "create/user";
+    static final String LOGIN_REGEX = "^[A-ZА-Я][a-zа-я]{1,19}$";
+    static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
+    static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
 }

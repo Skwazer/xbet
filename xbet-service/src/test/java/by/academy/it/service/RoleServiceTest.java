@@ -132,14 +132,15 @@ public class RoleServiceTest {
     void showUpdateRolePage1() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_2);
         when(roleDao.findById(2)).thenReturn(role);
+        when(request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_ROLE + Constants.JSP))
+                .thenReturn(dispatcher);
 
         roleService.showUpdateRolePage(request, response);
         verify(request).getParameter(Constants.KEY);
         verify(roleDao, times(1)).findById(2);
-        verify(request).getSession();
-        verify(session).setAttribute(Constants.UPDATED_ROLE, role);
-        verify(response)
-                .sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_ROLE);
+        verify(request).setAttribute(Constants.UPDATED_ROLE, role);
+        verify(request).getRequestDispatcher(Constants.PATH + Constants.UPDATE_ROLE + Constants.JSP);
+        verify(dispatcher).forward(request, response);
     }
 
     @Test

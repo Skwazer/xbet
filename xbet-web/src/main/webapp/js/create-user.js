@@ -3,6 +3,7 @@ var isPasswordCorrect = false;
 var isFirstNameCorrect = false;
 var isLastNameCorrect = false;
 var isEmailCorrect = false;
+var isBalanceCorrect = false;
 
 function checkLogin() {
     var login = $("#login").val();

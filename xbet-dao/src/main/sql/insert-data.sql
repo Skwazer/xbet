@@ -2,11 +2,11 @@ INSERT INTO xbet.roles (role) VALUES ('admin');
 INSERT INTO xbet.roles (role) VALUES ('user');
 
 INSERT INTO xbet.users (login, password, first_name, last_name, email, balance, role_id)
-VALUES ('admin', 'Password1', 'Admin', 'Admin', 'admin@mail.ru', 500, 1);
+VALUES ('Admin', 'Password1', 'Admin', 'Admin', 'admin@mail.ru', 500, 1);
 INSERT INTO xbet.users (login, password, first_name, last_name, email, balance, role_id)
-VALUES ('user', 'Password2', 'User', 'User', 'user@mail.ru', 100, 2);
+VALUES ('User', 'Password2', 'User', 'User', 'user@mail.ru', 100, 2);
 INSERT INTO xbet.users (login, password, first_name, last_name, email, balance, role_id)
-VALUES ('ivan', 'Password3', 'Ivan', 'Ivan', 'ivan@mail.ru', 0, 2);
+VALUES ('Ivan', 'Password3', 'Ivan', 'Ivan', 'ivan@mail.ru', 0, 2);
 
 INSERT INTO xbet.teams (name) VALUES ('Uruguay');
 INSERT INTO xbet.teams (name) VALUES ('Portugal');

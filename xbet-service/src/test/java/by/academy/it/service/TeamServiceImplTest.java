@@ -135,13 +135,15 @@ class TeamServiceImplTest {
     void showUpdateTeamPage1() throws Exception {
         when(request.getParameter(Constants.KEY)).thenReturn(Constants.STRING_1);
         when(teamDao.findById(1)).thenReturn(team);
+        when(request.getRequestDispatcher(Constants.PATH + Constants.UPDATE_TEAM + Constants.JSP))
+                .thenReturn(dispatcher);
 
         teamService.showUpdateTeamPage(request, response);
         verify(request).getParameter(Constants.KEY);
         verify(teamDao, times(1)).findById(1);
-        verify(request).getSession();
-        verify(session).setAttribute(Constants.UPDATED_TEAM, team);
-        verify(response).sendRedirect(request.getContextPath() + Constants.MAIN + Constants.UPDATE_TEAM);
+        verify(request).setAttribute(Constants.UPDATED_TEAM, team);
+        verify(request).getRequestDispatcher(Constants.PATH + Constants.UPDATE_TEAM + Constants.JSP);
+        verify(dispatcher).forward(request, response);
     }
 
     @Test

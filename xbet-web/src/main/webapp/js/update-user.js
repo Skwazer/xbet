@@ -2,7 +2,7 @@
 var isFirstNameCorrect = true;
 var isLastNameCorrect = true;
 var isEmailCorrect = true;
-// var isBalanceCorrect = true;
+var isBalanceCorrect = true;
 
 /*function checkLogin() {
     var login = $("#login").val();
@@ -132,12 +132,12 @@ function emailMessage(result) {
     }
 }
 
-/*function balanceCheck() {
+function balanceCheck() {
     var amount = $("#balance").val();
     if (amount === "") {
         isBalanceCorrect = false;
         $('#balanceDiv').css("display", "none");
-        alert("<c:out value="${balanceRequired}"/>");
+        alert("<c:out value='${balanceRequired}'/>");
     } else if (amount < 0) {
         isBalanceCorrect = false;
         balanceMessage('NEGATIVE');
@@ -149,17 +149,17 @@ function emailMessage(result) {
 
 function balanceMessage(result) {
     if (result === 'SUCCESS') {
-        $('#balanceDiv').html("<p style='color: #4cae4c'><c:out value="${accepted}"/></p>");
+        $('#balanceDiv').html("<p style='color: #4cae4c'><c:out value='${accepted}'/></p>");
         $('#balanceDiv').css("display", "block")
     } else if (result === 'NEGATIVE') {
-        $('#balanceDiv').html("<p style='color: red'><c:out value="${balanceNegative}"/></p>");
+        $('#balanceDiv').html("<p style='color: red'><c:out value='${balanceNegative}'/></p>");
         $('#balanceDiv').css("display", "block")
     }
-}*/
+}
 
 
 function changeFormAction() {
-    var result = isEmailCorrect && isFirstNameCorrect && isLastNameCorrect;
+    var result = isEmailCorrect && isFirstNameCorrect && isLastNameCorrect && isBalanceCorrect;
     if (result) {
         var form = document.getElementById('createForm');
         form.action = "<c:url value='/main/change/user'/>";

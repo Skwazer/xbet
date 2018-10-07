@@ -95,7 +95,7 @@
                                     <label for="balance"><c:out value="${enterBalance}"/></label>
                                     <input id="balance" class="input" type="number" name="balance"  step="0.001"
                                            onchange="balanceCheck()"
-                                           value="<c:out value="${updateUser.balance}"/>" readonly>
+                                           value="<c:out value="${updateUser.balance}"/>">
                                     <div id="balanceDiv" style="display:none;"></div>
                                 </div>
                                 <div class="form-group">

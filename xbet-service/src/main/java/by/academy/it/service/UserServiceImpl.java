@@ -36,7 +36,7 @@ class UserServiceImpl implements UserService {
 
 
     /**
-     * Authenticates user's login.
+     * Authenticates user's login through ajax.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
@@ -250,20 +250,22 @@ class UserServiceImpl implements UserService {
         String firstName = request.getParameter(Constants.FIRST_NAME);
         String lastName = request.getParameter(Constants.LAST_NAME);
         String email = request.getParameter(Constants.EMAIL);
-        String balance = request.getParameter(Constants.BALANCE);
+        String balanceParam = request.getParameter(Constants.BALANCE);
         String role = request.getParameter(Constants.ROLE);
 
-        if (Utils.isValidString(login) && Utils.isValidString(password) && Utils.isValidString(firstName)
-                && Utils.isValidString(lastName) && Utils.isValidString(email) && Utils.isValidString(balance)
-                && Utils.isValidString(role)) {
-            try {
+        Double balance;
+        try {
+            if (Utils.isValidStrings(login, password, firstName, lastName, email, balanceParam, role) &&
+                    validateLogin(login) && validatePassword(password) && validateEmail(email) &&
+                    (balance= Double.parseDouble(balanceParam)) >= 0) {
+
                 User user = new User();
                 user.setLogin(login);
                 user.setPassword(password.toCharArray());
                 user.setFirstName(firstName);
                 user.setLastName(lastName);
                 user.setEmail(email);
-                user.setBalance(Double.parseDouble(balance));
+                user.setBalance(balance);
                 user.setRole(Integer.parseInt(role));
                 userDao.create(user);
 
@@ -271,23 +273,56 @@ class UserServiceImpl implements UserService {
                 request.getSession().setAttribute(Constants.USER_MESSAGE, Constants.CREATE_USER_MESSAGE);
                 response.sendRedirect( request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
-            } catch (NumberFormatException e) {
-                logger.error("Cannot parse a number parameter", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            } catch (DAOException e) {
-                logger.error("An exception occurred during create user operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_USER_ERROR);
+            } else {
+                logger.error("Create user data are not valid");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.REGISTRATION_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-        } else {
-            logger.error("Create user data are not valid");
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.REGISTRATION_ERROR);
+        } catch (NumberFormatException e) {
+            logger.error("Cannot parse a number parameter", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        } catch (DAOException e) {
+            logger.error("An exception occurred during create user operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_USER_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
+    }
+
+
+    /**
+     * Validates login value.
+     *
+     * @param login a value to validate.
+     * @return true if login matches the regular expression or false otherwise.
+     */
+    private boolean validateLogin(String login) {
+        return login.matches(Constants.LOGIN_REGEX);
+    }
+
+
+    /**
+     * Validates password value.
+     *
+     * @param password a value to validate.
+     * @return true if password matches the regular expression or false otherwise.
+     */
+    private boolean validatePassword(String password) {
+        return password.matches(Constants.PASSWORD_REGEX);
+    }
+
+
+    /**
+     * Validates email value.
+     *
+     * @param email a value to validate.
+     * @return true if email matches the regular expression or false otherwise.
+     */
+    private boolean validateEmail(String email) {
+        return email.matches(Constants.EMAIL_REGEX);
     }
 
 
@@ -393,20 +428,15 @@ class UserServiceImpl implements UserService {
         String email = request.getParameter(Constants.EMAIL);
         String balanceParam = request.getParameter(Constants.BALANCE);
         String roleParam = request.getParameter(Constants.ROLE);
-        if (Utils.isValidString(idParam) && Utils.isValidString(lastName) && Utils.isValidString(firstName)
-                && Utils.isValidString(lastName) && Utils.isValidString(email)
-                && Utils.isValidString(balanceParam) && Utils.isValidString(roleParam)) {
-            try {
+
+        Double balance;
+        try {
+            if (Utils.isValidStrings(idParam, firstName, lastName, email, roleParam) && validateEmail(email) &&
+                    validateLogin(login) && (balance = Double.parseDouble(balanceParam)) >= 0 ) {
+
                 int id = Integer.parseInt(idParam);
                 int role = Integer.parseInt(roleParam);
-                double balance = Double.parseDouble(balanceParam);
-                if (balance < 0) {
-                    logger.warn("Balance cannot be negative");
-                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BALANCE_NEGATIVE);
 
-                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                    return;
-                }
                 User user = new User();
                 user.setId(id);
                 user.setLogin(login);
@@ -426,20 +456,20 @@ class UserServiceImpl implements UserService {
                 session.setAttribute(Constants.USER_MESSAGE, Constants.UPDATE_USER_MESSAGE);
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET + Constants.USERS);
 
-            } catch (NumberFormatException e) {
-                logger.error("Cannot parse a number parameter", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            } catch (DAOException e) {
-                logger.error("An exception occurred during update user operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_USER_ERROR);
+            } else {
+                logger.warn("Update user parameters are not valid");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-        } else {
-            logger.warn("Update user parameters are not valid");
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
+        } catch (NumberFormatException e) {
+            logger.error("Cannot parse a number parameter", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        } catch (DAOException e) {
+            logger.error("An exception occurred during update user operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_USER_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -536,7 +566,7 @@ class UserServiceImpl implements UserService {
         String login = request.getParameter(Constants.LOGIN);
         String password = request.getParameter(Constants.PASSWORD);
         try {
-            if (Utils.isValidString(login) && Utils.isValidString(password)
+            if (Utils.isValidStrings(login, password) && validateLogin(login) && validatePassword(password)
                     && isPasswordCorrectForLogin(login, password)) {
                 User user = userDao.findByLogin(login);
                 if (user != null) {
@@ -575,9 +605,9 @@ class UserServiceImpl implements UserService {
      */
     public void topup(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String param = request.getParameter("amount");
-        if (Utils.isValidString(param)) {
-            try {
-                double amount = Double.parseDouble(param);
+        Double amount;
+        try {
+            if (Utils.isValidString(param) && (amount = Double.parseDouble(param)) > 0) {
                 User sessionUser = (User) request.getSession().getAttribute(Constants.USER);
                 User user = updateUserBalance(sessionUser.getLogin(), amount);
                 if (user == null) {
@@ -591,21 +621,21 @@ class UserServiceImpl implements UserService {
 
                 response.sendRedirect(Utils.getReferrerURI(request));
 
-            } catch (NumberFormatException e) {
-                logger.error("Wrong number format", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-
-            } catch (DAOException e) {
-                logger.error("An exception occurred during top up balance operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TOPUP_ERROR);
+            } else {
+                logger.error("Amount parameter is not valid");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.AMOUNT_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-        } else {
-            logger.error("Amount parameter is not valid");
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.AMOUNT_ERROR);
+        } catch (NumberFormatException e) {
+            logger.error("Wrong number format", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+
+        } catch (DAOException e) {
+            logger.error("An exception occurred during top up balance operation", e);
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TOPUP_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -620,15 +650,14 @@ class UserServiceImpl implements UserService {
      * @throws IOException if an input or output error is detected.
      */
     public void registerUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         String login = request.getParameter(Constants.LOGIN);
         String password = request.getParameter(Constants.PASSWORD);
         String firstName = request.getParameter(Constants.FIRST_NAME);
         String lastName = request.getParameter(Constants.LAST_NAME);
         String email = request.getParameter(Constants.EMAIL);
 
-        if (Utils.isValidString(login) && Utils.isValidString(password) && Utils.isValidString(firstName)
-                && Utils.isValidString(lastName) && Utils.isValidString(email)) {
+        if (Utils.isValidStrings(login, password, firstName, lastName, email) && validateLogin(login) &&
+                validatePassword(password) && validateEmail(email)) {
             User user = new User();
             user.setLogin(login);
             user.setPassword(password.toCharArray());

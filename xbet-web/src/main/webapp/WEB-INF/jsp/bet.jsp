@@ -98,7 +98,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="input"><c:out value="${betAmount}"/>: </label>
-                                <input id="input" type="number" class="form-control" name="amount"/>
+                                <input id="input" type="number" class="form-control" name="amount" min="1" step="0.01">
                                 <input type="hidden" name="matchId" value="${match.id}"/>
                             </div>
                         </div>

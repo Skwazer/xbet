@@ -48,7 +48,7 @@ public class Utils {
 
 
     /**
-     * Checks if a string is valid.
+     * Checks if a string is not empty or null.
      *
      * @param string a string to check.
      * @return {@code true} if a string is neither null nor empty, {@code false} otherwise.
@@ -56,6 +56,23 @@ public class Utils {
     static boolean isValidString(String string) {
         return string != null && !string.trim().isEmpty();
     }
+
+
+    /**
+     * Checks if an array contains not empty strings.
+     *
+     * @param array a string array to check.
+     * @return {@code true} if a string is neither null nor empty, {@code false} otherwise.
+     */
+    static boolean isValidStrings(String... array) {
+        for (String s : array) {
+            if (s == null || s.trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
     /**
