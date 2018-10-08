@@ -128,14 +128,13 @@ class ResultServiceImpl implements ResultService {
         String team2GoalsParam = request.getParameter(Constants.TEAM2_GOALS);
         String result = request.getParameter(Constants.RESULT);
 
-        if (Utils.isValidString(matchIdParam) && Utils.isValidString(team1GoalsParam)
-                && Utils.isValidString(team2GoalsParam) && Utils.isValidString(result)) {
+        if (Utils.areStringsValid(matchIdParam, team1GoalsParam, team2GoalsParam, result)) {
             try {
                 int matchId = Integer.parseInt(matchIdParam);
                 int team1_goals = Integer.parseInt(team1GoalsParam);
                 int team2_goals = Integer.parseInt(team2GoalsParam);
                 if (!checkGoalsValue(team1_goals) || !checkGoalsValue(team2_goals)) {
-                    logger.warn("Goals value is not correct");
+                    logger.warn("Goal values are not correct");
                     request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.GOALS_VALUE_ERROR);
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                     return;
@@ -183,7 +182,7 @@ class ResultServiceImpl implements ResultService {
     public void showUpdateResultPage(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
                 Result result = resultDao.findById(id);
@@ -195,7 +194,7 @@ class ResultServiceImpl implements ResultService {
                     request.setAttribute(Constants.MATCHES_IDS, matchesIds);
                     logger.info("matches ids have been retrieved");
                 } else {
-                    logger.warn("Matches ids have not been found");
+                    logger.warn("Match ids have not been found");
                     request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCHES_IDS_NOT_FOUND);
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                     return;
@@ -236,7 +235,7 @@ class ResultServiceImpl implements ResultService {
                 request.setAttribute(Constants.MATCHES_IDS, matchesIds);
                 logger.info("matches ids have been retrieved");
             } else {
-                logger.warn("Matches ids have not been found");
+                logger.warn("Matches id have not been found");
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.MATCHES_IDS_NOT_FOUND);
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 return;
@@ -266,15 +265,14 @@ class ResultServiceImpl implements ResultService {
         String team2GoalsParam = request.getParameter(Constants.TEAM2_GOALS);
         String result = request.getParameter(Constants.RESULT);
 
-        if (Utils.isValidString(matchIdParam) && Utils.isValidString(team1GoalsParam)
-                && Utils.isValidString(team2GoalsParam) && Utils.isValidString(result)) {
+        if (Utils.areStringsValid(idParam, matchIdParam, team1GoalsParam, team2GoalsParam, result)) {
             try {
                 int id = Integer.parseInt(idParam);
                 int matchId = Integer.parseInt(matchIdParam);
                 int team1_goals = Integer.parseInt(team1GoalsParam);
                 int team2_goals = Integer.parseInt(team2GoalsParam);
                 if (!checkGoalsValue(team1_goals) || !checkGoalsValue(team2_goals)) {
-                    logger.warn("Goals value is not correct");
+                    logger.warn("Goals values are not correct");
                     request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.GOALS_VALUE_ERROR);
                     response.sendRedirect(request.getContextPath() + Constants.ERROR);
                     return;
@@ -321,7 +319,7 @@ class ResultServiceImpl implements ResultService {
      */
     public void deleteResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
                 resultDao.delete(id);

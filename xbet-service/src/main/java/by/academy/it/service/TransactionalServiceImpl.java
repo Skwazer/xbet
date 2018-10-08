@@ -59,11 +59,17 @@ class TransactionalServiceImpl implements TransactionalService {
         String matchIdParam = request.getParameter(Constants.MATCH_ID);
         String betParam = request.getParameter(Constants.BET);
         String amountParam = request.getParameter(Constants.AMOUNT);
-        if (Utils.isValidString(matchIdParam) && Utils.isValidString(betParam) && Utils.isValidString(amountParam)) {
+        if (Utils.areStringsValid(matchIdParam, betParam, amountParam)) {
             try {
                 int matchId = Integer.parseInt(matchIdParam);
                 double amount = Double.parseDouble(amountParam);
-                String[] betParams = betParam.split("/");
+                if (amount <=0) {
+                    logger.warn("Amount is zero or negative");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.AMOUNT_NEGATIVE);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                String[] betParams = betParam.split(Constants.SLASH);
                 double betValue = Double.parseDouble(betParams[1]);
 
                 HttpSession session = request.getSession();
@@ -126,7 +132,7 @@ class TransactionalServiceImpl implements TransactionalService {
      */
     public void finishMatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String matchIdParam = request.getParameter(Constants.MATCH_ID);
-        if (Utils.isValidString(matchIdParam)) {
+        if (Utils.isStringValid(matchIdParam)) {
             try {
                 int matchId = Integer.parseInt(matchIdParam);
 

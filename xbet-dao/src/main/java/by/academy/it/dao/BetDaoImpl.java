@@ -61,17 +61,8 @@ public class BetDaoImpl implements BetDao {
             statement.setInt(1, userId);
             statement.setInt(2, startFrom);
             set = statement.executeQuery();
-            Bet bet;
             while (set.next()) {
-                bet = new Bet();
-                bet.setId(set.getInt(Constants.ID));
-                bet.setUser_id(set.getInt(Constants.USER_ID));
-                bet.setMatch_id(set.getInt(Constants.MATCH_ID));
-                bet.setBetResult(set.getString(Constants.BET_RESULT));
-                bet.setBet(set.getDouble(Constants.BET));
-                bet.setMoney(set.getDouble(Constants.MONEY));
-                bet.setStatus(set.getString(Constants.STATUS));
-                list.add(bet);
+                list.add(setBetFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao find by user id operation is failed", e);
@@ -82,6 +73,26 @@ public class BetDaoImpl implements BetDao {
             Utils.closeConnection(connection);
         }
         return list;
+    }
+
+
+    /**
+     * Returns bet entity with fields values retrieved from the database.
+     *
+     * @param set java.sql.ResultSet
+     * @return {@link by.academy.it.entity.Bet} entity.
+     * @throws SQLException if an exception occurred during the operation.
+     */
+    private Bet setBetFields(ResultSet set) throws SQLException {
+        Bet bet = new Bet();
+        bet.setId(set.getInt(Constants.ID));
+        bet.setUser_id(set.getInt(Constants.USER_ID));
+        bet.setMatch_id(set.getInt(Constants.MATCH_ID));
+        bet.setBetResult(set.getString(Constants.BET_RESULT));
+        bet.setBet(set.getDouble(Constants.BET));
+        bet.setMoney(set.getDouble(Constants.MONEY));
+        bet.setStatus(set.getString(Constants.STATUS));
+        return bet;
     }
 
 
@@ -137,17 +148,8 @@ public class BetDaoImpl implements BetDao {
             statement = connection.prepareStatement(GET_BY_MATCH_ID_QUERY);
             statement.setInt(1, matchId);
             set = statement.executeQuery();
-            Bet bet;
             while (set.next()) {
-                bet = new Bet();
-                bet.setId(set.getInt(Constants.ID));
-                bet.setUser_id(set.getInt(Constants.USER_ID));
-                bet.setMatch_id(set.getInt(Constants.MATCH_ID));
-                bet.setBetResult(set.getString(Constants.BET_RESULT));
-                bet.setBet(set.getDouble(Constants.BET));
-                bet.setMoney(set.getDouble(Constants.MONEY));
-                bet.setStatus(set.getString(Constants.STATUS));
-                list.add(bet);
+                list.add(setBetFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao find by match id operation is failed", e);
@@ -179,17 +181,8 @@ public class BetDaoImpl implements BetDao {
             statement = connection.prepareStatement(GET_ALL_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
-            Bet bet;
             while (set.next()) {
-                bet = new Bet();
-                bet.setId(set.getInt(Constants.ID));
-                bet.setUser_id(set.getInt(Constants.USER_ID));
-                bet.setMatch_id(set.getInt(Constants.MATCH_ID));
-                bet.setBetResult(set.getString(Constants.BET_RESULT));
-                bet.setBet(set.getDouble(Constants.BET));
-                bet.setMoney(set.getDouble(Constants.MONEY));
-                bet.setStatus(set.getString(Constants.STATUS));
-                list.add(bet);
+                list.add(setBetFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("BetDao find all bets operation is failed", e);

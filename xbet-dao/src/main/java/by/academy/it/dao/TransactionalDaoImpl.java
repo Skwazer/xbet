@@ -125,7 +125,7 @@ public class TransactionalDaoImpl implements TransactionalDao {
 
             updateUserStatement = connection.prepareStatement(UPDATE_USER_BALANCE_BY_ID_QUERY);
             for (Bet bet : bets) {
-                if (bet.getStatus().equals("won")) {
+                if (bet.getStatus().equals(Constants.WON)) {
                     updateUserStatement.setDouble(1, bet.getBet() * bet.getMoney());
                     updateUserStatement.setInt(2, bet.getUser_id());
                     updateUserStatement.addBatch();

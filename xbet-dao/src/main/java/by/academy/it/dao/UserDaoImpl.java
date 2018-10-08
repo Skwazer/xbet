@@ -133,15 +133,7 @@ public class UserDaoImpl implements UserDao {
             statement.setString(1, login);
             set = statement.executeQuery();
             if (set.next()) {
-                user = new User();
-                user.setId(set.getInt(Constants.ID));
-                user.setLogin(set.getString(Constants.LOGIN));
-                user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
-                user.setFirstName(set.getString(Constants.FIRST_NAME));
-                user.setLastName(set.getString(Constants.LAST_NAME));
-                user.setEmail(set.getString(Constants.EMAIL));
-                user.setBalance(set.getDouble(Constants.BALANCE));
-                user.setRole(set.getInt(Constants.ROLE_ID));
+                user = setUserFields(set);
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
@@ -151,6 +143,27 @@ public class UserDaoImpl implements UserDao {
             Utils.closeStatement(statement);
             Utils.closeConnection(connection);
         }
+        return user;
+    }
+
+
+    /**
+     * Returns user entity with fields values retrieved from the database.
+     *
+     * @param set java.sql.ResultSet
+     * @return {@link by.academy.it.entity.User} entity.
+     * @throws SQLException if an exception occurred during the operation.
+     */
+    private User setUserFields(ResultSet set) throws SQLException {
+        User user = new User();
+        user.setId(set.getInt(Constants.ID));
+        user.setLogin(set.getString(Constants.LOGIN));
+        user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
+        user.setFirstName(set.getString(Constants.FIRST_NAME));
+        user.setLastName(set.getString(Constants.LAST_NAME));
+        user.setEmail(set.getString(Constants.EMAIL));
+        user.setBalance(set.getDouble(Constants.BALANCE));
+        user.setRole(set.getInt(Constants.ROLE_ID));
         return user;
     }
 
@@ -175,15 +188,7 @@ public class UserDaoImpl implements UserDao {
             statement.setInt(1, id);
             set = statement.executeQuery();
             if (set.next()) {
-                user = new User();
-                user.setId(set.getInt(Constants.ID));
-                user.setLogin(set.getString(Constants.LOGIN));
-                user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
-                user.setFirstName(set.getString(Constants.FIRST_NAME));
-                user.setLastName(set.getString(Constants.LAST_NAME));
-                user.setEmail(set.getString(Constants.EMAIL));
-                user.setBalance(set.getDouble(Constants.BALANCE));
-                user.setRole(set.getInt(Constants.ROLE_ID));
+                user = setUserFields(set);
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find by login operation is failed", e);
@@ -235,18 +240,8 @@ public class UserDaoImpl implements UserDao {
             statement = connection.prepareStatement(GET_USERS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
-            User user;
             while (set.next()) {
-                user = new User();
-                user.setId(set.getInt(Constants.ID));
-                user.setLogin(set.getString(Constants.LOGIN));
-                user.setPassword(set.getString(Constants.PASSWORD).toCharArray());
-                user.setFirstName(set.getString(Constants.FIRST_NAME));
-                user.setLastName(set.getString(Constants.LAST_NAME));
-                user.setEmail(set.getString(Constants.EMAIL));
-                user.setBalance(set.getDouble(Constants.BALANCE));
-                user.setRole(set.getInt(Constants.ROLE_ID));
-                list.add(user);
+                list.add(setUserFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("UserDao find users operation is failed", e);

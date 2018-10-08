@@ -46,7 +46,7 @@ class UserServiceImpl implements UserService {
     public void authenticateLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String login = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(login)) {
+        if (Utils.isStringValid(login)) {
             try {
                 if (isLoginExist(login)) {
                     logger.info("this login exists");
@@ -91,7 +91,7 @@ class UserServiceImpl implements UserService {
     public void checkNewUserLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String login = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(login)) {
+        if (Utils.isStringValid(login)) {
             try {
                 if (!isLoginExist(login)) {
                     logger.info("this login is free");
@@ -159,7 +159,7 @@ class UserServiceImpl implements UserService {
      */
     public void deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
 
@@ -255,8 +255,8 @@ class UserServiceImpl implements UserService {
 
         Double balance;
         try {
-            if (Utils.isValidStrings(login, password, firstName, lastName, email, balanceParam, role) &&
-                    validateLogin(login) && validatePassword(password) && validateEmail(email) &&
+            if (Utils.areStringsValid(login, password, firstName, lastName, email, balanceParam, role) &&
+                    isLoginValid(login) && isPasswordValid(password) && isEmailValid(email) &&
                     (balance= Double.parseDouble(balanceParam)) >= 0) {
 
                 User user = new User();
@@ -299,7 +299,7 @@ class UserServiceImpl implements UserService {
      * @param login a value to validate.
      * @return true if login matches the regular expression or false otherwise.
      */
-    private boolean validateLogin(String login) {
+    private boolean isLoginValid(String login) {
         return login.matches(Constants.LOGIN_REGEX);
     }
 
@@ -310,7 +310,7 @@ class UserServiceImpl implements UserService {
      * @param password a value to validate.
      * @return true if password matches the regular expression or false otherwise.
      */
-    private boolean validatePassword(String password) {
+    private boolean isPasswordValid(String password) {
         return password.matches(Constants.PASSWORD_REGEX);
     }
 
@@ -321,7 +321,7 @@ class UserServiceImpl implements UserService {
      * @param email a value to validate.
      * @return true if email matches the regular expression or false otherwise.
      */
-    private boolean validateEmail(String email) {
+    private boolean isEmailValid(String email) {
         return email.matches(Constants.EMAIL_REGEX);
     }
 
@@ -337,7 +337,7 @@ class UserServiceImpl implements UserService {
     public void showUpdateUserPage(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
                 User user = userDao.findById(id);
@@ -351,7 +351,7 @@ class UserServiceImpl implements UserService {
                         request.setAttribute(Constants.ROLES_IDS, rolesIds);
                         logger.info("roles ids have been retrieved");
                     } else {
-                        logger.warn("Roles ids have not been found");
+                        logger.warn("Role ids have not been found");
                         request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.ROLES_IDS_NOT_FOUND);
                         response.sendRedirect(request.getContextPath() + Constants.ERROR);
                         return;
@@ -397,7 +397,7 @@ class UserServiceImpl implements UserService {
                 request.setAttribute(Constants.ROLES_IDS, rolesIds);
                 logger.info("roles ids have been retrieved");
             } else {
-                logger.warn("Roles ids have not been found");
+                logger.warn("Roles id have not been found");
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.ROLES_IDS_NOT_FOUND);
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 return;
@@ -431,8 +431,8 @@ class UserServiceImpl implements UserService {
 
         Double balance;
         try {
-            if (Utils.isValidStrings(idParam, firstName, lastName, email, roleParam) && validateEmail(email) &&
-                    validateLogin(login) && (balance = Double.parseDouble(balanceParam)) >= 0 ) {
+            if (Utils.areStringsValid(idParam, firstName, lastName, email, roleParam) && isEmailValid(email) &&
+                    isLoginValid(login) && (balance = Double.parseDouble(balanceParam)) >= 0 ) {
 
                 int id = Integer.parseInt(idParam);
                 int role = Integer.parseInt(roleParam);
@@ -509,7 +509,7 @@ class UserServiceImpl implements UserService {
     public void checkBalance(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 double amount = Double.parseDouble(key);
                 User user = (User) request.getSession().getAttribute(Constants.USER);
@@ -566,7 +566,7 @@ class UserServiceImpl implements UserService {
         String login = request.getParameter(Constants.LOGIN);
         String password = request.getParameter(Constants.PASSWORD);
         try {
-            if (Utils.isValidStrings(login, password) && validateLogin(login) && validatePassword(password)
+            if (Utils.areStringsValid(login, password) && isLoginValid(login) && isPasswordValid(password)
                     && isPasswordCorrectForLogin(login, password)) {
                 User user = userDao.findByLogin(login);
                 if (user != null) {
@@ -607,7 +607,7 @@ class UserServiceImpl implements UserService {
         String param = request.getParameter("amount");
         Double amount;
         try {
-            if (Utils.isValidString(param) && (amount = Double.parseDouble(param)) > 0) {
+            if (Utils.isStringValid(param) && (amount = Double.parseDouble(param)) > 0) {
                 User sessionUser = (User) request.getSession().getAttribute(Constants.USER);
                 User user = updateUserBalance(sessionUser.getLogin(), amount);
                 if (user == null) {
@@ -656,8 +656,8 @@ class UserServiceImpl implements UserService {
         String lastName = request.getParameter(Constants.LAST_NAME);
         String email = request.getParameter(Constants.EMAIL);
 
-        if (Utils.isValidStrings(login, password, firstName, lastName, email) && validateLogin(login) &&
-                validatePassword(password) && validateEmail(email)) {
+        if (Utils.areStringsValid(login, password, firstName, lastName, email) && isLoginValid(login) &&
+                isPasswordValid(password) && isEmailValid(email)) {
             User user = new User();
             user.setLogin(login);
             user.setPassword(password.toCharArray());

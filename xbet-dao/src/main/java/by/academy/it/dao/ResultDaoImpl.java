@@ -82,12 +82,7 @@ public class ResultDaoImpl implements ResultDao {
             statement.setInt(1, id);
             set = statement.executeQuery();
             if (set.next()) {
-                result = new Result();
-                result.setId(set.getInt(Constants.ID));
-                result.setMatchId(set.getInt(Constants.MATCHES_ID));
-                result.setResult(set.getString(Constants.RESULT));
-                result.setTeam1_goals(set.getInt(Constants.TEAM1_GOALS));
-                result.setTeam2_goals(set.getInt(Constants.TEAM2_GOALS));
+                result = setResultFields(set);
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao find by id operation is failed", e);
@@ -119,15 +114,8 @@ public class ResultDaoImpl implements ResultDao {
             statement = connection.prepareStatement(GET_RESULTS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
-            Result result;
             while (set.next()) {
-                result = new Result();
-                result.setId(set.getInt(Constants.ID));
-                result.setMatchId(set.getInt(Constants.MATCHES_ID));
-                result.setResult(set.getString(Constants.RESULT));
-                result.setTeam1_goals(set.getInt(Constants.TEAM1_GOALS));
-                result.setTeam2_goals(set.getInt(Constants.TEAM2_GOALS));
-                list.add(result);
+                list.add(setResultFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao get last results operation is failed", e);
@@ -138,6 +126,24 @@ public class ResultDaoImpl implements ResultDao {
             Utils.closeConnection(connection);
         }
         return list;
+    }
+
+
+    /**
+     * Returns result entity with fields values retrieved from the database.
+     *
+     * @param set java.sql.ResultSet
+     * @return {@link by.academy.it.entity.Result} entity.
+     * @throws SQLException if an exception occurred during the operation.
+     */
+    private Result setResultFields(ResultSet set) throws SQLException {
+        Result result = new Result();
+        result.setId(set.getInt(Constants.ID));
+        result.setMatchId(set.getInt(Constants.MATCHES_ID));
+        result.setResult(set.getString(Constants.RESULT));
+        result.setTeam1_goals(set.getInt(Constants.TEAM1_GOALS));
+        result.setTeam2_goals(set.getInt(Constants.TEAM2_GOALS));
+        return result;
     }
 
 
@@ -159,15 +165,8 @@ public class ResultDaoImpl implements ResultDao {
             statement = connection.prepareStatement(GET_LAST_RESULTS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
-            Result result;
             while (set.next()) {
-                result = new Result();
-                result.setId(set.getInt(Constants.ID));
-                result.setMatchId(set.getInt(Constants.MATCHES_ID));
-                result.setResult(set.getString(Constants.RESULT));
-                result.setTeam1_goals(set.getInt(Constants.TEAM1_GOALS));
-                result.setTeam2_goals(set.getInt(Constants.TEAM2_GOALS));
-                list.add(result);
+                list.add(setResultFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("ResultDao get results operation is failed", e);

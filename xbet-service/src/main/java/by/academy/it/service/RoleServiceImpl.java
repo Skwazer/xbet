@@ -73,7 +73,7 @@ class RoleServiceImpl implements RoleService {
      */
     public void createRole(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String roleParam = request.getParameter(Constants.ROLE);
-        if (Utils.isValidString(roleParam)) {
+        if (Utils.isStringValid(roleParam) && isRoleValid(roleParam)) {
             Role role = new Role();
             role.setRole(roleParam);
             try {
@@ -99,6 +99,17 @@ class RoleServiceImpl implements RoleService {
 
 
     /**
+     * Validates role value.
+     *
+     * @param role a value to validate.
+     * @return true if role matches the regular expression or false otherwise.
+     */
+    private boolean isRoleValid(String role) {
+        return role.matches(Constants.ROLE_REGEX);
+    }
+
+
+    /**
      * Retrieves a role by id through {@link by.academy.it.dao.RoleDao}.
      *
      * @param request {@code HttpServletRequest} request.
@@ -109,7 +120,7 @@ class RoleServiceImpl implements RoleService {
     public void showUpdateRolePage(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String roleParam = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(roleParam)) {
+        if (Utils.isStringValid(roleParam)) {
             try {
                 int id = Integer.parseInt(roleParam);
                 Role role = roleDao.findById(id);
@@ -156,7 +167,7 @@ class RoleServiceImpl implements RoleService {
     public void updateRole(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idParam = request.getParameter(Constants.ID);
         String roleParam = request.getParameter(Constants.ROLE);
-        if (Utils.isValidString(idParam) && Utils.isValidString(roleParam)) {
+        if (Utils.areStringsValid(idParam, roleParam) && isRoleValid(roleParam)) {
             try {
                 int id = Integer.parseInt(idParam);
                 if (id == 1) {
@@ -202,7 +213,7 @@ class RoleServiceImpl implements RoleService {
      */
     public void deleteRole(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
 

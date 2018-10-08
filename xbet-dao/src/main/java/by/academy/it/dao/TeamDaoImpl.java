@@ -77,9 +77,7 @@ public class TeamDaoImpl implements TeamDao {
             statement.setInt(1, id);
             set = statement.executeQuery();
             if (set.next()) {
-                team = new Team();
-                team.setId(set.getInt(Constants.ID));
-                team.setName(set.getString(Constants.NAME));
+                team = setTeamFields(set);
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao find by id operation is failed", e);
@@ -89,6 +87,21 @@ public class TeamDaoImpl implements TeamDao {
             Utils.closeStatement(statement);
             Utils.closeConnection(connection);
         }
+        return team;
+    }
+
+
+    /**
+     * Returns team entity with fields values retrieved from the database.
+     *
+     * @param set java.sql.ResultSet
+     * @return {@link by.academy.it.entity.Team} entity.
+     * @throws SQLException if an exception occurred during the operation.
+     */
+    private Team setTeamFields(ResultSet set) throws SQLException {
+        Team team = new Team();
+        team.setId(set.getInt(Constants.ID));
+        team.setName(set.getString(Constants.NAME));
         return team;
     }
 
@@ -111,12 +124,8 @@ public class TeamDaoImpl implements TeamDao {
             statement = connection.prepareStatement(GET_TEAMS_QUERY);
             statement.setInt(1, startFrom);
             set = statement.executeQuery();
-            Team team;
             while (set.next()) {
-                team = new Team();
-                team.setId(set.getInt(Constants.ID));
-                team.setName(set.getString(Constants.NAME));
-                list.add(team);
+                list.add(setTeamFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("TeamDao get teams operation is failed", e);

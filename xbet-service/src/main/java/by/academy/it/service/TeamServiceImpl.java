@@ -83,7 +83,7 @@ class TeamServiceImpl implements TeamService {
      */
     public void createTeam(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter(Constants.NAME);
-        if (Utils.isValidString(name)) {
+        if (Utils.isStringValid(name) && isNameValid(name)) {
             Team team = new Team();
             team.setName(name);
             try {
@@ -109,6 +109,17 @@ class TeamServiceImpl implements TeamService {
 
 
     /**
+     * Validates name value.
+     *
+     * @param name a value to validate.
+     * @return true if name matches the regular expression or false otherwise.
+     */
+    private boolean isNameValid(String name) {
+        return name.matches(Constants.TEAM_REGEX);
+    }
+
+
+    /**
      * Retrieves a team by id through {@link by.academy.it.dao.RoleDao} and sends forward to the 'update team' page.
      *
      * @param request {@code HttpServletRequest} request.
@@ -119,7 +130,7 @@ class TeamServiceImpl implements TeamService {
     public void showUpdateTeamPage(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String idParam = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(idParam)) {
+        if (Utils.isStringValid(idParam)) {
             try {
                 int id = Integer.parseInt(idParam);
                 Team team = teamDao.findById(id);
@@ -160,7 +171,7 @@ class TeamServiceImpl implements TeamService {
     public void updateTeam(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idParam = request.getParameter(Constants.ID);
         String name = request.getParameter(Constants.NAME);
-        if (Utils.isValidString(idParam) && Utils.isValidString(name)) {
+        if (Utils.areStringsValid(idParam, name) && isNameValid(name)) {
             try {
                 int id = Integer.parseInt(idParam);
                 Team team = new Team();
@@ -201,7 +212,7 @@ class TeamServiceImpl implements TeamService {
      */
     public void deleteTeam(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
                 teamDao.delete(id);

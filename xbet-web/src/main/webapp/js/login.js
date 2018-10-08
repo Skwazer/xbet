@@ -3,31 +3,35 @@ var isPasswordCorrect = false;
 
 function checkLogin() {
     var login = $("#login").val();
+    var regExp = new RegExp("<c:out value='${regexp}'/>");
     if (login === "") {
         $('#loginDiv').css("display", "none");
         alert("<c:out value='${loginRequired}'/>");
         isLoginExists = false;
-        return;
-    }
-    $.ajax({
-        url: "<c:url value='/main/authenticate'/>",
-        type: "POST",
-        data: {
-            key: login
-        },
-        success: function (data, textStatus, request) {
-            var result = request.getResponseHeader('result');
-            if (result !== null && result !== "") {
-                loginMessage(result);
-                $('#loginDiv').css("display", "block");
-            } else {
-                $('#loginDiv').css("display", "none");
-                $('#loginDiv').html("");
-                alert("<c:out value='${loginError}'/>");
-                isLoginExists = false;
+    } else if (!regExp.test(login)) {
+        $('#loginDiv').css("display", "block");
+        loginMessage("REGEXP");
+    } else {
+        $.ajax({
+            url: "<c:url value='/main/authenticate'/>",
+            type: "POST",
+            data: {
+                key: login
+            },
+            success: function (data, textStatus, request) {
+                var result = request.getResponseHeader('result');
+                if (result !== null && result !== "") {
+                    loginMessage(result);
+                    $('#loginDiv').css("display", "block");
+                } else {
+                    $('#loginDiv').css("display", "none");
+                    $('#loginDiv').html("");
+                    alert("<c:out value='${loginError}'/>");
+                    isLoginExists = false;
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 function loginMessage(result) {
@@ -37,6 +41,9 @@ function loginMessage(result) {
     } else if (result === 'FAILURE') {
         $('#loginDiv').html("<p style='color: red'><c:out value='${loginIncorrect}'/></p>");
         isLoginExists = false;
+    } else if (result === 'REGEXP') {
+        $('#loginDiv').html("<p style='color: red'><c:out value='${loginRegexp}'/></p>");
+        isLoginCorrect = false;
     }
 }
 

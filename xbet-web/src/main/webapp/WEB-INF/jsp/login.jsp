@@ -9,10 +9,12 @@
     <fmt:message key="enter.login" var="enterLogin"/>
     <fmt:message key="enter.password" var="enterPassword"/>
     <fmt:message key="login" var="login"/>
+    <fmt:message key="regexp" var="regexp"/>
     <fmt:message key="login.correct" var="loginCorrect"/>
     <fmt:message key="login.incorrect" var="loginIncorrect"/>
     <fmt:message key="login.error" var="loginError"/>
     <fmt:message key="login.required" var="loginRequired"/>
+    <fmt:message key="login.regexp" var="loginRegexp"/>
     <fmt:message key="password.required" var="passwordRequired"/>
     <fmt:message key="password.valid" var="passwordValid"/>
     <fmt:message key="password.incorrect" var="passwordIncorrect"/>

@@ -76,9 +76,7 @@ public class RoleDaoImpl implements RoleDao {
             statement.setInt(1, id);
             set = statement.executeQuery();
             if (set.next()) {
-                role = new Role();
-                role.setId(set.getInt(Constants.ID));
-                role.setRole(set.getString(Constants.ROLE));
+                role = setRoleFields(set);
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao find by login operation is failed", e);
@@ -88,6 +86,21 @@ public class RoleDaoImpl implements RoleDao {
             Utils.closeStatement(statement);
             Utils.closeConnection(connection);
         }
+        return role;
+    }
+
+
+    /**
+     * Returns role entity with fields values retrieved from the database.
+     *
+     * @param set java.sql.ResultSet
+     * @return {@link by.academy.it.entity.Role} entity.
+     * @throws SQLException if an exception occurred during the operation.
+     */
+    private Role setRoleFields(ResultSet set) throws SQLException {
+        Role role = new Role();
+        role.setId(set.getInt(Constants.ID));
+        role.setRole(set.getString(Constants.ROLE));
         return role;
     }
 
@@ -108,12 +121,8 @@ public class RoleDaoImpl implements RoleDao {
             connection.setReadOnly(true);
             statement = connection.createStatement();
             set = statement.executeQuery(GET_ROLES_QUERY);
-            Role role;
             while (set.next()) {
-                role = new Role();
-                role.setId(set.getInt(Constants.ID));
-                role.setRole(set.getString(Constants.ROLE));
-                list.add(role);
+                list.add(setRoleFields(set));
             }
         } catch (SQLException | ConnectionPoolException e) {
             logger.error("RoleDao get roles operation is failed", e);

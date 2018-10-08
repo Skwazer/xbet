@@ -44,7 +44,7 @@ class MatchServiceImpl implements MatchService {
      */
     public void placeBet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String matchId = request.getParameter(Constants.MATCH_ID);
-        if (Utils.isValidString(matchId)) {
+        if (Utils.isStringValid(matchId)) {
             try {
                 int id = Integer.parseInt(matchId);
                 Match match = matchDao.findById(id);
@@ -187,55 +187,60 @@ class MatchServiceImpl implements MatchService {
         String v12 = request.getParameter(Constants.V12);
         String X2 = request.getParameter(Constants.X2);
 
-        try {
-            Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateParam);
-            java.sql.Date date = new java.sql.Date(utilDate.getTime());
-            int team1_id = Integer.parseInt(team1IDParam);
-            int team2_id = Integer.parseInt(team2IDParam);
-            double victory1 = Double.parseDouble(v1);
-            double draw = Double.parseDouble(X);
-            double victory2 = Double.parseDouble(v2);
-            double victory1orDraw = Double.parseDouble(X1);
-            double victory1or2 = Double.parseDouble(v12);
-            double victory2orDraw = Double.parseDouble(X2);
-            if (!checkCoefficientValue(victory1) || !checkCoefficientValue(draw) || !checkCoefficientValue(victory2) ||
-                    !checkCoefficientValue(victory1orDraw) || !checkCoefficientValue(victory1or2)
-                    || !checkCoefficientValue(victory2orDraw)) {
-                logger.warn("Coefficient value is not correct");
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.COEF_VALUE_ERROR);
+        if (Utils.areStringsValid(dateParam, team1IDParam, team2IDParam, v1, X, v2, X1, v12, X2)) {
+            try {
+                Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateParam);
+                java.sql.Date date = new java.sql.Date(utilDate.getTime());
+                int team1_id = Integer.parseInt(team1IDParam);
+                int team2_id = Integer.parseInt(team2IDParam);
+                double victory1 = Double.parseDouble(v1);
+                double draw = Double.parseDouble(X);
+                double victory2 = Double.parseDouble(v2);
+                double victory1orDraw = Double.parseDouble(X1);
+                double victory1or2 = Double.parseDouble(v12);
+                double victory2orDraw = Double.parseDouble(X2);
+                if (!checkCoefficientsValues(victory1, draw, victory2, victory1orDraw, victory1or2, victory2orDraw)) {
+                    logger.warn("Coefficients values are not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.COEF_VALUE_ERROR);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                Match match = new Match();
+                match.setDate(date);
+                match.setTeam1_id(team1_id);
+                match.setTeam2_id(team2_id);
+                match.setVictory1(victory1);
+                match.setDraw(draw);
+                match.setVictory2(victory2);
+                match.setVictory1OrDraw(victory1orDraw);
+                match.setVictory1Or2(victory1or2);
+                match.setVictory2OrDraw(victory2orDraw);
+                matchDao.create(match);
+
+                logger.info("match has been created");
+                request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.CREATE_MATCH_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
+
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                return;
+            } catch (ParseException e) {
+                logger.error("Cannot parse a date parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DATE_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
+                logger.error("An exception occurred during create match operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_MATCH_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-            Match match = new Match();
-            match.setDate(date);
-            match.setTeam1_id(team1_id);
-            match.setTeam2_id(team2_id);
-            match.setVictory1(victory1);
-            match.setDraw(draw);
-            match.setVictory2(victory2);
-            match.setVictory1OrDraw(victory1orDraw);
-            match.setVictory1Or2(victory1or2);
-            match.setVictory2OrDraw(victory2orDraw);
-            matchDao.create(match);
-
-            logger.info("match has been created");
-            request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.CREATE_MATCH_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
-
-        } catch (NumberFormatException e) {
-            logger.error("Cannot parse a number parameter", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
-        } catch (ParseException e) {
-            logger.error("Cannot parse a date parameter", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DATE_PARSE_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
-        } catch (DAOException e) {
-            logger.error("An exception occurred during create match operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_MATCH_ERROR);
+        } else {
+            logger.warn("Create match parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -253,7 +258,7 @@ class MatchServiceImpl implements MatchService {
     public void showUpdateMatchPage(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
                 Match match = matchDao.findById(id);
@@ -263,7 +268,7 @@ class MatchServiceImpl implements MatchService {
                 List<Integer> teamsIds = ServiceFactoryImpl.getIdService().getTeamsIds();
                 if (teamsIds != null) {
                     request.setAttribute(Constants.TEAMS_IDS, teamsIds);
-                    logger.info("teams ids have been retrieved");
+                    logger.info("team ids have been retrieved");
                 } else {
                     logger.warn("Teams ids have not been found");
                     request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TEAMS_IDS_NOT_FOUND);
@@ -306,7 +311,7 @@ class MatchServiceImpl implements MatchService {
                 request.setAttribute(Constants.TEAMS_IDS, teamsIds);
                 logger.info("teams ids have been retrieved");
             } else {
-                logger.warn("Teams ids have not been found");
+                logger.warn("Team ids have not been found");
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.TEAMS_IDS_NOT_FOUND);
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 return;
@@ -341,57 +346,62 @@ class MatchServiceImpl implements MatchService {
         String v12 = request.getParameter(Constants.V12);
         String X2 = request.getParameter(Constants.X2);
 
-        try {
-            int id = Integer.parseInt(idParam);
-            Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateParam);
-            java.sql.Date date = new java.sql.Date(utilDate.getTime());
-            int team1_id = Integer.parseInt(team1IDParam);
-            int team2_id = Integer.parseInt(team2IDParam);
-            double victory1 = Double.parseDouble(v1);
-            double draw = Double.parseDouble(X);
-            double victory2 = Double.parseDouble(v2);
-            double victory1orDraw = Double.parseDouble(X1);
-            double victory1or2 = Double.parseDouble(v12);
-            double victory2orDraw = Double.parseDouble(X2);
-            if (!checkCoefficientValue(victory1) || !checkCoefficientValue(draw) || !checkCoefficientValue(victory2) ||
-                    !checkCoefficientValue(victory1orDraw) || !checkCoefficientValue(victory1or2)
-                    || !checkCoefficientValue(victory2orDraw)) {
-                logger.warn("Coefficient value is not correct");
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.COEF_VALUE_ERROR);
+        if (Utils.areStringsValid(idParam, dateParam, team1IDParam, team2IDParam, v1, X, v2, X1, v12, X2)) {
+            try {
+                int id = Integer.parseInt(idParam);
+                Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateParam);
+                java.sql.Date date = new java.sql.Date(utilDate.getTime());
+                int team1_id = Integer.parseInt(team1IDParam);
+                int team2_id = Integer.parseInt(team2IDParam);
+                double victory1 = Double.parseDouble(v1);
+                double draw = Double.parseDouble(X);
+                double victory2 = Double.parseDouble(v2);
+                double victory1orDraw = Double.parseDouble(X1);
+                double victory1or2 = Double.parseDouble(v12);
+                double victory2orDraw = Double.parseDouble(X2);
+                if (!checkCoefficientsValues(victory1, draw, victory2, victory1orDraw, victory1or2, victory2orDraw)) {
+                    logger.warn("Coefficient values are not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.COEF_VALUE_ERROR);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+                Match match = new Match();
+                match.setId(id);
+                match.setDate(date);
+                match.setTeam1_id(team1_id);
+                match.setTeam2_id(team2_id);
+                match.setVictory1(victory1);
+                match.setDraw(draw);
+                match.setVictory2(victory2);
+                match.setVictory1OrDraw(victory1orDraw);
+                match.setVictory1Or2(victory1or2);
+                match.setVictory2OrDraw(victory2orDraw);
+                matchDao.update(match);
+
+                logger.info("match has been updated");
+                request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.UPDATE_MATCH_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
+
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                return;
+            } catch (ParseException e) {
+                logger.error("Cannot parse a date parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DATE_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            } catch (DAOException e) {
+                logger.error("An exception occurred during update match operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_MATCH_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
-            Match match = new Match();
-            match.setId(id);
-            match.setDate(date);
-            match.setTeam1_id(team1_id);
-            match.setTeam2_id(team2_id);
-            match.setVictory1(victory1);
-            match.setDraw(draw);
-            match.setVictory2(victory2);
-            match.setVictory1OrDraw(victory1orDraw);
-            match.setVictory1Or2(victory1or2);
-            match.setVictory2OrDraw(victory2orDraw);
-            matchDao.update(match);
-
-            logger.info("match has been updated");
-            request.getSession().setAttribute(Constants.MATCHES_MESSAGE, Constants.UPDATE_MATCH_MESSAGE);
-            response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_MATCHES);
-
-        } catch (NumberFormatException e) {
-            logger.error("Cannot parse a number parameter", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
-        } catch (ParseException e) {
-            logger.error("Cannot parse a date parameter", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.DATE_PARSE_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
-        } catch (DAOException e) {
-            logger.error("An exception occurred during update match operation", e);
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.UPDATE_MATCH_ERROR);
+        } else {
+            logger.warn("Update match parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
             response.sendRedirect(request.getContextPath() + Constants.ERROR);
         }
@@ -407,7 +417,7 @@ class MatchServiceImpl implements MatchService {
      */
     public void deleteMatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String key = request.getParameter(Constants.KEY);
-        if (Utils.isValidString(key)) {
+        if (Utils.isStringValid(key)) {
             try {
                 int id = Integer.parseInt(key);
                 matchDao.delete(id);
@@ -437,13 +447,18 @@ class MatchServiceImpl implements MatchService {
 
 
     /**
-     * Checks if the value of the coefficient is within the acceptable range.
+     * Checks if values of coefficients is within the acceptable range.
      *
-     * @param value the coefficient value.
-     * @return true if the value greater than one and less or equals four, false otherwise.
+     * @param values coefficients values.
+     * @return true if the values greater or equal one and less or equals four, false otherwise.
      */
-    private boolean checkCoefficientValue(double value) {
-        return value >= 1 && value <= 4;
+    private boolean checkCoefficientsValues(double... values) {
+        for (double coef : values) {
+            if (coef < 1 || coef > 4) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

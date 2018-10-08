@@ -156,10 +156,9 @@ class Constants {
     static final String RUS = "RU";
     static final String PARAM_ERROR = "param.error";
     static final String PARAMS_ERROR = "params.error";
-    static final String BALANCE_NEGATIVE = "balance.negative";
     static final String COEF_VALUE_ERROR = "coef.value.error";
     static final String GOALS_VALUE_ERROR = "goals.value.error";
-    static final String TEST = "test";
+    static final String TEST = "Test";
     static final String STRING_1 = "1";
     static final String STRING_2 = "2";
     static final String DAO_TEST_EXC = "2";
@@ -179,5 +178,9 @@ class Constants {
     static final String LOGIN_REGEX = "^[A-ZА-Я][a-zа-я]{1,19}$";
     static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,20}$";
     static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+    static final String SLASH = "/";
+    static final String AMOUNT_NEGATIVE = "amount.negative";
+    static final String TEAM_REGEX = "^[A-ZА-Я][a-zа-я]{3,19}$";
+    static final String ROLE_REGEX = "^[a-zа-яA-ZА-Я]{4,20}$";
 
 }

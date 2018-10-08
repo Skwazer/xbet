@@ -40,5 +40,6 @@ public class Constants {
     public static final String DB_PASSWORD = "PASSWORD";
     public static final String DRIVER = "DRIVER";
     public static final String MAX_CONNECTIONS = "MAX.CONNECTIONS";
+    static final String WON = "won";
 
 }
