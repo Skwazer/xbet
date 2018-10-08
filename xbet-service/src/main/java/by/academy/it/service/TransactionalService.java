@@ -21,13 +21,21 @@ public interface TransactionalService {
     void confirmBet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 
     /**
-     * Creates a random result to selected match, finds all active bets, placed on this match, sets a bet status to
-     * 'won' or 'lost' and updates the user balance.
+     * Creates a result entity and finishes the match.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
      */
-    void finishMatch(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void createResult(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    /**
+     * Creates a random result entity to the selected match and finishes the match.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
+    void createRandomResult(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
 }

@@ -33,16 +33,6 @@ public interface ResultService {
 
 
     /**
-     * Creates a result through {@link by.academy.it.dao.ResultDao}
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws IOException if an input or output error is detected.
-     */
-    void createResult(HttpServletRequest request, HttpServletResponse response) throws IOException;
-
-
-    /**
      * Retrieves a result by id through {@link by.academy.it.dao.ResultDao} and sends a redirect to 'update result' page.
      *
      * @param request {@code HttpServletRequest} request.

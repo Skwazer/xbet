@@ -1,6 +1,6 @@
 package by.academy.it.command;
 
-import by.academy.it.service.ResultService;
+import by.academy.it.service.TransactionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,19 +16,19 @@ import java.io.IOException;
 public class CreateResultCommand implements Command {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateResultCommand.class);
-    private ResultService resultService;
+    private TransactionalService transactionalService;
 
     /**
      * Constructs an instance of the {@code CreateResultCommand}.
      *
-     * @param resultService {@link by.academy.it.service.ResultService}
+     * @param transactionalService {@link by.academy.it.service.TransactionalService}.
      */
-    CreateResultCommand(ResultService resultService) {
-        this.resultService = resultService;
+    CreateResultCommand(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
     }
 
     /**
-     * Delegates create result operation to {@link by.academy.it.service.ResultService}.
+     * Delegates create result operation to {@link by.academy.it.service.TransactionalService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -38,7 +38,7 @@ public class CreateResultCommand implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.info("create result operation");
-        resultService.createResult(request, response);
+        transactionalService.createResult(request, response);
     }
 
 }

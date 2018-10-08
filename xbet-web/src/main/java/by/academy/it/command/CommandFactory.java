@@ -51,7 +51,7 @@ public class CommandFactory {
         commands.put(Constants.POST_BALANCE, new CheckBalanceCommand(userService));
         commands.put(Constants.POST_TOPUP, new TopUpBalanceCommand(userService));
         commands.put(Constants.GET_BETS, new ShowUserBetsCommand(betService));
-        commands.put(Constants.POST_MATCHES, new FinishMatchCommand(transactionalService));
+        commands.put(Constants.POST_MATCHES, new CreateRandomResultCommand(transactionalService));
         commands.put(Constants.GET_GET_USERS, new ShowUsersCommand(userService));
         commands.put(Constants.GET_CREATE_USER, new ShowCreateUserPage(userService));
         commands.put(Constants.POST_CREATE_USER, new CreateUserCommand(userService));
@@ -76,7 +76,7 @@ public class CommandFactory {
         commands.put(Constants.POST_DELETE_MATCH, new DeleteMatchCommand(matchService));
         commands.put(Constants.GET_GET_RESULTS, new ShowResultsCommand(resultService));
         commands.put(Constants.GET_CREATE_RESULT, new ShowCreateResultPageCommand(resultService));
-        commands.put(Constants.POST_CREATE_RESULT, new CreateResultCommand(resultService));
+        commands.put(Constants.POST_CREATE_RESULT, new CreateResultCommand(transactionalService));
         commands.put(Constants.POST_UPDATE_RESULT, new ShowUpdateResultPageCommand(resultService));
         commands.put(Constants.GET_UPDATE_RESULT, new ForwardRequestCommand(Constants.UPDATE_RESULT));
         commands.put(Constants.POST_CHANGE_RESULT, new UpdateResultCommand(resultService));

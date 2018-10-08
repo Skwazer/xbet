@@ -52,7 +52,6 @@ class Constants {
     static final String CONFIRM_MESSAGE = "confirmMessage";
     static final String BETS_EXCEPTION = "bets.error";
     static final String BETS = "bets";
-    static final String FINISH_ERROR = "finish.error";
     static final String NUMBER_ERROR = "number.error";
     static final String FIRST_WON = "1";
     static final String SECOND_WON = "2";
@@ -182,5 +181,6 @@ class Constants {
     static final String AMOUNT_NEGATIVE = "amount.negative";
     static final String TEAM_REGEX = "^[A-ZА-Я][a-zа-я]{3,19}$";
     static final String ROLE_REGEX = "^[a-zа-яA-ZА-Я]{4,20}$";
+    static final String RANDOM_ERROR = "random.result.create.error";
 
 }

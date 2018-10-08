@@ -121,16 +121,119 @@ class TransactionalServiceImpl implements TransactionalService {
         }
     }
 
+    /**
+     * Updates the session user's balance if it is necessary.
+     *
+     * @param request HttpServletRequest request.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    private void checkSessionUserBalance(HttpServletRequest request) throws DAOException {
+        HttpSession session = request.getSession();
+        User sessionUser = (User) session.getAttribute(Constants.USER);
+        User user = userDao.findByLogin(sessionUser.getLogin());
+        if (!user.getBalance().equals(sessionUser.getBalance())) {
+            sessionUser.setBalance(user.getBalance());
+            logger.info("user balance in the session has been updated");
+        }
+    }
+
 
     /**
-     * Creates a random result to selected match, finds all active bets, placed on this match, sets a bet status to
-     * 'won' or 'lost' and updates the user balance.
+     * Finds all active bets, placed on this match, sets a bet status to 'won' or 'lost'. Creates result entry,
+     * updates bet entries and user balance through {@link by.academy.it.dao.TransactionalDao}.
+     *
+     * @param result {@link by.academy.it.entity.Result} entity.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    private void finishMatch(Result result) throws DAOException {
+            List<Bet> bets = betDao.findByMatchId(result.getMatchId());
+            if (!bets.isEmpty()) {
+                bets.forEach(bet -> {
+                    if (bet.getBetResult().contains(result.getResult())) {
+                        bet.setStatus(Constants.WON);
+                    } else {
+                        bet.setStatus(Constants.LOST);
+                    }
+                });
+            } else {
+                logger.warn("no bets placed on this match");
+            }
+
+            logger.debug("start of a transaction");
+            transactionalDao.finishMatch(result, bets);
+            logger.debug("transaction is finished");
+    }
+
+
+    /**
+     * Creates a result entity and finishes the match.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
      * @throws IOException if an input or output error is detected.
      */
-    public void finishMatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void createResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String matchIdParam = request.getParameter(Constants.MATCH_ID_PARAM);
+        String team1GoalsParam = request.getParameter(Constants.TEAM1_GOALS);
+        String team2GoalsParam = request.getParameter(Constants.TEAM2_GOALS);
+        String result = request.getParameter(Constants.RESULT);
+
+        if (Utils.areStringsValid(matchIdParam, team1GoalsParam, team2GoalsParam, result)) {
+            try {
+                int matchId = Integer.parseInt(matchIdParam);
+                int team1_goals = Integer.parseInt(team1GoalsParam);
+                int team2_goals = Integer.parseInt(team2GoalsParam);
+
+                if (!ResultServiceImpl.checkGoalsValue(team1_goals) ||
+                        !ResultServiceImpl.checkGoalsValue(team2_goals)) {
+                    logger.warn("Goal values are not correct");
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.GOALS_VALUE_ERROR);
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
+                    return;
+                }
+
+                Result res = new Result();
+                res.setMatchId(matchId);
+                res.setTeam1_goals(team1_goals);
+                res.setTeam2_goals(team2_goals);
+                res.setResult(result);
+
+                finishMatch(res);
+                checkSessionUserBalance(request);
+
+                logger.info("result has been created");
+                request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.CREATE_RESULT_MESSAGE);
+                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
+
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+
+            } catch (DAOException e) {
+                logger.error("An exception occurred during create result operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_RESULT_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.warn("Create result parameters are not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        }
+    }
+
+
+    /**
+     * Creates a random result entity to the selected match and finishes the match.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void createRandomResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String matchIdParam = request.getParameter(Constants.MATCH_ID);
         if (Utils.isStringValid(matchIdParam)) {
             try {
@@ -143,30 +246,10 @@ class TransactionalServiceImpl implements TransactionalService {
                 result.setTeam1_goals(resultEntry.team1goals);
                 result.setTeam2_goals(resultEntry.team2goals);
 
-                List<Bet> bets = betDao.findByMatchId(matchId);
-                if (!bets.isEmpty()) {
-                    bets.forEach(bet -> {
-                        if (bet.getBetResult().contains(result.getResult())) {
-                            bet.setStatus(Constants.WON);
-                        } else {
-                            bet.setStatus(Constants.LOST);
-                        }
-                    });
-                } else {
-                    logger.warn("no bets placed on this match");
-                }
+                finishMatch(result);
+                checkSessionUserBalance(request);
 
-                logger.debug("start of transaction");
-                transactionalDao.finishMatch(result, bets);
-                logger.debug("transaction is finished");
-
-                HttpSession session = request.getSession();
-                User sessionUser = (User) session.getAttribute(Constants.USER);
-                User user = userDao.findByLogin(sessionUser.getLogin());
-                if (!user.getBalance().equals(sessionUser.getBalance())) {
-                    sessionUser.setBalance(user.getBalance());
-                    logger.info("user balance in the session has been updated");
-                }
+                logger.info("random result has been created");
                 response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.RESULTS);
 
             } catch (NumberFormatException e) {
@@ -174,9 +257,10 @@ class TransactionalServiceImpl implements TransactionalService {
                 request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
+
             } catch (DAOException e) {
-                logger.error("An exception occurred during finish match operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.FINISH_ERROR);
+                logger.error("An exception occurred during create random result operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.RANDOM_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }

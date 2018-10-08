@@ -10,25 +10,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Implements {@link by.academy.it.command.Command}, randomly finishes the match.
+ * Implements {@link by.academy.it.command.Command}, creates a random result of the match.
  *
  */
-public class FinishMatchCommand implements Command {
+public class CreateRandomResultCommand implements Command {
 
-    private static final Logger logger = LoggerFactory.getLogger(FinishMatchCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(CreateRandomResultCommand.class);
     private TransactionalService transactionalService;
 
     /**
-     * Constructs an instance of the {@code FinishMatchCommand}.
+     * Constructs an instance of the {@code CreateRandomResultCommand}.
      *
-     * @param transactionalService {@link TransactionalService}
+     * @param transactionalService {@link by.academy.it.service.TransactionalService}.
      */
-    FinishMatchCommand(TransactionalService transactionalService) {
+    CreateRandomResultCommand(TransactionalService transactionalService) {
         this.transactionalService = transactionalService;
     }
 
     /**
-     * Delegates operation to {@link TransactionalService}.
+     * Delegates operation to {@link by.academy.it.service.TransactionalService}.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response {@code HttpServletResponse} response.
@@ -37,8 +37,8 @@ public class FinishMatchCommand implements Command {
      */
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.info("finish match operation");
-        transactionalService.finishMatch(request, response);
+        logger.info("create random result operation");
+        transactionalService.createRandomResult(request, response);
     }
 
 }

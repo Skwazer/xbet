@@ -116,62 +116,6 @@ class ResultServiceImpl implements ResultService {
 
 
     /**
-     * Creates a result through {@link by.academy.it.dao.ResultDao}
-     *
-     * @param request {@code HttpServletRequest} request.
-     * @param response  {@code HttpServletResponse} response.
-     * @throws IOException if an input or output error is detected.
-     */
-    public void createResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String matchIdParam = request.getParameter(Constants.MATCH_ID_PARAM);
-        String team1GoalsParam = request.getParameter(Constants.TEAM1_GOALS);
-        String team2GoalsParam = request.getParameter(Constants.TEAM2_GOALS);
-        String result = request.getParameter(Constants.RESULT);
-
-        if (Utils.areStringsValid(matchIdParam, team1GoalsParam, team2GoalsParam, result)) {
-            try {
-                int matchId = Integer.parseInt(matchIdParam);
-                int team1_goals = Integer.parseInt(team1GoalsParam);
-                int team2_goals = Integer.parseInt(team2GoalsParam);
-                if (!checkGoalsValue(team1_goals) || !checkGoalsValue(team2_goals)) {
-                    logger.warn("Goal values are not correct");
-                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.GOALS_VALUE_ERROR);
-                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
-                    return;
-                }
-
-                Result res = new Result();
-                res.setMatchId(matchId);
-                res.setTeam1_goals(team1_goals);
-                res.setTeam2_goals(team2_goals);
-                res.setResult(result);
-                resultDao.create(res);
-
-                logger.info("result has been created");
-                request.getSession().setAttribute(Constants.RESULTS_MESSAGE, Constants.CREATE_RESULT_MESSAGE);
-                response.sendRedirect(request.getContextPath() + Constants.MAIN + Constants.GET_RESULTS);
-
-            } catch (NumberFormatException e) {
-                logger.error("Cannot parse a number parameter", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            } catch (DAOException e) {
-                logger.error("An exception occurred during create result operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.CREATE_RESULT_ERROR);
-
-                response.sendRedirect(request.getContextPath() + Constants.ERROR);
-            }
-        } else {
-            logger.warn("Create result parameters are not valid");
-            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
-
-            response.sendRedirect(request.getContextPath() + Constants.ERROR);
-        }
-    }
-
-
-    /**
      * Retrieves a result by id through {@link by.academy.it.dao.ResultDao} and sends forward to 'update result' page.
      *
      * @param request {@code HttpServletRequest} request.
@@ -354,7 +298,7 @@ class ResultServiceImpl implements ResultService {
      * @param value the goals value.
      * @return true if the value greater than zero and less or equals five, false otherwise.
      */
-    private boolean checkGoalsValue(double value) {
+    static boolean checkGoalsValue(double value) {
         return value >= 0 && value <= 6;
     }
 

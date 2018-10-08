@@ -129,7 +129,7 @@ public class TransactionalDaoImpl implements TransactionalDao {
                     updateUserStatement.setDouble(1, bet.getBet() * bet.getMoney());
                     updateUserStatement.setInt(2, bet.getUser_id());
                     updateUserStatement.addBatch();
-                    logger.debug("user balance: id : [" + bet.getUser_id()
+                    logger.debug("update user id : [" + bet.getUser_id()
                             + "], prize [" + bet.getMoney() * bet.getBet() + "]");
                 }
             }
