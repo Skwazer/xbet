@@ -44,31 +44,64 @@ class BetServiceImpl implements BetService {
     public void showUserBets(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String pageParam = request.getParameter(Constants.PAGE);
+        String type = request.getParameter(Constants.TYPE);
         int page = Utils.checkPageParameter(pageParam);
         int startFrom = Utils.calculateSelectStartPosition(page, request, response);
         if (startFrom >= 0) {
-            User user = (User) request.getSession().getAttribute(Constants.USER);
-            try {
-                List<Bet> list = betDao.findByUserId(user.getId(), startFrom);
-                if (!list.isEmpty()) {
-                    ServiceFactoryImpl.getModelService().setBetMatches(list);
-                    double pages = Math.ceil(betDao.getAmountOfUserBets(user.getId()) / 10d);
+            if (!Utils.isStringValid(type)) {
+                type = Constants.ACTIVE;
+            }
+            if (isTypeValid(type)) {
+                User user = (User) request.getSession().getAttribute(Constants.USER);
+                try {
+                    List<Bet> list = null;
+                    double pages = 0d;
+                    switch (type) {
+                        case Constants.ACTIVE:
+                            list = betDao.findActiveBetsByUserId(user.getId(), startFrom);
+                            pages = Math.ceil(betDao.getAmountOfActiveUserBets(user.getId()) / 10d);
+                            break;
+                        case Constants.PLAYED:
+                            list = betDao.findPlayedBetsByUserId(user.getId(), startFrom);
+                            pages = Math.ceil(betDao.getAmountOfPlayedUserBets(user.getId()) / 10d);
+                            break;
+                    }
+                    if (!list.isEmpty()) {
+                        ServiceFactoryImpl.getModelService().setBetMatches(list);
 
-                    request.setAttribute(Constants.CURRENT_PAGE, page);
-                    request.setAttribute(Constants.PAGES, pages);
-                    logger.info("bets list is retrieved");
+                        request.setAttribute(Constants.CURRENT_PAGE, page);
+                        request.setAttribute(Constants.PAGES, pages);
+                        logger.info("bets list is retrieved");
+                    }
+                    request.setAttribute(Constants.TYPE, type);
+                    request.setAttribute(Constants.BETS, list);
+                    request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).
+                            forward(request, response);
+
+                } catch (DAOException e) {
+                    logger.error("An exception occurred during get bets list operation", e);
+                    request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
+
+                    response.sendRedirect(request.getContextPath() + Constants.ERROR);
                 }
-                request.setAttribute(Constants.BETS, list);
-                request.getRequestDispatcher(Constants.PATH + Constants.BETS + Constants.JSP).
-                        forward(request, response);
-
-            } catch (DAOException e) {
-                logger.error("An exception occurred during get bets list operation", e);
-                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_EXCEPTION);
+            } else {
+                logger.error("Bets type parameter is not valid");
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
 
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         }
+    }
+
+
+    /**
+     * Checks if the type parameter has an appropriate value.
+     *
+     * @param type type of bets.
+     * @return true if type is 'active' or 'played', false otherwise.
+     */
+    private boolean isTypeValid(String type) {
+        return Constants.ACTIVE.equals(type) || Constants.PLAYED.equals(type);
     }
 
 
@@ -105,6 +138,47 @@ class BetServiceImpl implements BetService {
                 response.sendRedirect(request.getContextPath() + Constants.ERROR);
             }
         }
+    }
+
+    /**
+     * Deletes played user's bets.
+     *
+     * @param request {@code HttpServletRequest} request.
+     * @param response  {@code HttpServletResponse} response.
+     * @throws ServletException if the request could not be handled.
+     * @throws IOException if an input or output error is detected.
+     */
+    public void deletePlayedBets(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String idParam = request.getParameter(Constants.KEY);
+        if (Utils.isStringValid(idParam)) {
+            try {
+                Integer userId = Integer.parseInt(idParam);
+
+                betDao.deletePlayedBets(userId);
+                logger.info("played bets have been deleted");
+
+                response.sendRedirect(Utils.getReferrerURI(request) + Constants.TYPE_PLAYED);
+
+            } catch (NumberFormatException e) {
+                logger.error("Cannot parse a number parameter", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.NUMBER_PARSE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+
+            } catch (DAOException e) {
+                logger.error("An exception occurred during delete played bets operation", e);
+                request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.BETS_DELETE_ERROR);
+
+                response.sendRedirect(request.getContextPath() + Constants.ERROR);
+            }
+        } else {
+            logger.error("User id parameter is not valid");
+            request.getSession().setAttribute(Constants.ERROR_MESSAGE, Constants.PARAMS_ERROR);
+
+            response.sendRedirect(request.getContextPath() + Constants.ERROR);
+        }
+
     }
 
 }

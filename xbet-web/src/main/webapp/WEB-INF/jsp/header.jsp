@@ -18,6 +18,8 @@
     <fmt:message key="bet.amount" var="betAmount"/>
     <fmt:message key="amount.negative" var="amountNegative"/>
     <fmt:message key="my.bets" var="myBets"/>
+    <fmt:message key="active" var="active"/>
+    <fmt:message key="played" var="played"/>
     <fmt:message key="users" var="usersTitle"/>
     <fmt:message key="xbet" var="xbet"/>
     <fmt:message key="management" var="management"/>
@@ -165,7 +167,10 @@
                             <a href="<c:url value="/main/logout"/>" class="small"><c:out value="${logout}"/></a>
                         </c:if>
                         <ul class="custom-menu">
-                            <li><a href="<c:url value="/main/bets"/>"><i class="fa fa-handshake-o"></i> <c:out value="${myBets}"/></a></li>
+                            <li><a href="<c:url value="/main/bets?type=active"/>"><i class="fa fa-handshake-o"></i>
+                                <c:out value="${active}"/></a></li>
+                            <li><a href="<c:url value="/main/bets?type=played"/>"><i class="fa fa-check-circle"></i>
+                                <c:out value="${played}"/></a></li>
                         </ul>
                     </li>
                     <!-- /Account -->

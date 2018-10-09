@@ -22,12 +22,20 @@ public class BetDaoImpl implements BetDao {
     private static final Logger logger = LoggerFactory.getLogger(BetDaoImpl.class);
     private ConnectionPool pool;
 
-    private static final String GET_BY_USER_ID_QUERY = "SELECT * FROM xbet.bets WHERE user_id = ? limit ?, 10";
+    private static final String GET_ACTIVE_BETS_BY_USER_ID_QUERY = "SELECT * FROM xbet.bets WHERE user_id = ? AND " +
+            "status = 'active' limit ?, 10";
+    private static final String GET_PLAYED_BETS_BY_USER_ID_QUERY = "SELECT * FROM xbet.bets WHERE user_id = ? AND " +
+            "(status = 'won' OR status = 'lost') limit ?, 10";
     private static final String GET_ALL_QUERY = "SELECT * FROM xbet.bets limit ?, 10";
-    private static final String GET_AMOUNT_BY_USER_ID_QUERY = "SELECT COUNT(*) FROM xbet.bets WHERE user_id = ?";
+    private static final String GET_AMOUNT_OF_ACTIVE_BETS_BY_USER_ID_QUERY = "SELECT COUNT(*) FROM xbet.bets " +
+            "WHERE user_id = ? AND status = 'active'";
+    private static final String GET_AMOUNT_OF_PLAYED_BETS_BY_USER_ID_QUERY = "SELECT COUNT(*) FROM xbet.bets " +
+            "WHERE user_id = ? AND (status = 'won' OR status = 'lost')";
     private static final String GET_AMOUNT_OF_ALL_BETS_QUERY = "SELECT COUNT(*) FROM xbet.bets";
     private static final String GET_BY_MATCH_ID_QUERY =
             "SELECT * FROM xbet.bets WHERE match_id = ?  AND status = 'active'";
+    private static final String DELETE_QUERY = "DELETE FROM xbet.bets WHERE user_id = ? " +
+            "AND (status = 'won' OR status = 'lost')";
 
 
     /**
@@ -42,14 +50,14 @@ public class BetDaoImpl implements BetDao {
 
 
     /**
-     * Retrieves a list of bets from the database by user id.
+     * Retrieves a list of active bets from the database by user id.
      *
      * @param userId the id of a user.
      * @param startFrom position from which the select operation is performed.
      * @return {@code List<Bet>} - the list of user's bets.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    public List<Bet> findByUserId(int userId, int startFrom) throws DAOException {
+    public List<Bet> findActiveBetsByUserId(int userId, int startFrom) throws DAOException {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet set = null;
@@ -57,7 +65,42 @@ public class BetDaoImpl implements BetDao {
         try {
             connection = pool.getConnection();
             connection.setReadOnly(true);
-            statement = connection.prepareStatement(GET_BY_USER_ID_QUERY);
+            statement = connection.prepareStatement(GET_ACTIVE_BETS_BY_USER_ID_QUERY);
+            statement.setInt(1, userId);
+            statement.setInt(2, startFrom);
+            set = statement.executeQuery();
+            while (set.next()) {
+                list.add(setBetFields(set));
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("BetDao find by user id operation is failed", e);
+            throw new DAOException("BetDao find by user id operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
+        }
+        return list;
+    }
+
+
+    /**
+     * Retrieves a list of played bets from the database by user id.
+     *
+     * @param userId the id of a user.
+     * @param startFrom position from which the select operation is performed.
+     * @return {@code List<Bet>} - the list of user's bets.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public List<Bet> findPlayedBetsByUserId(int userId, int startFrom) throws DAOException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        List<Bet> list = new ArrayList<>(10);
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.prepareStatement(GET_PLAYED_BETS_BY_USER_ID_QUERY);
             statement.setInt(1, userId);
             statement.setInt(2, startFrom);
             set = statement.executeQuery();
@@ -97,13 +140,13 @@ public class BetDaoImpl implements BetDao {
 
 
     /**
-     * Retrieves amount of user bets from the database.
+     * Retrieves amount of active user bets from the database.
      *
      * @param userId the id of a user.
      * @return amount of user bets.
      * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
      */
-    public int getAmountOfUserBets(int userId) throws DAOException {
+    public int getAmountOfActiveUserBets(int userId) throws DAOException {
         int amount = 0;
         Connection connection = null;
         PreparedStatement statement = null;
@@ -111,7 +154,40 @@ public class BetDaoImpl implements BetDao {
         try {
             connection = pool.getConnection();
             connection.setReadOnly(true);
-            statement = connection.prepareStatement(GET_AMOUNT_BY_USER_ID_QUERY);
+            statement = connection.prepareStatement(GET_AMOUNT_OF_ACTIVE_BETS_BY_USER_ID_QUERY);
+            statement.setInt(1, userId);
+            set = statement.executeQuery();
+            if (set.next()) {
+                amount = set.getInt(1);
+            }
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("BetDao get amount of user bets operation is failed", e);
+            throw new DAOException("BetDao get amount of user bets operation is failed", e);
+        } finally {
+            Utils.closeResultSet(set);
+            Utils.closeStatement(statement);
+            Utils.closeConnection(connection);
+        }
+        return amount;
+    }
+
+
+    /**
+     * Retrieves amount of played user bets from the database.
+     *
+     * @param userId the id of a user.
+     * @return amount of user bets.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public int getAmountOfPlayedUserBets(int userId) throws DAOException {
+        int amount = 0;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet set = null;
+        try {
+            connection = pool.getConnection();
+            connection.setReadOnly(true);
+            statement = connection.prepareStatement(GET_AMOUNT_OF_PLAYED_BETS_BY_USER_ID_QUERY);
             statement.setInt(1, userId);
             set = statement.executeQuery();
             if (set.next()) {
@@ -224,6 +300,25 @@ public class BetDaoImpl implements BetDao {
             Utils.closeConnection(connection);
         }
         return amount;
+    }
+
+
+    /**
+     * Deletes played user bets from the database.
+     *
+     * @param userId the id of a user.
+     * @throws by.academy.it.dao.DAOException if an exception occurred during the operation.
+     */
+    public void deletePlayedBets(Integer userId) throws DAOException {
+        try (Connection connection = pool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_QUERY))
+        {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException | ConnectionPoolException e) {
+            logger.error("BetDao cannot delete played bets in DAO", e);
+            throw new DAOException("BetDao delete delete a match", e);
+        }
     }
 
 }

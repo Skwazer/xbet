@@ -12,7 +12,11 @@
     <fmt:message key="match.team2" var="matchTeam2"/>
     <fmt:message key="coefficient" var="coefficient"/>
     <fmt:message key="bet" var="betTitle"/>
-    <fmt:message key="no.bets" var="noBets"/>
+    <fmt:message key="delete" var="delete"/>
+    <fmt:message key="active.bets" var="activeBets"/>
+    <fmt:message key="played.bets" var="playedBets"/>
+    <fmt:message key="no.active.bets" var="noActiveBets"/>
+    <fmt:message key="no.played.bets" var="noPlayedBets"/>
     <fmt:message key="status" var="status"/>
     <fmt:message key="bet.result" var="betResult"/>
 
@@ -31,7 +35,19 @@
                             <c:choose>
                                 <c:when test="${not empty bets}">
                                     <div class="section-title">
-                                        <h3 class="title"><c:out value="${myBets}"/></h3>
+                                        <c:choose>
+                                            <c:when test="${type eq 'active'}">
+                                                <h3 class="title"><c:out value="${activeBets}"/></h3>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <h3 class="title"><c:out value="${playedBets}"/></h3>
+                                                <button form="deleteForm" class="primary-btn pull-right">
+                                                    <c:out value="${delete}"/></button>
+                                                <form id="deleteForm" method="post" action="<c:url value="/main/delete/bets"/>">
+                                                    <input type="hidden" name="key" value="${user.id}">
+                                                </form>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <table class="table table-striped">
                                         <thead>
@@ -62,7 +78,14 @@
                                 </c:when>
                                 <c:otherwise>
                                     <div class="text-center">
-                                        <h2><c:out value="${noBets}"/></h2>
+                                        <c:choose>
+                                            <c:when test="${type eq 'active'}">
+                                                <h2><c:out value="${noActiveBets}"/></h2>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <h2><c:out value="${noPlayedBets}"/></h2>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </c:otherwise>
                             </c:choose>
@@ -71,7 +94,7 @@
                         <div class="text-center">
                             <ul class="store-pages">
                                 <c:if test="${currentPage > 1}">
-                                    <li><a href=<c:url value="/main/bets?page=${currentPage-1}"/>>
+                                    <li><a href=<c:url value="/main/bets?page=${currentPage-1}&type=${type}"/>>
                                         <i class="fa fa-caret-left"></i></a></li>
                                 </c:if>
                                 <c:if test="${pages > 1}">
@@ -81,13 +104,13 @@
                                                 <li class="active">${i}</li>
                                             </c:when>
                                             <c:otherwise>
-                                                <li><a href=<c:url value="/main/bets?page=${i}"/>>${i}</a></li>
+                                                <li><a href=<c:url value="/main/bets?page=${i}&type=${type}"/>>${i}</a></li>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
                                 </c:if>
                                 <c:if test="${currentPage < pages}">
-                                    <li><a href=<c:url value="/main/bets?page=${currentPage+1}"/>>
+                                    <li><a href=<c:url value="/main/bets?page=${currentPage+1}&type=${type}"/>>
                                         <i class="fa fa-caret-right"></i></a></li>
                                 </c:if>
                             </ul>

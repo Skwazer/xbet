@@ -182,5 +182,10 @@ class Constants {
     static final String TEAM_REGEX = "^[A-ZА-Я][a-zа-я]{3,19}$";
     static final String ROLE_REGEX = "^[a-zа-яA-ZА-Я]{4,20}$";
     static final String RANDOM_ERROR = "random.result.create.error";
+    static final String TYPE = "type";
+    static final String ACTIVE = "active";
+    static final String PLAYED = "played";
+    static final String BETS_DELETE_ERROR = "bets.delete.error";
+    static final String TYPE_PLAYED = "?type=played";
 
 }

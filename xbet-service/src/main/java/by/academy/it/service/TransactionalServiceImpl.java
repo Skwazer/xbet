@@ -91,7 +91,7 @@ class TransactionalServiceImpl implements TransactionalService {
                 bet.setBetResult(betParams[0]);
                 bet.setBet(betValue);
                 bet.setMoney(amount);
-                bet.setStatus("active");
+                bet.setStatus(Constants.ACTIVE);
 
                 logger.debug("start of transaction");
                 transactionalDao.placeBet(user.getLogin(), balance, bet);

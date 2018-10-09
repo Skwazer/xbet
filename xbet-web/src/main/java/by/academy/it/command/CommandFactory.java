@@ -89,6 +89,7 @@ public class CommandFactory {
         commands.put(Constants.POST_CHANGE_TEAM, new UpdateTeamCommand(teamService));
         commands.put(Constants.POST_DELETE_TEAM, new DeleteTeamCommand(teamService));
         commands.put(Constants.GET_RESULTS, new ShowLastResultsCommand(resultService));
+        commands.put(Constants.POST_DELETE_BETS, new DeletePlayedUserBetsCommand(betService));
 
         logger.info("Command factory has been created");
     }
