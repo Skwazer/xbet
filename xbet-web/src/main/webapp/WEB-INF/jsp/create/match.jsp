@@ -40,84 +40,75 @@
 <div class="section">
     <!-- container -->
     <div class="container">
-        <c:choose>
-            <c:when test="${user.role eq 1}">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        <div class="billing-details">
-                            <div class="section-title">
-                                <h3 class="title"><c:out value="${createData}"/></h3>
-                            </div>
-                            <form id="createForm" class="clearfix" method="post" action="#">
-                                <div class="form-group">
-                                    <input id="date" class="input" type="date" name="date" onchange="checkDate()">
-                                    <div id="dateDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="select1" class="normal"><c:out value="${team1ID}"/></label>
-                                    <select id="select1" name="team1ID" class="form-control no-radius" form="createForm">
-                                        <c:forEach var="teamId" items="${teamsIds}">
-                                            <option value="${teamId}"><c:out value="${teamId}"/></option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="select2" class="normal"><c:out value="${team2ID}"/></label>
-                                    <select id="select2" name="team2ID" class="form-control no-radius" form="createForm">
-                                        <c:forEach var="teamId" items="${teamsIds}">
-                                            <option value="${teamId}"><c:out value="${teamId}"/></option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <input id="v1" class="input" type="number" name="v1" min="1" max="4" step="0.01"
-                                           onchange="check1()"
-                                           placeholder="<c:out value="${match1}"/>">
-                                    <div id="v1Div" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="X" class="input" type="number" name="X" min="1" max="4" step="0.01"
-                                           onchange="checkX()"
-                                           placeholder="<c:out value="${matchX}"/>">
-                                    <div id="XDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="v2" class="input" type="number" name="v2" min="1" max="4" step="0.01"
-                                           onchange="check2()"
-                                           placeholder="<c:out value="${match2}"/>">
-                                    <div id="v2Div" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="X1" class="input" type="number" name="X1" min="1" max="4" step="0.01"
-                                           onchange="check1X()"
-                                           placeholder="<c:out value="${match1X}"/>">
-                                    <div id="X1Div" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="v12" class="input" type="number" name="v12" min="1" max="4" step="0.01"
-                                           onchange="check12()"
-                                           placeholder="<c:out value="${match12}"/>">
-                                    <div id="v12Div" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="X2" class="input" type="number" name="X2" min="1" max="4" step="0.01"
-                                           onchange="check2X()"
-                                           placeholder="<c:out value="${match2X}"/>">
-                                    <div id="X2Div" style="display:none;"></div>
-                                </div>
-                            </form>
-                            <button id="createButton" class="primary-btn pull-left"
-                                    onclick="changeFormAction()"><c:out value="${create}"/></button>
-                        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title"><c:out value="${createData}"/></h3>
                     </div>
+                    <form id="createForm" class="clearfix" method="post" action="#">
+                        <div class="form-group">
+                            <input id="date" class="input" type="date" name="date" onchange="checkDate()">
+                            <div id="dateDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="select1" class="normal"><c:out value="${team1ID}"/></label>
+                            <select id="select1" name="team1ID" class="form-control no-radius" form="createForm">
+                                <c:forEach var="teamId" items="${teamsIds}">
+                                    <option value="${teamId}"><c:out value="${teamId}"/></option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="select2" class="normal"><c:out value="${team2ID}"/></label>
+                            <select id="select2" name="team2ID" class="form-control no-radius" form="createForm">
+                                <c:forEach var="teamId" items="${teamsIds}">
+                                    <option value="${teamId}"><c:out value="${teamId}"/></option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input id="v1" class="input" type="number" name="v1" min="1" max="4" step="0.01"
+                                   onchange="check1()"
+                                   placeholder="<c:out value="${match1}"/>">
+                            <div id="v1Div" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="X" class="input" type="number" name="X" min="1" max="4" step="0.01"
+                                   onchange="checkX()"
+                                   placeholder="<c:out value="${matchX}"/>">
+                            <div id="XDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="v2" class="input" type="number" name="v2" min="1" max="4" step="0.01"
+                                   onchange="check2()"
+                                   placeholder="<c:out value="${match2}"/>">
+                            <div id="v2Div" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="X1" class="input" type="number" name="X1" min="1" max="4" step="0.01"
+                                   onchange="check1X()"
+                                   placeholder="<c:out value="${match1X}"/>">
+                            <div id="X1Div" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="v12" class="input" type="number" name="v12" min="1" max="4" step="0.01"
+                                   onchange="check12()"
+                                   placeholder="<c:out value="${match12}"/>">
+                            <div id="v12Div" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="X2" class="input" type="number" name="X2" min="1" max="4" step="0.01"
+                                   onchange="check2X()"
+                                   placeholder="<c:out value="${match2X}"/>">
+                            <div id="X2Div" style="display:none;"></div>
+                        </div>
+                    </form>
+                    <button id="createButton" class="primary-btn pull-left"
+                            onclick="changeFormAction()"><c:out value="${create}"/></button>
                 </div>
-            </c:when>
-            <c:otherwise>
-                <div class="text-center">
-                    <h2><c:out value="${adminError}"/></h2>
-                </div>
-            </c:otherwise>
-        </c:choose>
+            </div>
+        </div>
     </div>
     <!-- /container -->
 </div>

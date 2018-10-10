@@ -53,71 +53,62 @@
 <div class="section">
     <!-- container -->
     <div class="container">
-        <c:choose>
-            <c:when test="${user.role eq 1}">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        <div class="billing-details">
-                            <div class="section-title">
-                                <h3 class="title"><c:out value="${createData}"/></h3>
-                            </div>
-                            <form id="createForm" class="clearfix" method="post" action="#">
-                                <div class="form-group">
-                                    <input id="login" class="input" name="login" onchange="checkLogin()"
-                                           placeholder="<c:out value="${enterLogin}"/>">
-                                    <div id="loginDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="password" class="input" type="password" name="password"
-                                           onchange="checkPassword()"
-                                           placeholder="<c:out value="${enterPassword}"/>">
-                                    <div id="passwordDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="firstName" class="input" name="firstName"
-                                           onchange="firstNameCheck()"
-                                           placeholder="<c:out value="${enterFirstname}"/>">
-                                    <div id="firstNameDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="lastName" class="input" name="lastName"
-                                           onchange="lastNameCheck()"
-                                           placeholder="<c:out value="${enterLastname}"/>">
-                                    <div id="lastNameDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="email" class="input" name="email" onchange="emailCheck()"
-                                           placeholder="<c:out value="${enterEmail}"/>">
-                                    <div id="emailDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="balance" class="input" type="number" name="balance" min="0"
-                                           onchange="balanceCheck()" placeholder="<c:out value="${enterBalance}"/>">
-                                    <div id="balanceDiv" style="display:none;"></div>
-                                </div>
-                                <div class="form-group">
-
-                                    <label for="select" class="normal"><c:out value="${enterRole}"/></label>
-                                    <select id="select" name="role" class="form-control no-radius" form="createForm">
-                                        <c:forEach var="roleId" items="${rolesIds}">
-                                            <option value="${roleId}"><c:out value="${roleId}"/></option>
-                                        </c:forEach>
-                                    </select>
-
-                                </div>
-                            </form>
-                            <button id="createButton" class="primary-btn pull-left"
-                                    onclick="changeFormAction()"><c:out value="${create}"/></button>
-                        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title"><c:out value="${createData}"/></h3>
                     </div>
+                    <form id="createForm" class="clearfix" method="post" action="#">
+                        <div class="form-group">
+                            <input id="login" class="input" name="login" onchange="checkLogin()"
+                                   placeholder="<c:out value="${enterLogin}"/>">
+                            <div id="loginDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="password" class="input" type="password" name="password"
+                                   onchange="checkPassword()"
+                                   placeholder="<c:out value="${enterPassword}"/>">
+                            <div id="passwordDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="firstName" class="input" name="firstName"
+                                   onchange="firstNameCheck()"
+                                   placeholder="<c:out value="${enterFirstname}"/>">
+                            <div id="firstNameDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="lastName" class="input" name="lastName"
+                                   onchange="lastNameCheck()"
+                                   placeholder="<c:out value="${enterLastname}"/>">
+                            <div id="lastNameDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="email" class="input" name="email" onchange="emailCheck()"
+                                   placeholder="<c:out value="${enterEmail}"/>">
+                            <div id="emailDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+                            <input id="balance" class="input" type="number" name="balance" min="0"
+                                   onchange="balanceCheck()" placeholder="<c:out value="${enterBalance}"/>">
+                            <div id="balanceDiv" style="display:none;"></div>
+                        </div>
+                        <div class="form-group">
+
+                            <label for="select" class="normal"><c:out value="${enterRole}"/></label>
+                            <select id="select" name="role" class="form-control no-radius" form="createForm">
+                                <c:forEach var="roleId" items="${rolesIds}">
+                                    <option value="${roleId}"><c:out value="${roleId}"/></option>
+                                </c:forEach>
+                            </select>
+
+                        </div>
+                    </form>
+                    <button id="createButton" class="primary-btn pull-left"
+                            onclick="changeFormAction()"><c:out value="${create}"/></button>
                 </div>
-            </c:when>
-            <c:otherwise>
-                <div class="text-center">
-                    <h2><c:out value="${adminError}"/></h2>
-                </div>
-            </c:otherwise>
-        </c:choose>
+            </div>
+        </div>
     </div>
     <!-- /container -->
 </div>

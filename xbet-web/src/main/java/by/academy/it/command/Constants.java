@@ -6,17 +6,22 @@ package by.academy.it.command;
 public class Constants {
 
     public static final String UTF_8 = "UTF-8";
-    static final String ERROR_MESSAGE = "errorMessage";
-    static final String MAIN_ERROR = "/main/error";
+    public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String USER = "user";
+    public static final String ACCESS_DENIED = "access.denied";
+    public static final String USER_LOGGED = "user.logged";
+    public static final String ACCESS_ADMIN = "access.admin";
+    public static final String MAIN_ERROR = "/main/error";
+
+    static final String LOGIN = "login";
     static final String NO_COMMAND = "no.command";
     static final String PATH = "/WEB-INF/jsp/";
     static final String JSP = ".jsp";
-
     static final String GET_LOCALE = "GET/locale";
     static final String GET_HOME = "GET/home";
     static final String HOME = "home";
+    static final String ERROR = "error";
     static final String GET_LOGIN = "GET/login";
-    static final String LOGIN = "login";
     static final String POST_LOGIN = "POST/login";
     static final String POST_AUTHENTICATE = "POST/authenticate";
     static final String GET_REGISTRATION = "GET/registration";
@@ -24,7 +29,6 @@ public class Constants {
     static final String POST_REGISTRATION = "POST/registration";
     static final String POST_REGISTER = "POST/register";
     static final String GET_ERROR = "GET/error";
-    static final String ERROR = "error";
     static final String GET_LOGOUT = "GET/logout";
     static final String GET_MATCHES = "GET/matches";
     static final String POST_CHECK = "POST/check";

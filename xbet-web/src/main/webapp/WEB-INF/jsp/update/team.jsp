@@ -21,45 +21,36 @@
 <div class="section">
     <!-- container -->
     <div class="container">
-        <c:choose>
-            <c:when test="${user.role eq 1}">
-                <div class="row">
-                    <div class="col-md-4 col-md-offset-4">
-                        <div class="billing-details">
-                            <div class="section-title">
-                                <h3 class="title"><c:out value="${createData}"/></h3>
-                            </div>
-                            <form id="updateForm" class="clearfix" method="post" action="#">
-                                <div class="form-group">
-                                    <label for="id">ID</label>
-                                    <input id="id" class="input" name="id"
-                                           value="<c:out value="${updateTeam.id}"/>" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="name"><c:out value="${enterName}"/></label>
-                                    <input id="name" class="input" name="name" onchange="nameCheck()"
-                                           value="${updateTeam.name}">
-                                    <div id="nameDiv" style="display:none;"></div>
-                                </div>
-                            </form>
-                            <button class="primary-btn pull-left" onclick="changeFormAction()">
-                                <c:out value="${update}"/></button>
-                            <button form="deleteForm" class="primary-btn pull-right">
-                                <c:out value="${delete}"/></button>
-                            <form id="deleteForm" method="post" action="<c:url value="/main/delete/team"/>">
-                                <input type="hidden" name="key" value="${updateTeam.id}">
-                            </form>
-                        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title"><c:out value="${createData}"/></h3>
                     </div>
+                    <form id="updateForm" class="clearfix" method="post" action="#">
+                        <div class="form-group">
+                            <label for="id">ID</label>
+                            <input id="id" class="input" name="id"
+                                   value="<c:out value="${updateTeam.id}"/>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="name"><c:out value="${enterName}"/></label>
+                            <input id="name" class="input" name="name" onchange="nameCheck()"
+                                   value="${updateTeam.name}">
+                            <div id="nameDiv" style="display:none;"></div>
+                        </div>
+                    </form>
+                    <button class="primary-btn pull-left" onclick="changeFormAction()">
+                        <c:out value="${update}"/></button>
+                    <button form="deleteForm" class="primary-btn pull-right">
+                        <c:out value="${delete}"/></button>
+                    <form id="deleteForm" method="post" action="<c:url value="/main/delete/team"/>">
+                        <input type="hidden" name="key" value="${updateTeam.id}">
+                    </form>
                 </div>
-                <c:remove var="updateTeam" scope="session"/>
-            </c:when>
-            <c:otherwise>
-                <div class="text-center">
-                    <h2><c:out value="${adminError}"/></h2>
-                </div>
-            </c:otherwise>
-        </c:choose>
+            </div>
+        </div>
+        <c:remove var="updateTeam" scope="session"/>
     </div>
     <!-- /container -->
 </div>

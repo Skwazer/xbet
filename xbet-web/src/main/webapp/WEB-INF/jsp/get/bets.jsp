@@ -21,85 +21,76 @@
 <div class="section">
     <!-- container -->
     <div class="container">
-        <c:choose>
-            <c:when test="${user.role eq 1}">
-                <div class="row">
-                    <div class="col-md-6 col-md-offset-3">
-                        <div class="billing-details">
-                            <div class="section-title">
-                                <h3 class="title"><c:out value="${betsTitle}"/></h3>
-                            </div>
-                            <c:choose>
-                                <c:when test="${not empty allBets}">
-                                    <table class="table table-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th><c:out value="${userIDTitle}"/></th>
-                                            <th><c:out value="${matchIDTitle}"/></th>
-                                            <th><c:out value="${betResult}"/></th>
-                                            <th><c:out value="${coefficient}"/></th>
-                                            <th><c:out value="${betTitle}"/></th>
-                                            <th><c:out value="${status}"/></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach items="${allBets}" var="bet">
-                                            <tr>
-                                                <td><c:out value="${bet.id}"/></td>
-                                                <td><c:out value="${bet.user_id}"/></td>
-                                                <td><c:out value="${bet.match_id}"/></td>
-                                                <td><c:out value="${bet.betResult}"/></td>
-                                                <td><c:out value="${bet.bet}"/></td>
-                                                <td><c:out value="${bet.money}"/></td>
-                                                <td><c:out value="${bet.status}"/></td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="text-center">
-                                        <h2><c:out value="${betsEmpty}"/></h2>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                        <!-- pagination -->
-                        <div class="text-center">
-                            <ul class="store-pages">
-                                <c:if test="${currentPage > 1}">
-                                    <li><a href=<c:url value="/main/get/bets?page=${currentPage-1}"/>>
-                                        <i class="fa fa-caret-left"></i></a></li>
-                                </c:if>
-                                <c:if test="${pages > 1}">
-                                    <c:forEach begin="1" end="${pages}" var="i">
-                                        <c:choose>
-                                            <c:when test="${currentPage == i}">
-                                                <li class="active">${i}</li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li><a href=<c:url value="/main/get/bets?page=${i}"/>>${i}</a></li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${currentPage < pages}">
-                                    <li><a href=<c:url value="/main/get/bets?page=${currentPage+1}"/>>
-                                        <i class="fa fa-caret-right"></i></a></li>
-                                </c:if>
-                            </ul>
-                        </div>
-                        <!-- /pagination -->
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title"><c:out value="${betsTitle}"/></h3>
                     </div>
+                    <c:choose>
+                        <c:when test="${not empty allBets}">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th><c:out value="${userIDTitle}"/></th>
+                                    <th><c:out value="${matchIDTitle}"/></th>
+                                    <th><c:out value="${betResult}"/></th>
+                                    <th><c:out value="${coefficient}"/></th>
+                                    <th><c:out value="${betTitle}"/></th>
+                                    <th><c:out value="${status}"/></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${allBets}" var="bet">
+                                    <tr>
+                                        <td><c:out value="${bet.id}"/></td>
+                                        <td><c:out value="${bet.user_id}"/></td>
+                                        <td><c:out value="${bet.match_id}"/></td>
+                                        <td><c:out value="${bet.betResult}"/></td>
+                                        <td><c:out value="${bet.bet}"/></td>
+                                        <td><c:out value="${bet.money}"/></td>
+                                        <td><c:out value="${bet.status}"/></td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-center">
+                                <h2><c:out value="${betsEmpty}"/></h2>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
-            </c:when>
-            <c:otherwise>
+                <!-- pagination -->
                 <div class="text-center">
-                    <h2><c:out value="${matchesLogIn}"/></h2>
+                    <ul class="store-pages">
+                        <c:if test="${currentPage > 1}">
+                            <li><a href=<c:url value="/main/get/bets?page=${currentPage-1}"/>>
+                                <i class="fa fa-caret-left"></i></a></li>
+                        </c:if>
+                        <c:if test="${pages > 1}">
+                            <c:forEach begin="1" end="${pages}" var="i">
+                                <c:choose>
+                                    <c:when test="${currentPage == i}">
+                                        <li class="active">${i}</li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li><a href=<c:url value="/main/get/bets?page=${i}"/>>${i}</a></li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${currentPage < pages}">
+                            <li><a href=<c:url value="/main/get/bets?page=${currentPage+1}"/>>
+                                <i class="fa fa-caret-right"></i></a></li>
+                        </c:if>
+                    </ul>
                 </div>
-            </c:otherwise>
-        </c:choose>
+                <!-- /pagination -->
+            </div>
+        </div>
     </div>
     <!-- /container -->
 </div>

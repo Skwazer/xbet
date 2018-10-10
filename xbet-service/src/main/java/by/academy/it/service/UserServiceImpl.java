@@ -494,6 +494,13 @@ class UserServiceImpl implements UserService {
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
         logger.info("locale has been changed - " + locale);
 
+        //todo delete code below
+        try {
+            request.getSession().setAttribute(Constants.USER, userDao.findByLogin("Admin"));
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
+
         response.sendRedirect(Utils.getReferrerURI(request));
     }
 
@@ -604,7 +611,7 @@ class UserServiceImpl implements UserService {
      * @throws IOException if an input or output error is detected.
      */
     public void topup(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String param = request.getParameter("amount");
+        String param = request.getParameter(Constants.AMOUNT);
         Double amount;
         try {
             if (Utils.isStringValid(param) && (amount = Double.parseDouble(param)) > 0) {

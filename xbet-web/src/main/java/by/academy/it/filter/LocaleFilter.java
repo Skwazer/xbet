@@ -17,7 +17,7 @@ public class LocaleFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(LocaleFilter.class);
 
     /**
-     * Gets a locale from the request, and sets it into the application context
+     * Gets a locale from the request, and sets it into the application context.
      *
      * @param request {@code HttpServletRequest} request.
      * @param response  {@code HttpServletResponse} response.
@@ -25,7 +25,9 @@ public class LocaleFilter implements Filter {
      * @throws ServletException if the request could not be handled.
      * @throws IOException if an input or output error is detected.
      */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+
         HttpServletRequest req = (HttpServletRequest) request;
         Locale locale = request.getLocale();
         Config.set(req.getSession(), Config.FMT_LOCALE, locale);
@@ -34,7 +36,6 @@ public class LocaleFilter implements Filter {
         chain.doFilter(req, response);
     }
 
-    @Override
     public void destroy() {
 
     }
