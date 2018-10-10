@@ -494,13 +494,6 @@ class UserServiceImpl implements UserService {
         Config.set(request.getSession(), Config.FMT_LOCALE, locale);
         logger.info("locale has been changed - " + locale);
 
-        //todo delete code below
-        try {
-            request.getSession().setAttribute(Constants.USER, userDao.findByLogin("Admin"));
-        } catch (DAOException e) {
-            e.printStackTrace();
-        }
-
         response.sendRedirect(Utils.getReferrerURI(request));
     }
 
