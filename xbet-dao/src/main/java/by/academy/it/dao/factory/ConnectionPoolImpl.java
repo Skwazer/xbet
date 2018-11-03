@@ -42,16 +42,17 @@ public class ConnectionPoolImpl implements ConnectionPool {
             password = properties.getProperty(Constants.DB_PASSWORD);
             String driver = properties.getProperty(Constants.DRIVER);
             String maxConnections = properties.getProperty(Constants.MAX_CONNECTIONS);
-            this.maxConnections = Integer.parseInt(maxConnections);
-
+            try {
+                this.maxConnections = Integer.parseInt(maxConnections);
+            } catch (NumberFormatException e) {
+                logger.error("Cannot read the connection pool max size", e);
+                this.maxConnections = 40;
+            }
             Class.forName(driver);
             availableConnections = new ArrayBlockingQueue<>(this.maxConnections);
             usedConnections = new ArrayBlockingQueue<>(this.maxConnections);
             logger.info("The connection pool has been created");
 
-        } catch (NumberFormatException e) {
-            logger.error("Cannot read the connection pool max size", e);
-            maxConnections = 40;
         } catch (ClassNotFoundException | IOException e) {
             logger.error("The connection pool hasn't been created", e);
             throw new ConnectionPoolException("The connection pool hasn't been created", e);
